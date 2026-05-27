@@ -264,7 +264,9 @@
       position: absolute;
       bottom: 0; left: 0; right: 0;
       z-index: 8;
-      background: #000;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 8px 8px;
       display: grid;
@@ -284,7 +286,7 @@
       letter-spacing: 0.1px;
       color: rgba(255,255,255,0.85);
     }
-    .feed-tab--active { color: #fff; }
+    .feed-tab--active i { color: var(--gp-orange-500); }
     .feed-tab--active .feed-tab__label {
       color: #fff; font-weight: 700;
       text-decoration: underline;
