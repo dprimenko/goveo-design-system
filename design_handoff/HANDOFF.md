@@ -159,3 +159,81 @@ rg "bottom-bar/(earth|shop|mask|temp|add)\.svg" app/ components/ features/ modul
 ```
 
 If `rg` returns nothing, safe to delete. Otherwise, leave them.
+
+---
+
+## Step 8 · Brand theming (v1.2.0 · new) — Goveo ↔ Ibiza Goveo
+
+Two builds ship from the same codebase: the global **Goveo** app and the
+regional **Ibiza Goveo** app (same product, geofenced to Ibiza/Formentera).
+They share every component, type ramp, spacing token and radius — only the
+brand colour ramp, accent and logo change.
+
+The design system now exposes both brands. Pick one at app boot.
+
+### What changed in `@goveo/design-tokens@1.2.0`
+
+| File | Change |
+|---|---|
+| `tokens.ts` | New exports: `goveoBrand`, `ibizaBrand`, `brands`, `BrandVariant`, `buildBrandTheme(brand)`. Existing `colors.primary` / `lightTheme` etc. are unchanged (= Goveo). |
+| `tokens.json` | New top-level `themes` object with `goveo` and `ibiza` blocks. |
+| `tokens.css` | Brand tokens (primary ramp, naranja-*, --accent, --fg-on-accent, --orange-glow, --brand-name) are now inside `.theme-goveo` (= `:root` default) and `.theme-ibiza` blocks. Toggle by class on `<html>` or `<body>`. |
+
+### What to apply in `goveo-expo`
+
+1. Re-run `npm install` (the design-system submodule will pull the new tokens).
+
+2. Add a brand selector to your app config. Easiest: read it from an env var
+   at build time so the binary is brand-locked, two builds → two app icons.
+
+   ```ts
+   // app.config.ts
+   const variant = process.env.EXPO_PUBLIC_BRAND ?? 'goveo';   // 'goveo' | 'ibiza'
+   export default { extra: { brand: variant }, /* … */ };
+   ```
+
+3. Wire the brand through your existing `ThemeContextProvider`:
+
+   ```ts
+   // theme/ThemeContextProvider.tsx
+   import Constants from 'expo-constants';
+   import { brands, buildBrandTheme, type BrandVariant } from '@goveo/design-tokens';
+
+   const brandKey = (Constants.expoConfig?.extra?.brand ?? 'goveo') as BrandVariant;
+   const brand   = brands[brandKey];
+   const themes  = buildBrandTheme(brand);
+
+   // themes.light.accent === '#88e4d7' on Ibiza, '#f96a3f' on Goveo
+   // themes.light.fgOnPrimary === '#0d3338' on Ibiza (critical — light primary needs dark text)
+   ```
+
+4. Audit any hardcoded `#fff` text on top of `--accent` / primary buttons.
+   On Ibiza the primary is a light turquoise — you MUST use
+   `theme.light.fgOnPrimary` (= `#0d3338`) for legibility.
+
+   ```bash
+   rg "color:\s*['\"]?#fff['\"]?" components/ app/ | rg -i "primary|accent|button"
+   ```
+
+5. Geofence: hardcode the Ibiza search/feed bounds when `brand === 'ibiza'`:
+
+   ```ts
+   // features/geo/bounds.ts
+   export const IBIZA_BOUNDS = {
+     north: 39.117, south: 38.635,
+     east:  1.582,  west:  1.211,    // covers Ibiza + Formentera
+   };
+   ```
+
+6. App icon + splash + logo: ship Ibiza variants under `assets/brand/ibiza/`
+   and select at build time via the same `EXPO_PUBLIC_BRAND` env var.
+   Source asset for the Ibiza logo: `https://es.goveo.app/assets/img/ibiza/logo-ibiza.png`
+   (download and commit to `assets/brand/ibiza/logo.png`).
+
+### Acceptance — Ibiza build
+
+- [ ] Primary buttons render `#88e4d7` background with `#0d3338` text
+- [ ] Feed `Seguir` CTA uses the Ibiza primary (turquoise)
+- [ ] Landing accent words/CTAs still use orange (kept warm on purpose)
+- [ ] Map opens centered on Ibiza; search results limited to Ibiza/Formentera
+- [ ] Goveo build is unchanged (snapshot tests still pass)

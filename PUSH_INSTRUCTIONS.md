@@ -51,8 +51,8 @@ git push -u origin main
 ## 4 · Tag the release
 
 ```bash
-git tag -a v1.1.0 -m "v1.1.0 — bottom-nav redesign + creator FAB"
-git push origin v1.1.0
+git tag -a v1.2.0 -m "v1.2.0 — brand theming (Goveo + Ibiza)"
+git push origin v1.2.0
 ```
 
 ## 5 · Wire goveo-expo
@@ -102,7 +102,8 @@ When this repo gets new tokens or components:
 
 ```bash
 # from this design-system project
-git add -A && git commit -m "feat: …" && git push
+git add -A && git commit -m "feat: brand theming — Goveo + Ibiza (v1.2.0)"
+git push
 git tag v1.2.0 && git push origin v1.2.0
 
 # from goveo-expo

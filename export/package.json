@@ -1,6 +1,6 @@
 {
   "name": "@goveo/design-tokens",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Goveo design tokens — colors, type, spacing, radii, shadows. Source of truth for goveo-expo, goveo-astro, and any other Goveo surface.",
   "license": "UNLICENSED",
   "private": true,

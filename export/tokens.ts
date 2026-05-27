@@ -27,7 +27,59 @@ export const colors = {
   basic: { white: '#ffffff', black: '#000000' },
 } as const;
 
-/** Semantic colors — light app surface (default) */
+/* -----------------------------------------------------------
+   BRANDS (v1.2.0)
+   -----------------------------------------------------------
+   Goveo and Ibiza Goveo ship from the same codebase. Pick the
+   brand at app boot (or per-route in the web case) and pass it
+   through `buildBrandTheme()` below.
+
+   `goveoBrand` is identical to the legacy `colors.primary` /
+   `colors.naranja` exports above — kept for backwards compat.
+   ----------------------------------------------------------- */
+
+export type BrandVariant = 'goveo' | 'ibiza';
+
+export const goveoBrand = {
+  variant:     'goveo' as const,
+  primary:     colors.primary,
+  naranja:     colors.naranja,
+  accent:      colors.primary[500],   // #f96a3f
+  accentHover: colors.primary[700],   // #eb5a2c
+  fgOnAccent:  colors.basic.white,
+  fgOnPrimary: colors.basic.white,
+  accentGlow:  '0 0 20px rgba(233,128,39,0.5)',
+  name:        'Goveo',
+  tagline:     'Video · Smart Geomarketing',
+} as const;
+
+export const ibizaBrand = {
+  variant:     'ibiza' as const,
+  primary: {
+    50:  '#f0fbf8', 100: '#dcf7ef', 200: '#b9eddf', 300: '#98e6d8',
+    400: '#8fe5d7', 500: '#88e4d7', 600: '#5cbbb4', 700: '#379ea3',
+    800: '#297a82', 900: '#1c5660', 950: '#0d3338',
+  },
+  naranja:     { goveo: '#e98127', dark: '#c66a1a' },
+  accent:      '#88e4d7',
+  accentHover: '#379ea3',
+  /** Primary is LIGHT turquoise — dark foreground required for contrast. */
+  fgOnAccent:  '#0d3338',
+  fgOnPrimary: '#0d3338',
+  accentGlow:  '0 0 20px rgba(136,228,215,0.55)',
+  name:        'Ibiza Goveo',
+  tagline:     'Ibiza · Formentera',
+} as const;
+
+export const brands = {
+  goveo: goveoBrand,
+  ibiza: ibizaBrand,
+} as const;
+
+export type Brand = typeof goveoBrand | typeof ibizaBrand;
+
+/** Semantic colors — light app surface (default · Goveo brand).
+ *  For Ibiza, use `buildBrandTheme(ibizaBrand).light` instead. */
 export const lightTheme = {
   bg:          colors.basic.white,
   bgElevated:  colors.neutral[100],
@@ -186,9 +238,46 @@ export const tokens = {
   light: lightTheme,
   dark:  darkTheme,
   landing: landingTheme,
+  brands,
+  brand: goveoBrand, // backwards-compat default
   space, radius, fontFamily, fontWeight, type, poster,
   breakpoint, shadow, rnShadow, zIndex,
 } as const;
+
+/* -----------------------------------------------------------
+   buildBrandTheme(brand)
+   -----------------------------------------------------------
+   Returns the same shape as `{ light, dark, landing }` but with
+   brand-coloured slots (`accent`, `accentHover`, `fgOnPrimary`)
+   swapped to match the brand. Pass it through your theme
+   context so components consume the right colours.
+
+     import { ibizaBrand, buildBrandTheme } from '@goveo/design-tokens';
+     const themes = buildBrandTheme(ibizaBrand);
+     <ThemeProvider value={{ ...themes, surface: 'light' }}>
+   ----------------------------------------------------------- */
+export function buildBrandTheme(brand: Brand) {
+  return {
+    brand,
+    light: {
+      ...lightTheme,
+      accent:      brand.accent,
+      accentHover: brand.accentHover,
+      fgOnPrimary: brand.fgOnPrimary,
+    },
+    dark: {
+      ...darkTheme,
+      accent:      brand.accent,
+      accentHover: brand.accentHover,
+      fgOnPrimary: brand.fgOnPrimary,
+    },
+    landing: {
+      ...landingTheme,
+      accent:      brand.naranja.goveo,
+      accentHover: brand.naranja.dark,
+    },
+  } as const;
+}
 
 export type Tokens = typeof tokens;
 export default tokens;

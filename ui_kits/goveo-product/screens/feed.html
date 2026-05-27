@@ -167,7 +167,7 @@
     .clip__actions {
       position: absolute;
       right: 8px;
-      bottom: 80px;
+      bottom: 64px;
       z-index: 3;
       display: flex;
       flex-direction: column;
@@ -208,7 +208,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 64px;
+      bottom: 52px;
       padding: 48px 80px 16px 16px;   /* right padding clears the action rail */
       background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%);
       z-index: 2;
@@ -266,7 +266,7 @@
       z-index: 8;
       background: #000;
       border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 12px 8px 28px;
+      padding: 8px 8px;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 4px;
@@ -274,11 +274,11 @@
     .feed-tab {
       background: transparent; border: 0; cursor: pointer;
       display: flex; flex-direction: column; align-items: center;
-      gap: 4px; padding: 6px 0;
+      gap: 2px; padding: 0;
       color: rgba(255,255,255,0.92);
       font-family: var(--gp-font);
     }
-    .feed-tab i { font-size: 24px; line-height: 1; }
+    .feed-tab i { font-size: 22px; line-height: 1; }
     .feed-tab__label {
       font-size: 11px; font-weight: 500;
       letter-spacing: 0.1px;
@@ -417,7 +417,6 @@
               <button className="gp-chip" style={{ marginLeft: "auto" }} onClick={() => setMuted(!muted)}>
                 <Icon name={muted ? "speaker-simple-slash" : "speaker-simple-high"} size={14} weight="fill" />
               </button>
-              <button className="gp-chip" aria-label="Filtros"><Icon name="sliders" size={14} /></button>
             </div>
 
             <div className="clip__actions">
@@ -427,10 +426,6 @@
               >
                 <span className="action-btn__circle"><Icon name="heart" size={22} weight={liked ? "fill" : "regular"} /></span>
                 <span>{data.likes + (liked ? 1 : 0)}</span>
-              </button>
-              <button className="action-btn">
-                <span className="action-btn__circle"><Icon name="chat-circle" size={20} weight="regular" /></span>
-                <span>32</span>
               </button>
               <button className="action-btn">
                 <span className="action-btn__circle"><Icon name="paper-plane-tilt" size={20} /></span>

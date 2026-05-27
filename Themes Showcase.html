@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es" class="theme-goveo">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Goveo · Themes Showcase</title>
+<link rel="icon" href="assets/favicon.png" />
+<link rel="stylesheet" href="colors_and_type.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  /* ============================================================
+     Showcase chrome — dark, neutral. Theme tokens live INSIDE
+     .theme-pane only, so the chrome doesn't shift when you flip.
+     ============================================================ */
+  :root {
+    --sb-bg:        #09090b;
+    --sb-bg-soft:   rgba(255,255,255,0.04);
+    --sb-bg-hover:  rgba(255,255,255,0.07);
+    --sb-border:    rgba(255,255,255,0.08);
+    --sb-border-strong: rgba(255,255,255,0.16);
+    --sb-fg:        #fafafa;
+    --sb-fg-muted:  #a1a1aa;
+    --sb-fg-subtle: #71717a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--sb-bg);
+    color: var(--sb-fg);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     TOP BAR
+     ============================================================ */
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    background: rgba(9,9,11,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--sb-border);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .topbar__brand {
+    display: flex; align-items: center; gap: 12px;
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.02em; font-size: 14px;
+  }
+  .topbar__brand::before {
+    content: '';
+    width: 26px; height: 26px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #e98027 0%, #88e4d7 100%);
+    box-shadow: 0 0 14px rgba(233,128,39,0.4), 0 0 14px rgba(136,228,215,0.4);
+  }
+  .topbar__sub {
+    color: var(--sb-fg-subtle);
+    font-size: 10px; letter-spacing: 0.22em;
+    font-weight: 700; font-style: italic;
+  }
+  .topbar__spacer { flex: 1; }
+
+  .switch {
+    display: inline-flex;
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 9999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .switch__btn {
+    appearance: none; background: transparent; border: 0; cursor: pointer;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    color: var(--sb-fg-muted);
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .switch__btn:hover { color: var(--sb-fg); }
+  .switch__btn.is-active { color: #fff; }
+  .switch__btn[data-mode="goveo"].is-active   { background: #f96a3f; box-shadow: 0 6px 18px rgba(249,106,63,0.35); }
+  .switch__btn[data-mode="ibiza"].is-active   { background: #88e4d7; color: #0d3338; box-shadow: 0 6px 18px rgba(136,228,215,0.35); }
+  .switch__btn[data-mode="both"].is-active    { background: #fff; color: #09090b; }
+  .switch__dot {
+    width: 9px; height: 9px; border-radius: 9999px;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
+  }
+  .switch__dot--g { background: #f96a3f; }
+  .switch__dot--i { background: #88e4d7; }
+  .switch__dot--b { background: linear-gradient(90deg, #f96a3f 0%, #f96a3f 49%, #88e4d7 51%, #88e4d7 100%); }
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .canvas {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px 24px 96px;
+  }
+
+  /* The grid that holds one or two theme panes */
+  .panes {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+  }
+  body[data-mode="both"] .panes {
+    grid-template-columns: 1fr 1fr;
+  }
+  body[data-mode="goveo"] .theme-pane.theme-ibiza,
+  body[data-mode="ibiza"] .theme-pane.theme-goveo {
+    display: none;
+  }
+
+  /* Each theme pane = independent scope of tokens */
+  .theme-pane {
+    display: flex; flex-direction: column; gap: 24px;
+    min-width: 0;
+  }
+  .pane-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 18px;
+  }
+  .pane-header__logo {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--logo-url) center / contain no-repeat, #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+  .pane-header__txt { flex: 1; min-width: 0; }
+  .pane-header__name {
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.01em; font-size: 18px;
+    color: var(--sb-fg);
+  }
+  .pane-header__sub {
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--sb-fg-subtle); font-weight: 700; font-style: italic;
+    margin-top: 2px;
+  }
+  .pane-header__chip {
+    background: var(--accent);
+    color: var(--fg-on-accent);
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    font-size: 10px; letter-spacing: 0.16em;
+    padding: 6px 12px; border-radius: 9999px;
+  }
+
+  /* ============================================================
+     CARDS — each shows a slice of the design system
+     ============================================================ */
+  .card {
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .card__head {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--sb-border);
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px;
+  }
+  .card__title {
+    font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    font-weight: 800; font-style: italic;
+    color: var(--sb-fg);
+  }
+  .card__hint {
+    font-size: 10px; color: var(--sb-fg-subtle);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  .card__body { padding: 18px; }
+  .card__body--flush { padding: 0; }
+
+  /* ============================================================
+     RAMP swatches
+     ============================================================ */
+  .ramp {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 2px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ramp__chip {
+    aspect-ratio: 1;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding: 6px 4px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .ramp__chip[data-light="1"] { color: rgba(0,0,0,0.55); text-shadow: none; }
+  .ramp__legend {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 2px;
+    margin-top: 6px;
+  }
+  .ramp__legend span {
+    text-align: center;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 8.5px; color: var(--sb-fg-subtle);
+  }
+
+  /* ============================================================
+     TOKEN ROWS
+     ============================================================ */
+  .tokens {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .token {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--sb-border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .token__sw {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .token__meta { flex: 1; min-width: 0; }
+  .token__name {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11px; color: var(--sb-fg);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .token__val {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 10px; color: var(--sb-fg-subtle);
+    margin-top: 2px;
+  }
+
+  /* ============================================================
+     APP SURFACE (light) preview
+     ============================================================ */
+  .app-surface {
+    background: var(--bg);
+    color: var(--fg);
+    padding: 22px;
+    display: grid; gap: 18px;
+  }
+  .app-surface__btns {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .btn-primary,
+  .btn-ghost,
+  .btn-text {
+    appearance: none;
+    border: 0;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.18s ease;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--fg-on-accent);
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+  }
+  .btn-ghost:hover { background: var(--accent); color: var(--fg-on-accent); }
+  .btn-text {
+    background: transparent;
+    color: var(--fg);
+  }
+  .btn-text:hover { background: var(--bg-elevated); }
+
+  .app-surface__row {
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .badge-accent {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary-50);
+    color: var(--primary-800);
+    font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 9999px;
+  }
+  .chip-active {
+    background: var(--accent);
+    color: var(--fg-on-accent);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 12px; font-weight: 600;
+  }
+  .chip-inactive {
+    background: var(--bg-elevated);
+    color: var(--fg-muted);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 12px; font-weight: 500;
+  }
+
+  .progress {
+    height: 6px; width: 100%;
+    background: var(--bg-elevated);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .progress__fill {
+    height: 100%; width: 64%;
+    background: var(--accent);
+    border-radius: 9999px;
+  }
+
+  /* ============================================================
+     LANDING SURFACE (dark) preview
+     ============================================================ */
+  .landing-surface {
+    background: var(--landing-bg);
+    color: var(--landing-fg);
+    padding: 24px;
+    display: grid; gap: 18px;
+  }
+  .landing-surface__h {
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.02em; line-height: 0.95;
+    font-size: 28px; margin: 0;
+  }
+  .landing-surface__h em {
+    color: var(--landing-accent);
+    font-style: italic;
+    text-shadow: var(--accent-glow);
+  }
+  .landing-surface__sub {
+    color: var(--landing-fg-muted);
+    font-size: 13px; line-height: 1.5;
+    margin: 0;
+  }
+  .landing-surface__btns {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .lp-btn {
+    appearance: none; border: 0;
+    font-family: var(--font-sans);
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.08em; font-size: 11px;
+    padding: 12px 20px; border-radius: 12px;
+    cursor: pointer; transition: all 0.18s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .lp-btn--orange {
+    background: var(--landing-accent);
+    color: #fff;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.4);
+  }
+  .lp-btn--orange:hover { background: var(--landing-accent-hover); }
+  .lp-btn--white {
+    background: #fff; color: #000;
+  }
+  .lp-btn--white:hover { background: var(--landing-accent); color: #fff; }
+  .lp-btn--outline {
+    background: transparent;
+    color: var(--landing-accent);
+    border: 1.5px solid var(--landing-accent);
+  }
+  .lp-btn--outline:hover { background: var(--landing-accent); color: #fff; }
+
+  .glass {
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    border-radius: 24px;
+    padding: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .glass__num {
+    font-style: italic; font-weight: 900;
+    font-size: 32px; line-height: 1;
+    color: var(--landing-accent);
+    text-shadow: var(--accent-glow);
+  }
+  .glass__lab {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--landing-fg-muted); font-weight: 700; font-style: italic;
+  }
+
+  /* ============================================================
+     MOBILE FEED MOCKUP
+     ============================================================ */
+  .device {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 9 / 19.5;
+    border-radius: 36px;
+    border: 8px solid #1c1c1e;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    margin: 0 auto;
+  }
+  .device__notch {
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 22px;
+    background: #000;
+    border-radius: 0 0 14px 14px;
+    z-index: 5;
+  }
+  .device__screen {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,0.08), transparent 60%),
+      linear-gradient(180deg, #2a2a2e 0%, #0e0e10 100%);
+    color: #fff;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .device__hd {
+    padding: 32px 16px 14px;
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.5), transparent);
+  }
+  .device__menu {
+    width: 32px; height: 32px;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.12);
+    display: grid; place-items: center;
+    color: #fff;
+    font-size: 16px;
+  }
+  .device__loc {
+    flex: 1;
+    background: rgba(255,255,255,0.12);
+    border-radius: 9999px;
+    padding: 7px 14px;
+    font-size: 11px;
+    color: #fff;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .device__loc i { color: var(--accent); }
+  .device__brand {
+    width: 32px; height: 32px;
+    background: var(--logo-url) center / contain no-repeat, #fff;
+    border-radius: 8px;
+  }
+
+  .device__body {
+    flex: 1;
+    position: relative;
+    margin: 0 16px;
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 12px, rgba(255,255,255,0.08) 12px 24px),
+      linear-gradient(135deg, #1a1a1c, #0a0a0c);
+  }
+  .device__body::before {
+    content: 'video placeholder';
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .device__side {
+    position: absolute; right: 10px; bottom: 96px;
+    display: flex; flex-direction: column; gap: 16px;
+    z-index: 3;
+  }
+  .device__act {
+    width: 38px; height: 38px;
+    border-radius: 9999px;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .device__act--accent {
+    background: var(--accent);
+    color: var(--fg-on-accent);
+    box-shadow: 0 0 18px var(--accent);
+  }
+  .device__info {
+    position: absolute; left: 14px; right: 80px; bottom: 92px;
+    color: #fff;
+    z-index: 3;
+  }
+  .device__info-name {
+    font-weight: 700; font-size: 14px; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .device__info-name .tick {
+    width: 14px; height: 14px;
+    background: var(--accent);
+    color: var(--fg-on-accent);
+    border-radius: 9999px;
+    display: grid; place-items: center;
+    font-size: 9px; font-weight: 800;
+  }
+  .device__info-desc { font-size: 11px; line-height: 1.4; opacity: 0.85; }
+  .device__info-plan {
+    display: inline-flex;
+    margin-top: 6px;
+    background: var(--accent);
+    color: var(--fg-on-accent);
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 0.14em;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+  }
+  .device__nav {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; justify-content: space-around;
+    padding: 10px 0 18px;
+    z-index: 4;
+  }
+  .device__nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px;
+    color: rgba(255,255,255,0.55);
+    font-size: 9px; letter-spacing: 0.06em;
+  }
+  .device__nav-item.is-active { color: var(--accent); }
+  .device__nav-item i { font-size: 18px; }
+
+  /* ============================================================
+     INFO STRIP (intro)
+     ============================================================ */
+  .intro {
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 18px;
+    padding: 22px 26px;
+    margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: end;
+  }
+  .intro h1 {
+    margin: 0;
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.02em; line-height: 0.95;
+    font-size: clamp(26px, 3vw, 38px);
+  }
+  .intro h1 .accent-g { color: #f96a3f; }
+  .intro h1 .accent-i { color: #88e4d7; }
+  .intro p {
+    margin: 12px 0 0;
+    color: var(--sb-fg-muted);
+    line-height: 1.5;
+    max-width: 64ch;
+    font-size: 13.5px;
+  }
+  .intro pre {
+    margin: 0;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--sb-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11.5px;
+    color: #a1f0e2;
+    overflow-x: auto;
+  }
+  .intro pre .tag { color: #f96a3f; }
+  .intro pre .attr { color: #88e4d7; }
+  .intro pre .str { color: #d4d4d8; }
+
+  @media (max-width: 920px) {
+    body[data-mode="both"] .panes { grid-template-columns: 1fr; }
+    .intro { grid-template-columns: 1fr; }
+    .tokens { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body data-mode="both">
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div>
+    <div class="topbar__brand">Goveo · Themes</div>
+    <div class="topbar__sub">Design System · v1.1</div>
+  </div>
+  <div class="topbar__spacer"></div>
+  <div class="switch" id="switch">
+    <button class="switch__btn" data-mode="goveo"><span class="switch__dot switch__dot--g"></span>Goveo</button>
+    <button class="switch__btn" data-mode="ibiza"><span class="switch__dot switch__dot--i"></span>Ibiza</button>
+    <button class="switch__btn is-active" data-mode="both"><span class="switch__dot switch__dot--b"></span>Comparar</button>
+  </div>
+</header>
+
+<main class="canvas">
+
+  <!-- ============ INTRO ============ -->
+  <section class="intro">
+    <div>
+      <h1>Un sistema, <span class="accent-g">dos</span> <span class="accent-i">marcas.</span></h1>
+      <p>
+        Goveo e Ibiza Goveo comparten los mismos componentes, tipografía,
+        spacing y radios — sólo cambian la rampa de marca, el accent
+        y el logo. Activa cada tema con una clase en <code>&lt;html&gt;</code>
+        o <code>&lt;body&gt;</code>; los tokens cambian, las pantallas no.
+      </p>
+    </div>
+    <pre><span class="tag">&lt;html</span> <span class="attr">class</span>=<span class="str">"theme-ibiza"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"colors_and_type.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+  </section>
+
+  <!-- ============ PANES (one per theme) ============ -->
+  <div class="panes" id="panes">
+
+    <!-- ============ GOVEO PANE ============ -->
+    <div class="theme-pane theme-goveo">
+
+      <div class="pane-header">
+        <div class="pane-header__logo"></div>
+        <div class="pane-header__txt">
+          <div class="pane-header__name">Goveo</div>
+          <div class="pane-header__sub">Global · Video Smart Geomarketing</div>
+        </div>
+        <div class="pane-header__chip">Naranja</div>
+      </div>
+
+      <!-- Primary ramp -->
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Primary ramp</div>
+          <div class="card__hint">--primary-50 → 950</div>
+        </div>
+        <div class="card__body card__body--flush" style="padding: 18px;">
+          <div class="ramp" id="ramp-g"></div>
+          <div class="ramp__legend" id="ramp-g-legend"></div>
+        </div>
+      </div>
+
+      <!-- Brand tokens -->
+      <div class="card">
+        <div class="card__head"><div class="card__title">Brand tokens</div></div>
+        <div class="card__body">
+          <div class="tokens" id="tokens-g"></div>
+        </div>
+      </div>
+
+      <!-- App surface -->
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">App surface · light</div>
+          <div class="card__hint">--bg / --fg / --accent</div>
+        </div>
+        <div class="card__body card__body--flush">
+          <div class="app-surface">
+            <div class="app-surface__btns">
+              <button class="btn-primary"><i class="ph ph-play-circle"></i>Reproducir</button>
+              <button class="btn-ghost">Compartir</button>
+              <button class="btn-text">Cancelar</button>
+            </div>
+            <div class="app-surface__row">
+              <span class="chip-active">Bares</span>
+              <span class="chip-inactive">Restaurantes</span>
+              <span class="chip-inactive">Eventos</span>
+            </div>
+            <div class="app-surface__row">
+              <span class="badge-accent"><i class="ph-fill ph-crown-simple"></i>Premium</span>
+              <span class="badge-accent">Platinum</span>
+            </div>
+            <div class="progress"><div class="progress__fill"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Landing surface -->
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Landing surface · dark</div>
+          <div class="card__hint">--landing-* tokens</div>
+        </div>
+        <div class="card__body card__body--flush">
+          <div class="landing-surface">
+            <h3 class="landing-surface__h">Prueba la <em>revolución.</em></h3>
+            <p class="landing-surface__sub">El feed vertical que conecta negocios y clientes en tiempo real, sin algoritmos opacos.</p>
+            <div class="landing-surface__btns">
+              <button class="lp-btn lp-btn--orange">Empezar gratis</button>
+              <button class="lp-btn lp-btn--outline">Ver demo</button>
+            </div>
+            <div class="glass">
+              <div class="glass__num">+30K</div>
+              <div>
+                <div class="glass__lab">GeoClips publicados</div>
+                <div style="color: var(--landing-fg-muted); font-size: 12px; margin-top: 2px;">desde mayo 2024</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile feed mockup -->
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Feed mobile · in-context</div>
+          <div class="card__hint">accent + on-accent</div>
+        </div>
+        <div class="card__body" style="padding: 24px;">
+          <div class="device">
+            <div class="device__notch"></div>
+            <div class="device__screen">
+              <div class="device__hd">
+                <div class="device__menu"><i class="ph ph-list"></i></div>
+                <div class="device__loc"><i class="ph-fill ph-map-pin"></i> Cualquier lugar · 5 km</div>
+                <div class="device__brand"></div>
+              </div>
+              <div class="device__body"></div>
+              <div class="device__info">
+                <div class="device__info-name">Casa Madrid <span class="tick">✓</span></div>
+                <div class="device__info-desc">Tapas auténticas en el corazón del barrio.</div>
+                <div class="device__info-plan">Platinum</div>
+              </div>
+              <div class="device__side">
+                <div class="device__act"><i class="ph-fill ph-heart"></i></div>
+                <div class="device__act"><i class="ph-fill ph-chat-circle"></i></div>
+                <div class="device__act device__act--accent"><i class="ph-fill ph-paper-plane-tilt"></i></div>
+              </div>
+              <div class="device__nav">
+                <div class="device__nav-item is-active"><i class="ph-fill ph-house"></i>Feed</div>
+                <div class="device__nav-item"><i class="ph ph-magnifying-glass"></i>Buscar</div>
+                <div class="device__nav-item"><i class="ph ph-map-trifold"></i>Mapa</div>
+                <div class="device__nav-item"><i class="ph ph-user"></i>Yo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /GOVEO PANE -->
+
+
+    <!-- ============ IBIZA PANE ============ -->
+    <div class="theme-pane theme-ibiza">
+
+      <div class="pane-header">
+        <div class="pane-header__logo"></div>
+        <div class="pane-header__txt">
+          <div class="pane-header__name">Ibiza Goveo</div>
+          <div class="pane-header__sub">Ibiza · Formentera</div>
+        </div>
+        <div class="pane-header__chip">Turquesa</div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Primary ramp</div>
+          <div class="card__hint">--primary-50 → 950</div>
+        </div>
+        <div class="card__body card__body--flush" style="padding: 18px;">
+          <div class="ramp" id="ramp-i"></div>
+          <div class="ramp__legend" id="ramp-i-legend"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head"><div class="card__title">Brand tokens</div></div>
+        <div class="card__body">
+          <div class="tokens" id="tokens-i"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">App surface · light</div>
+          <div class="card__hint">--bg / --fg / --accent</div>
+        </div>
+        <div class="card__body card__body--flush">
+          <div class="app-surface">
+            <div class="app-surface__btns">
+              <button class="btn-primary"><i class="ph ph-play-circle"></i>Reproducir</button>
+              <button class="btn-ghost">Compartir</button>
+              <button class="btn-text">Cancelar</button>
+            </div>
+            <div class="app-surface__row">
+              <span class="chip-active">Beach clubs</span>
+              <span class="chip-inactive">Chiringuitos</span>
+              <span class="chip-inactive">Fiestas</span>
+            </div>
+            <div class="app-surface__row">
+              <span class="badge-accent"><i class="ph-fill ph-crown-simple"></i>Premium</span>
+              <span class="badge-accent">Platinum</span>
+            </div>
+            <div class="progress"><div class="progress__fill"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Landing surface · dark</div>
+          <div class="card__hint">--landing-* tokens</div>
+        </div>
+        <div class="card__body card__body--flush">
+          <div class="landing-surface">
+            <h3 class="landing-surface__h">Descubre <em>Ibiza.</em></h3>
+            <p class="landing-surface__sub">El feed vertical que conecta los mejores locales de Ibiza y Formentera con quienes los buscan.</p>
+            <div class="landing-surface__btns">
+              <button class="lp-btn lp-btn--orange">Empezar gratis</button>
+              <button class="lp-btn lp-btn--outline">Ver demo</button>
+            </div>
+            <div class="glass">
+              <div class="glass__num">+5K</div>
+              <div>
+                <div class="glass__lab">Locales en Ibiza</div>
+                <div style="color: var(--landing-fg-muted); font-size: 12px; margin-top: 2px;">verificados · 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <div class="card__title">Feed mobile · in-context</div>
+          <div class="card__hint">accent + on-accent</div>
+        </div>
+        <div class="card__body" style="padding: 24px;">
+          <div class="device">
+            <div class="device__notch"></div>
+            <div class="device__screen">
+              <div class="device__hd">
+                <div class="device__menu"><i class="ph ph-list"></i></div>
+                <div class="device__loc"><i class="ph-fill ph-map-pin"></i> Playa d'en Bossa · 5 km</div>
+                <div class="device__brand"></div>
+              </div>
+              <div class="device__body"></div>
+              <div class="device__info">
+                <div class="device__info-name">Cala Comte Beach <span class="tick">✓</span></div>
+                <div class="device__info-desc">Atardeceres y cocktails frente al mar.</div>
+                <div class="device__info-plan">Platinum</div>
+              </div>
+              <div class="device__side">
+                <div class="device__act"><i class="ph-fill ph-heart"></i></div>
+                <div class="device__act"><i class="ph-fill ph-chat-circle"></i></div>
+                <div class="device__act device__act--accent"><i class="ph-fill ph-paper-plane-tilt"></i></div>
+              </div>
+              <div class="device__nav">
+                <div class="device__nav-item is-active"><i class="ph-fill ph-house"></i>Feed</div>
+                <div class="device__nav-item"><i class="ph ph-magnifying-glass"></i>Buscar</div>
+                <div class="device__nav-item"><i class="ph ph-map-trifold"></i>Mapa</div>
+                <div class="device__nav-item"><i class="ph ph-user"></i>Yo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /IBIZA PANE -->
+
+  </div>
+
+</main>
+
+<script>
+(() => {
+  // ============ Theme switch ============
+  const body = document.body;
+  const html = document.documentElement;
+  const sw = document.getElementById('switch');
+  const initial = (location.hash.match(/mode=(\w+)/) || [])[1] || 'both';
+  setMode(initial);
+  sw.addEventListener('click', e => {
+    const btn = e.target.closest('.switch__btn');
+    if (!btn) return;
+    setMode(btn.dataset.mode);
+  });
+  function setMode(m) {
+    body.dataset.mode = m;
+    // also flip <html> theme class so global styles (selection, etc) follow when single-pane
+    html.classList.remove('theme-goveo', 'theme-ibiza');
+    if (m === 'goveo' || m === 'both') html.classList.add('theme-goveo');
+    if (m === 'ibiza') html.classList.add('theme-ibiza');
+    sw.querySelectorAll('.switch__btn').forEach(b => {
+      b.classList.toggle('is-active', b.dataset.mode === m);
+    });
+    location.replace('#mode=' + m);
+  }
+
+  // ============ Render ramp swatches ============
+  const steps = ['50','100','200','300','400','500','600','700','800','900','950'];
+  const lightSteps = new Set(['50','100','200','300','400']);
+
+  function renderRamp(rootSel, legendSel, paneClass) {
+    const root = document.querySelector(rootSel);
+    const legend = document.querySelector(legendSel);
+    const probe = document.createElement('div');
+    probe.className = paneClass;
+    probe.style.cssText = 'position:absolute;visibility:hidden;';
+    document.body.appendChild(probe);
+    const cs = getComputedStyle(probe);
+    root.innerHTML = '';
+    legend.innerHTML = '';
+    steps.forEach(s => {
+      const val = cs.getPropertyValue('--primary-' + s).trim();
+      const chip = document.createElement('div');
+      chip.className = 'ramp__chip';
+      chip.style.background = val;
+      if (lightSteps.has(s)) chip.dataset.light = '1';
+      chip.textContent = val;
+      root.appendChild(chip);
+      const lab = document.createElement('span');
+      lab.textContent = s;
+      legend.appendChild(lab);
+    });
+    probe.remove();
+  }
+
+  function renderTokens(rootSel, paneClass) {
+    const tokens = [
+      { name: '--accent', desc: 'CTA / active state', forText: false },
+      { name: '--accent-hover', desc: 'CTA hover', forText: false },
+      { name: '--fg-on-accent', desc: 'foreground on accent', forText: true },
+      { name: '--naranja-goveo', desc: 'landing accent', forText: false },
+    ];
+    const root = document.querySelector(rootSel);
+    const probe = document.createElement('div');
+    probe.className = paneClass;
+    probe.style.cssText = 'position:absolute;visibility:hidden;';
+    document.body.appendChild(probe);
+    const cs = getComputedStyle(probe);
+    root.innerHTML = '';
+    tokens.forEach(t => {
+      const val = cs.getPropertyValue(t.name).trim();
+      const el = document.createElement('div');
+      el.className = 'token';
+      el.innerHTML = `
+        <div class="token__sw" style="background:${val}"></div>
+        <div class="token__meta">
+          <div class="token__name">${t.name}</div>
+          <div class="token__val">${val} · ${t.desc}</div>
+        </div>`;
+      root.appendChild(el);
+    });
+    probe.remove();
+  }
+
+  // Wait for fonts/CSS
+  requestAnimationFrame(() => {
+    renderRamp('#ramp-g', '#ramp-g-legend', 'theme-goveo');
+    renderRamp('#ramp-i', '#ramp-i-legend', 'theme-ibiza');
+    renderTokens('#tokens-g', 'theme-goveo');
+    renderTokens('#tokens-i', 'theme-ibiza');
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -12,32 +12,19 @@
      - the in-app feed / sidebar / chrome (LIGHT, with dark mode flag)
      - the marketing landing pages (DARK, italic-uppercase poster style)
 
-   Both share the same orange ramp; the dark landing variant uses
-   #e98027 ("naranja-goveo") which lines up with $primary-700 #eb5a2c
-   – slightly warmer. Both values are tokenized below.
+   THEMES (2026-05): brand-coloured tokens (the primary ramp,
+   naranja-*, accent, logo, glow) now live in themes/*.css. This
+   file declares neutrals, semantic surface, spacing, radii and
+   type — i.e. everything that is identical across Goveo and
+   Ibiza Goveo. Default theme is .theme-goveo (= :root), opt in
+   to Ibiza by adding class="theme-ibiza" on <html> or <body>.
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('./themes/goveo.css');
+@import url('./themes/ibiza.css');
 
 :root {
-  /* ---------- COLORS · BRAND (orange ramp) -------------------- */
-  --primary-50:  #fff3f0;
-  --primary-100: #ffe4dd;
-  --primary-200: #ffc8bb;
-  --primary-300: #ffa38e;
-  --primary-400: #ff7d5e;
-  --primary-500: #f96a3f;  /* hero orange / "Goveo orange" */
-  --primary-600: #f26134;
-  --primary-700: #eb5a2c;
-  --primary-800: #d44d23;
-  --primary-900: #b33d1a;
-  --primary-950: #7c2610;
-
-  /* Landing-only warm-orange pair (from Tailwind config in
-     landing-test.html). Use ONLY on the dark marketing surface. */
-  --naranja-goveo: #e98027;
-  --naranja-dark:  #d36d1d;
-
   /* ---------- COLORS · NEUTRALS ------------------------------- */
   --basic-white: #ffffff;
   --basic-black: #000000;
@@ -69,11 +56,9 @@
   --fg:            var(--neutral-900);
   --fg-muted:      var(--neutral-600);
   --fg-subtle:     var(--neutral-400);
-  --fg-on-primary: var(--basic-white);
   --border:        var(--neutral-200);
   --border-strong: var(--neutral-300);
-  --accent:        var(--primary-500);
-  --accent-hover:  var(--primary-700);
+  /* --accent, --accent-hover, --fg-on-primary → themes/*.css */
 
   /* Landing (dark) surface */
   --landing-bg:           var(--zinc-950);
@@ -84,11 +69,9 @@
   --landing-fg:           var(--basic-white);
   --landing-fg-muted:     var(--zinc-400);
   --landing-fg-subtle:    var(--zinc-500);
-  --landing-accent:       var(--naranja-goveo);
-  --landing-accent-hover: var(--naranja-dark);
+  /* --landing-accent, --landing-accent-hover → themes/*.css */
 
-  /* Glow used behind hero numbers / hero orange words */
-  --orange-glow: 0 0 20px rgba(233, 128, 39, 0.5);
+  /* --orange-glow → themes/*.css (teal-tinted on Ibiza) */
 
   /* ---------- SPACING ----------------------------------------- */
   --space-4:  0.25rem;
@@ -223,4 +206,4 @@ body {
 }
 
 /* Selection */
-::selection { background: var(--primary-500); color: #fff; }
+::selection { background: var(--accent); color: var(--fg-on-accent); }
