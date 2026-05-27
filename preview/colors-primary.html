@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 24px 28px;
+    font-family: var(--font-sans);
+    color: var(--neutral-900);
+  }
+  .title {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--neutral-500);
+    margin-bottom: 14px;
+  }
+  .ramp {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 80px;
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .swatch span { display: block; font-weight: 500; opacity: 0.75; font-size: 9px; }
+  .light { color: rgba(0,0,0,0.7); }
+  .dark { color: rgba(255,255,255,0.92); }
+</style>
+</head>
+<body>
+  <div class="title">Primary · Goveo orange ramp</div>
+  <div class="ramp">
+    <div class="swatch light" style="background:#fff3f0"><span>50</span>#fff3f0</div>
+    <div class="swatch light" style="background:#ffe4dd"><span>100</span>#ffe4dd</div>
+    <div class="swatch light" style="background:#ffc8bb"><span>200</span>#ffc8bb</div>
+    <div class="swatch light" style="background:#ffa38e"><span>300</span>#ffa38e</div>
+    <div class="swatch dark" style="background:#ff7d5e"><span>400</span>#ff7d5e</div>
+    <div class="swatch dark" style="background:#f96a3f"><span>500★</span>#f96a3f</div>
+    <div class="swatch dark" style="background:#f26134"><span>600</span>#f26134</div>
+    <div class="swatch dark" style="background:#eb5a2c"><span>700</span>#eb5a2c</div>
+    <div class="swatch dark" style="background:#d44d23"><span>800</span>#d44d23</div>
+    <div class="swatch dark" style="background:#b33d1a"><span>900</span>#b33d1a</div>
+    <div class="swatch dark" style="background:#7c2610"><span>950</span>#7c2610</div>
+  </div>
+</body>
+</html>

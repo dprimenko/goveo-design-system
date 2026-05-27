@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es" data-screen-label="Publisher Profile">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goveo · Publisher</title>
+  <link rel="icon" href="../../../assets/favicon.png" />
+  <link rel="stylesheet" href="../../../product.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../screens.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+  <style>
+    /* ---------- Cover hero ---------- */
+    .pub-hero {
+      position: relative;
+      background: var(--gp-ink-800);
+      color: #fff;
+      border-radius: var(--gp-radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--gp-space-5);
+    }
+    .pub-hero__cover {
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .pub-hero__cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
+    }
+    .pub-hero__back {
+      position: absolute;
+      top: 14px; left: 14px;
+      z-index: 2;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.4);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .pub-hero__share-row {
+      position: absolute;
+      top: 14px; right: 14px;
+      z-index: 2;
+      display: flex; gap: 8px;
+    }
+    .pub-hero__share-row .gp-btn {
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      border-color: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+    }
+    .pub-hero__share-row .gp-btn:hover { background: rgba(0,0,0,0.6); }
+
+    .pub-hero__body {
+      padding: 0 var(--gp-space-5) var(--gp-space-5);
+      background: var(--gp-ink-800);
+      color: #fff;
+      position: relative;
+    }
+    .pub-hero__avatar {
+      width: 88px; height: 88px;
+      border-radius: var(--gp-radius-lg);
+      object-fit: cover;
+      border: 4px solid var(--gp-ink-800);
+      background: var(--gp-ink-700);
+      margin-top: -44px;
+      display: block;
+    }
+    .pub-hero__name {
+      display: flex; align-items: center; gap: 8px;
+      font-size: var(--gp-fs-xl);
+      font-weight: 600;
+      margin: 14px 0 4px;
+    }
+    .pub-hero__verified { color: #5d9cff; }
+    .pub-hero__cat {
+      color: rgba(255,255,255,0.72);
+      font-size: var(--gp-fs-sm);
+      margin: 0 0 var(--gp-space-3);
+    }
+    .pub-hero__cat-dot { opacity: 0.5; margin: 0 6px; }
+
+    .pub-hero__badges { display: flex; gap: 6px; margin-bottom: var(--gp-space-3); flex-wrap: wrap; }
+    .pub-hero__stats {
+      display: flex;
+      gap: var(--gp-space-6);
+      padding: var(--gp-space-3) 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: var(--gp-space-4);
+    }
+    .pub-hero__stats .stat__value { color: #fff; }
+    .pub-hero__stats .stat__label { color: rgba(255,255,255,0.6); }
+
+    .pub-hero__actions {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    @media (max-width: 520px) {
+      .pub-hero__actions { grid-template-columns: 1fr 1fr; }
+      .pub-hero__actions .gp-btn:first-child { grid-column: 1 / -1; }
+    }
+    .pub-hero__actions .gp-btn--secondary {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      border-color: rgba(255,255,255,0.15);
+    }
+    .pub-hero__actions .gp-btn--secondary:hover { background: rgba(255,255,255,0.16); }
+
+    /* ---------- Info row (under hero) ---------- */
+    .pub-info {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--gp-space-5);
+      margin-bottom: var(--gp-space-5);
+    }
+    @media (max-width: 760px) {
+      .pub-info { grid-template-columns: 1fr; }
+    }
+
+    .pub-about {
+      font-size: var(--gp-fs-base);
+      color: var(--fg-default);
+      line-height: 1.55;
+    }
+    .pub-about-list { display: flex; flex-direction: column; gap: 10px; margin-top: var(--gp-space-3); }
+    .pub-about-list__item { display: flex; align-items: center; gap: 10px; color: var(--fg-muted); font-size: var(--gp-fs-sm); }
+    .pub-about-list__item i { color: var(--fg-subtle); }
+    .pub-about-list__item strong { color: var(--fg-default); font-weight: 500; }
+
+    .pub-map-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--gp-radius-md);
+      overflow: hidden;
+    }
+    .pub-map-card__map { height: 180px; }
+    .pub-map-card__addr {
+      padding: 12px 14px;
+      font-size: var(--gp-fs-sm);
+      color: var(--fg-default);
+      display: flex; align-items: center; gap: 8px;
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body class="gp-product">
+  <div id="root"></div>
+
+  <script type="text/babel" src="../components/Icon.jsx"></script>
+  <script type="text/babel" src="../components/Button.jsx"></script>
+  <script type="text/babel" src="../components/Field.jsx"></script>
+  <script type="text/babel" src="../components/Badge.jsx"></script>
+  <script type="text/babel" src="../components/Card.jsx"></script>
+  <script type="text/babel" src="../components/Nav.jsx"></script>
+  <script type="text/babel" src="../components/Overlays.jsx"></script>
+
+  <script type="text/babel">
+    const PUBLISHER = {
+      name: "El Fogón de Sevilla",
+      category: "Restaurante · Tapas",
+      neighborhood: "Casco Antiguo · Sevilla",
+      avatar: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=240",
+      cover: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600",
+      verified: true,
+      plan: "Platinum",
+      open: true,
+      rating: "4.7",
+      reviews: 213,
+      stats: {
+        clips: 24,
+        followers: "3.2k",
+        products: 18,
+        events: 4,
+      },
+      about: "Cocina andaluza honesta servida en tapeo. Pescaíto del puerto, vinos de Jerez y tortilla que sale del horno cada mañana. Aforo 38 personas — recomendable reservar viernes y sábados.",
+      contact: {
+        address: "Calle Sierpes, 64 · 41004 Sevilla",
+        hours: "Mar–Dom · 12:00 – 16:30 y 20:00 – 00:00",
+        phone: "+34 954 22 81 19",
+        web: "elfogondesevilla.es",
+      },
+    };
+
+    const CLIPS = [
+      { id: 1, poster: "https://images.unsplash.com/photo-1543340904-0b1d843bccda?w=480", title: "Tortilla recién hecha", distance: "Hoy", duration: "0:28" },
+      { id: 2, poster: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=480", title: "Tapa del día · pulpo a la brasa", distance: "Ayer", duration: "0:22" },
+      { id: 3, poster: "https://images.unsplash.com/photo-1559054663-e8d23213f55c?w=480", title: "Menú de mediodía", distance: "Hace 3 d", duration: "0:30" },
+      { id: 4, poster: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=480", title: "Cata de Jerez en sala", distance: "Hace 6 d", duration: "0:24" },
+      { id: 5, poster: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=480", title: "Cocina abierta", distance: "Hace 8 d", duration: "0:18" },
+      { id: 6, poster: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=480", title: "Detrás del bar", distance: "Hace 12 d", duration: "0:16" },
+    ];
+
+    const PRODUCTS = [
+      { id: 1, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400", name: "Tapa del día", price: "3,50 €" },
+      { id: 2, img: "https://images.unsplash.com/photo-1559054663-e8d23213f55c?w=400", name: "Menú degustación", price: "28,00 €", oldPrice: "35,00 €" },
+      { id: 3, img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400", name: "Vino de la casa (bot.)", price: "14,00 €" },
+      { id: 4, img: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400", name: "Cata de Jerez", price: "22,00 €" },
+    ];
+
+    const EVENTS = [
+      { day: "14", month: "JUN", title: "Cata de vinos andaluces", time: "20:00", place: "En sala" },
+      { day: "21", month: "JUN", title: "Flamenco en directo", time: "22:30", place: "Patio interior" },
+      { day: "05", month: "JUL", title: "Cena maridada · 6 platos", time: "21:00", place: "Reserva previa" },
+    ];
+
+    const sidebarItems = [
+      { label: "Feed", icon: <Icon name="house" /> },
+      { label: "Mapa", icon: <Icon name="map-trifold" /> },
+      { label: "Mis sitios", icon: <Icon name="bookmark-simple" /> },
+      { label: "Publisher", icon: <Icon name="storefront" weight="fill" />, active: true },
+      { label: "Mensajes", icon: <Icon name="chat-circle" />, badge: <Badge variant="accent">2</Badge> },
+      { kind: "label", label: "Cuenta" },
+      { label: "Ajustes", icon: <Icon name="gear" /> },
+    ];
+
+    const bottomItems = [
+      { label: "Feed", icon: <Icon name="house" size={22} /> },
+      { label: "Buscar", icon: <Icon name="magnifying-glass" size={22} /> },
+      { icon: <Icon name="plus" size={22} weight="bold" />, fab: true },
+      { label: "Mensajes", icon: <Icon name="chat-circle" size={22} /> },
+      { label: "Perfil", icon: <Icon name="user" size={22} weight="fill" />, active: true },
+    ];
+
+    function App() {
+      const [tab, setTab] = React.useState("clips");
+      const [following, setFollowing] = React.useState(false);
+      return (
+        <div className="app-shell">
+          <Sidebar
+            brand={<><img src="../../../assets/goveo-app-icon.jpg" style={{ width: 28, height: 28, borderRadius: 6 }} /><span>Goveo</span></>}
+            items={sidebarItems}
+          />
+
+          <div className="app-shell__main">
+            <div className="screen">
+              {/* HERO */}
+              <div className="pub-hero">
+                <div className="pub-hero__cover" style={{ backgroundImage: `url('${PUBLISHER.cover}')` }}>
+                </div>
+
+                <div className="pub-hero__body">
+                  <img className="pub-hero__avatar" src={PUBLISHER.avatar} alt={PUBLISHER.name} />
+
+                  <h1 className="pub-hero__name">
+                    {PUBLISHER.name}
+                    {PUBLISHER.verified && <Icon name="seal-check" size={20} weight="fill" className="pub-hero__verified" />}
+                  </h1>
+                  <p className="pub-hero__cat">
+                    {PUBLISHER.category}
+                    <span className="pub-hero__cat-dot">·</span>
+                    {PUBLISHER.neighborhood}
+                  </p>
+
+                  <div className="pub-hero__badges">
+                    <Badge variant="accent">{PUBLISHER.plan}</Badge>
+                    {PUBLISHER.open && <Badge variant="success" dot>Abierto ahora</Badge>}
+                    <Badge dot>★ {PUBLISHER.rating} · {PUBLISHER.reviews} reseñas</Badge>
+                  </div>
+
+                  <div className="pub-hero__stats">
+                    <div><div className="stat__value">{PUBLISHER.stats.clips}</div><div className="stat__label">GeoClips</div></div>
+                    <div><div className="stat__value">{PUBLISHER.stats.followers}</div><div className="stat__label">Seguidores</div></div>
+                    <div><div className="stat__value">{PUBLISHER.stats.products}</div><div className="stat__label">Productos</div></div>
+                    <div><div className="stat__value">{PUBLISHER.stats.events}</div><div className="stat__label">Eventos</div></div>
+                  </div>
+
+                  <div className="pub-hero__actions">
+                    <Button
+                      variant={following ? "secondary" : "primary"}
+                      iconLeft={<Icon name={following ? "check" : "plus"} weight="bold" />}
+                      onClick={() => setFollowing(!following)}
+                    >
+                      {following ? "Siguiendo" : "Seguir"}
+                    </Button>
+                    <Button variant="secondary" iconLeft={<Icon name="map-pin" weight="fill" />}>Llegar</Button>
+                    <Button variant="secondary" iconLeft={<Icon name="whatsapp-logo" />}>WhatsApp</Button>
+                    <Button variant="secondary" iconLeft={<Icon name="globe" />}>Web</Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* INFO */}
+              <div className="pub-info">
+                <div>
+                  <h3 className="gp-h4" style={{ marginBottom: 8 }}>Sobre el negocio</h3>
+                  <p className="pub-about">{PUBLISHER.about}</p>
+                  <div className="pub-about-list">
+                    <div className="pub-about-list__item"><Icon name="map-pin" size={16} /> <span><strong>Dirección</strong> · {PUBLISHER.contact.address}</span></div>
+                    <div className="pub-about-list__item"><Icon name="clock" size={16} /> <span><strong>Horario</strong> · {PUBLISHER.contact.hours}</span></div>
+                    <div className="pub-about-list__item"><Icon name="phone" size={16} /> <span><strong>Teléfono</strong> · {PUBLISHER.contact.phone}</span></div>
+                    <div className="pub-about-list__item"><Icon name="globe" size={16} /> <span><strong>Web</strong> · {PUBLISHER.contact.web}</span></div>
+                  </div>
+                </div>
+
+                <div className="pub-map-card">
+                  <div className="pub-map-card__map map-placeholder">
+                    <div className="map-placeholder__pin" style={{ top: "50%", left: "50%" }} />
+                  </div>
+                  <div className="pub-map-card__addr">
+                    <Icon name="navigation-arrow" size={14} weight="fill" />
+                    <span>A 230 m · 3 min andando</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* TABS */}
+              <div className="gp-tabs">
+                <button className={`gp-tab ${tab === "clips" ? "gp-tab--active" : ""}`} onClick={() => setTab("clips")}>
+                  GeoClips<span className="gp-tab__count">{PUBLISHER.stats.clips}</span>
+                </button>
+                <button className={`gp-tab ${tab === "products" ? "gp-tab--active" : ""}`} onClick={() => setTab("products")}>
+                  Productos<span className="gp-tab__count">{PUBLISHER.stats.products}</span>
+                </button>
+                <button className={`gp-tab ${tab === "events" ? "gp-tab--active" : ""}`} onClick={() => setTab("events")}>
+                  Eventos<span className="gp-tab__count">{PUBLISHER.stats.events}</span>
+                </button>
+                <button className={`gp-tab ${tab === "reviews" ? "gp-tab--active" : ""}`} onClick={() => setTab("reviews")}>
+                  Reseñas<span className="gp-tab__count">{PUBLISHER.reviews}</span>
+                </button>
+              </div>
+
+              {tab === "clips" && (
+                <div className="grid-cards">
+                  {CLIPS.map((c) => <GeoClipCard key={c.id} poster={c.poster} title={c.title} distance={c.distance} duration={c.duration} />)}
+                </div>
+              )}
+
+              {tab === "products" && (
+                <div className="grid-cards grid-cards--lg">
+                  {PRODUCTS.map((p) => <ProductCard key={p.id} img={p.img} name={p.name} price={p.price} oldPrice={p.oldPrice} />)}
+                </div>
+              )}
+
+              {tab === "events" && (
+                <div style={{ display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+                  {EVENTS.map((e, i) => <EventCard key={i} {...e} />)}
+                </div>
+              )}
+
+              {tab === "reviews" && (
+                <EmptyState
+                  icon="star"
+                  title="Aún no hay reseñas visibles"
+                  sub="Las reseñas se publican una vez verificadas por nuestro equipo."
+                  actions={<Button variant="primary" size="sm">Escribir reseña</Button>}
+                />
+              )}
+            </div>
+
+            <div className="mobile-bottombar">
+              <BottomBar items={bottomItems} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

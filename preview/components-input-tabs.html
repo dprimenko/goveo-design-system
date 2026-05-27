@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: var(--zinc-950);
+    padding: 28px 32px;
+    font-family: var(--font-sans);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .row { display: flex; gap: 12px; align-items: center; }
+  .input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #fff;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+  }
+  .input.focused {
+    background: rgba(255,255,255,0.10);
+    border-color: #e98027;
+    color: #e98027;
+    outline: 2px solid rgba(233,128,39,0.25);
+  }
+  .input::placeholder { color: var(--zinc-500); }
+
+  .tabs {
+    display: inline-flex;
+    background: rgba(0,0,0,0.50);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 14px;
+    padding: 4px;
+    gap: 2px;
+  }
+  .tab {
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--zinc-500);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .tab.active { background: #e98027; color: #fff; box-shadow: 0 4px 15px rgba(233,128,39,0.4); }
+
+  .label {
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--zinc-500);
+  }
+</style>
+</head>
+<body>
+  <div class="row">
+    <span class="label" style="flex:0 0 90px">Input</span>
+    <input class="input" placeholder="Nombre del negocio" value="" />
+    <input class="input focused" value="@elfogonsevilla.es" />
+  </div>
+  <div class="row">
+    <span class="label" style="flex:0 0 90px">Tabs</span>
+    <div class="tabs">
+      <button class="tab active">Mensual</button>
+      <button class="tab">Semestral (-15%)</button>
+      <button class="tab">Anual (-30%)</button>
+    </div>
+  </div>
+</body>
+</html>

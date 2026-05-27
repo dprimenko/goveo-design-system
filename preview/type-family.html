@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  html, body { height: 100%; }
+  body {
+    background: #fff;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    box-sizing: border-box;
+  }
+  .specimen {
+    font-size: 96px;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--neutral-900);
+  }
+  .specimen em { color: var(--primary-500); font-style: italic; }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--neutral-600);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .meta .label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--neutral-500);
+  }
+  .meta .row { display: flex; gap: 18px; }
+  .meta .row span:first-child { color: var(--neutral-900); font-weight: 600; }
+  .weights { display: flex; gap: 14px; align-items: baseline; margin-top: 4px; color: var(--neutral-900); }
+  .weights span { font-size: 22px; }
+  .w400 { font-weight: 400; }
+  .w500 { font-weight: 500; }
+  .w600 { font-weight: 600; }
+  .w700 { font-weight: 700; }
+  .w900 { font-weight: 900; font-style: italic; }
+</style>
+</head>
+<body>
+  <div class="specimen">Goveo</div>
+  <div class="meta">
+    <div class="label">Type family</div>
+    <div class="row"><span>Inter</span><span>Google Fonts (loaded remotely)</span></div>
+    <div class="weights">
+      <span class="w400">Aa</span>
+      <span class="w500">Aa</span>
+      <span class="w600">Aa</span>
+      <span class="w700">Aa</span>
+      <span class="w900">Aa</span>
+    </div>
+    <div class="row" style="margin-top:6px"><span>400 / 500 / 600 / 700 / 900</span><span>italic 900 = brand voice</span></div>
+  </div>
+</body>
+</html>

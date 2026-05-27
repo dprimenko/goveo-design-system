@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    margin: 0;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.55) 100%),
+      url('https://images.unsplash.com/photo-1543340904-0b1d843bccda?w=720') center/cover no-repeat,
+      #1f1d1a;
+    font-family: var(--font-sans);
+    color: #fff;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    grid-template-rows: max-content 1fr;
+    gap: 12px;
+    height: 100%;
+  }
+  .header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .icon-pill {
+    width: 40px; height: 40px;
+    background: rgba(84,84,84,0.5);
+    border-radius: 9999px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    backdrop-filter: blur(4px);
+  }
+  .chip {
+    background: rgba(84,84,84,0.5);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .actions {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-self: end;
+    align-items: center;
+  }
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 9999px;
+    border: 1px solid #fff;
+    background: #c8cbce;
+  }
+  .action {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 11px;
+  }
+  .action img { width: 28px; }
+  .info {
+    grid-row: 2; grid-column: 1;
+    align-self: end;
+  }
+  .distance { font-size: 16px; font-weight: 600; }
+  .title { font-size: 14px; font-weight: 500; margin-top: 2px; }
+  .user { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="icon-pill">☰</div>
+    <div class="chip">📍 Sevilla, España</div>
+    <div class="icon-pill">🔍</div>
+  </div>
+  <div class="info">
+    <div class="distance">a 230m</div>
+    <div class="title">Mercado Lonja del Barranco</div>
+    <div class="user">@mercadosdesevilla</div>
+  </div>
+  <div class="actions">
+    <div class="avatar"></div>
+    <div class="action"><img src="../assets/logo-play-white.png" alt=""><span>Dónde</span></div>
+    <div class="action">♥<span style="margin-top:2px">128</span></div>
+    <div class="action">↗<span style="margin-top:2px">Compartir</span></div>
+  </div>
+</body>
+</html>

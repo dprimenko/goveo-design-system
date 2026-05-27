@@ -1,0 +1,42 @@
+{
+  "name": "@goveo/design-tokens",
+  "version": "1.1.0",
+  "description": "Goveo design tokens — colors, type, spacing, radii, shadows. Source of truth for goveo-expo, goveo-astro, and any other Goveo surface.",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "./tokens.js",
+  "module": "./tokens.ts",
+  "types": "./tokens.ts",
+  "react-native": "./tokens.ts",
+  "exports": {
+    ".": {
+      "types": "./tokens.ts",
+      "react-native": "./tokens.ts",
+      "import": "./tokens.ts",
+      "require": "./tokens.js"
+    },
+    "./tokens.json": "./tokens.json",
+    "./tokens.css": "./tokens.css",
+    "./tailwind": "./tailwind.preset.js",
+    "./astro/BottomNav.astro": "./astro/BottomNav.astro",
+    "./react-native/theme": "./react-native/theme.ts",
+    "./react-native/BottomNav": "./react-native/BottomNav.example.tsx"
+  },
+  "files": [
+    "tokens.json",
+    "tokens.css",
+    "tokens.ts",
+    "tokens.js",
+    "tailwind.preset.js",
+    "icons.md",
+    "astro/**/*",
+    "react-native/**/*",
+    "README.md"
+  ],
+  "keywords": ["design-tokens", "goveo", "design-system"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dprimenko/goveo-design-system.git",
+    "directory": "export"
+  }
+}

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Goveo · Home (v2)</title>
+<link rel="stylesheet" href="export/tokens.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  html, body {
+    margin: 0; padding: 0;
+    background: #15151a;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    color: #fff;
+  }
+  body {
+    display: grid;
+    place-items: center;
+    padding: 48px 24px;
+  }
+  .stage {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .caption {
+    margin: 24px 0 0;
+    color: #a1a1aa;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+  }
+  .caption strong { color: var(--landing-accent); font-style: italic; }
+  .badge {
+    display: inline-block;
+    background: var(--landing-accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow-orange-cta);
+  }
+
+  /* annotations layer (callouts pointing at FAB / bottom nav) */
+  .device-wrap { position: relative; }
+  .note {
+    position: absolute;
+    color: var(--landing-fg-muted);
+    font-size: 11px;
+    line-height: 1.45;
+    width: 200px;
+    pointer-events: none;
+  }
+  .note .num {
+    display: inline-block;
+    width: 22px; height: 22px;
+    background: var(--landing-accent);
+    color: #fff;
+    border-radius: 999px;
+    text-align: center;
+    line-height: 22px;
+    font-style: italic; font-weight: 900;
+    font-size: 12px;
+    margin-bottom: 6px;
+    box-shadow: var(--shadow-orange-cta);
+  }
+  .note strong { color: #fff; }
+  .note-right { right: -240px; }
+  .note-left  { left: -240px; text-align: right; }
+
+  @media (max-width: 1280px) {
+    .note { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+const { useState } = React;
+
+/* ────────────────────────────────────────────────────────────
+   Color tokens (mirror of export/tokens.ts)
+   ──────────────────────────────────────────────────────────── */
+const C = {
+  bg:        '#ffffff',
+  bgSoft:    '#f5f7f9',
+  fg:        '#181a1f',
+  fgMuted:   '#585b61',
+  fgSubtle:  '#acaeb3',
+  border:    '#e9e9eb',
+  accent:    '#f96a3f',
+  accentDark:'#eb5a2c',
+  naranja:   '#e98027',
+};
+
+/* ────────────────────────────────────────────────────────────
+   Tiny helper components
+   ──────────────────────────────────────────────────────────── */
+function Section({ kicker, accent, children }) {
+  return (
+    <section style={{ padding: '0 0 4px' }}>
+      <h2 style={{
+        margin: '0 16px 12px', fontSize: 22, fontWeight: 800,
+        color: C.fg, letterSpacing: -0.3,
+        display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'baseline',
+      }}>
+        <span>{kicker}</span>
+        <span style={{ color: C.accent }}>{accent}</span>
+      </h2>
+      <div style={{
+        display: 'flex', gap: 8, overflowX: 'auto', overflowY: 'hidden',
+        padding: '0 16px 4px', scrollSnapType: 'x mandatory',
+        scrollbarWidth: 'none',
+      }}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function VideoTile({ bg, label }) {
+  return (
+    <div style={{
+      flex: '0 0 auto',
+      width: 124, height: 184,
+      borderRadius: 14, overflow: 'hidden',
+      background: bg,
+      position: 'relative',
+      scrollSnapAlign: 'start',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+    }}>
+      {/* fake play button */}
+      <div style={{
+        position: 'absolute', bottom: 8, right: 8,
+        width: 22, height: 22, borderRadius: 999,
+        background: 'rgba(255,255,255,0.35)',
+        backdropFilter: 'blur(8px)',
+        display: 'grid', placeItems: 'center',
+      }}>
+        <i className="ph-fill ph-play" style={{ fontSize: 9, color: '#fff', marginLeft: 1 }}></i>
+      </div>
+      {/* tiny corner label so tiles feel real */}
+      {label && (
+        <div style={{
+          position: 'absolute', top: 8, left: 8,
+          background: 'rgba(0,0,0,0.45)',
+          color: '#fff', fontSize: 9, fontWeight: 700,
+          padding: '2px 6px', borderRadius: 999,
+          letterSpacing: 0.5, textTransform: 'uppercase',
+        }}>{label}</div>
+      )}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Bottom navigation — 4 tabs WITH LABELS
+   ──────────────────────────────────────────────────────────── */
+const TABS = [
+  { id: 'lugares',    icon: 'ph-globe',           iconFill: 'ph-fill ph-globe',           label: 'Lugares'    },
+  { id: 'negocios',   icon: 'ph-martini',         iconFill: 'ph-fill ph-martini',         label: 'Negocios'   },
+  { id: 'eventos',    icon: 'ph-mask-happy',      iconFill: 'ph-fill ph-mask-happy',      label: 'Eventos'    },
+  { id: 'geostories', icon: 'ph-clock-countdown', iconFill: 'ph-fill ph-clock-countdown', label: 'GeoStories' },
+];
+
+function BottomNav({ active, onChange }) {
+  return (
+    <nav style={{
+      position: 'absolute',
+      left: 0, right: 0, bottom: 0,
+      background: '#000',
+      padding: '12px 8px 28px',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 4,
+      zIndex: 55,
+    }}>
+      {TABS.map(tab => {
+        const isActive = tab.id === active;
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onChange(tab.id)}
+            style={{
+              background: 'transparent', border: 0, cursor: 'pointer',
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              gap: 4, padding: '6px 0',
+              color: '#fff',
+            }}>
+            <i className={isActive ? tab.iconFill : tab.icon}
+               style={{ fontSize: 24, lineHeight: 1,
+                        color: isActive ? '#fff' : 'rgba(255,255,255,0.92)' }}></i>
+            <span style={{
+              fontSize: 11, fontWeight: isActive ? 700 : 500,
+              letterSpacing: 0.1,
+              color: isActive ? '#fff' : 'rgba(255,255,255,0.85)',
+              textDecoration: isActive ? 'underline' : 'none',
+              textUnderlineOffset: 3,
+              textDecorationThickness: 1.2,
+            }}>{tab.label}</span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Floating "+" — top-right, only for content creators
+   ──────────────────────────────────────────────────────────── */
+function CreateFAB() {
+  return (
+    <button title="Subir GeoClip" style={{
+      position: 'absolute',
+      top: 70, right: 16,
+      width: 48, height: 48,
+      borderRadius: 999,
+      background: C.accent,
+      border: 0, cursor: 'pointer',
+      display: 'grid', placeItems: 'center',
+      color: '#fff',
+      boxShadow: '0 4px 14px rgba(249,106,63,0.45), 0 2px 4px rgba(0,0,0,0.1)',
+      zIndex: 50,
+    }}>
+      <i className="ph-bold ph-plus" style={{ fontSize: 22 }}></i>
+    </button>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Header
+   ──────────────────────────────────────────────────────────── */
+function Header() {
+  return (
+    <header style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '8px 16px 10px',
+      background: '#fff',
+    }}>
+      <button style={{ background: 'transparent', border: 0, padding: 8, cursor: 'pointer' }}>
+        <i className="ph-bold ph-user" style={{ fontSize: 24, color: C.fg }}></i>
+      </button>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+      }}>
+        <div style={{
+          width: 28, height: 28, position: 'relative',
+        }}>
+          {/* tiny pin logo */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: C.accent,
+            borderRadius: '50% 50% 50% 0',
+            transform: 'rotate(-45deg)',
+          }} />
+          <div style={{
+            position: 'absolute', inset: 6,
+            background: '#fff',
+            borderRadius: '50%',
+            transform: 'rotate(-45deg)',
+            display: 'grid', placeItems: 'center',
+          }}>
+            <div style={{
+              width: 0, height: 0,
+              borderLeft: '6px solid ' + C.accent,
+              borderTop: '4px solid transparent',
+              borderBottom: '4px solid transparent',
+              marginLeft: 1,
+            }} />
+          </div>
+        </div>
+        <span style={{
+          fontSize: 26, fontWeight: 800, color: C.accent,
+          letterSpacing: -1, fontStyle: 'italic',
+        }}>goveo</span>
+      </div>
+      <div style={{ display: 'flex', gap: 4 }}>
+        <button style={{ background: 'transparent', border: 0, padding: 8, cursor: 'pointer' }}>
+          <i className="ph ph-map-trifold" style={{ fontSize: 22, color: C.fg }}></i>
+        </button>
+        <button style={{ background: 'transparent', border: 0, padding: 8, cursor: 'pointer' }}>
+          <i className="ph ph-magnifying-glass" style={{ fontSize: 22, color: C.fg }}></i>
+        </button>
+      </div>
+    </header>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Category circles row
+   ──────────────────────────────────────────────────────────── */
+const CATEGORIES = [
+  { label: 'Experiencias', icon: 'ph-mountains',      bg: '#2e8a82' },
+  { label: 'Workshops',    icon: 'ph-palette',        bg: '#3b8c84' },
+  { label: 'Gourmet',      icon: 'ph-cooking-pot',    bg: '#7d3641' },
+  { label: 'Alojamientos', icon: 'ph-bed',            bg: '#b3d23c' },
+  { label: 'Artesanía',    icon: 'ph-flask',          bg: '#a09549' },
+  { label: 'Cultura',      icon: 'ph-bank',           bg: '#d97039' },
+];
+
+function CategoryRow() {
+  return (
+    <div style={{
+      display: 'flex', gap: 16, overflowX: 'auto',
+      padding: '14px 16px 8px',
+      scrollbarWidth: 'none',
+    }}>
+      {CATEGORIES.map(cat => (
+        <div key={cat.label} style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          gap: 6, flex: '0 0 auto',
+        }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: 999,
+            background: cat.bg,
+            display: 'grid', placeItems: 'center',
+          }}>
+            <i className={'ph-bold ' + cat.icon} style={{ fontSize: 28, color: '#fff' }}></i>
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 600, color: C.fg }}>{cat.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Segmented switcher
+   ──────────────────────────────────────────────────────────── */
+function Segmented() {
+  const [active, setActive] = useState('turismo');
+  const seg = (id, label) => (
+    <button onClick={() => setActive(id)} style={{
+      flex: 1, padding: '10px 0',
+      background: active === id ? C.accent : 'transparent',
+      color: active === id ? '#fff' : C.fg,
+      border: 0, cursor: 'pointer',
+      borderRadius: 10,
+      fontSize: 14, fontWeight: 600,
+      transition: 'all 0.2s ease',
+    }}>{label}</button>
+  );
+  return (
+    <div style={{
+      margin: '10px 16px 4px',
+      background: C.bgSoft,
+      borderRadius: 12,
+      padding: 4,
+      display: 'flex', gap: 4,
+    }}>
+      {seg('turismo', 'Turismo')}
+      {seg('compras', 'Compras Locales')}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Business result card
+   ──────────────────────────────────────────────────────────── */
+function BusinessCard() {
+  return (
+    <div style={{
+      margin: '10px 16px 14px',
+      background: '#fff',
+      borderRadius: 16,
+      border: '1px solid ' + C.border,
+      padding: 12,
+      display: 'flex', gap: 12, alignItems: 'center',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+    }}>
+      <div style={{
+        width: 64, height: 64, borderRadius: 12,
+        background: 'radial-gradient(circle, #f4d250, #c4922e)',
+        display: 'grid', placeItems: 'center',
+        flex: '0 0 auto',
+        fontFamily: 'serif',
+        fontStyle: 'italic',
+        fontSize: 32,
+        color: '#2c1f10',
+        fontWeight: 700,
+      }}>R</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: C.fg }}>
+          Romi&amp;Radost Moda
+        </h3>
+        <p style={{ margin: '2px 0 6px', fontSize: 12, color: C.fgSubtle }}>
+          Plaça de la Vila de Madrid, 6
+        </p>
+        <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: C.fg }}>
+          482 m
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Video data — solid color placeholders with little chips
+   ──────────────────────────────────────────────────────────── */
+const TURISMO_TILES = [
+  { bg: 'linear-gradient(135deg, #b8a280, #6f5630)', label: 'Catedral' },
+  { bg: 'linear-gradient(135deg, #c5cdd0, #6c7984)', label: 'Born' },
+  { bg: 'linear-gradient(135deg, #6cb2e5, #b88454)', label: 'Sagrada' },
+  { bg: 'linear-gradient(135deg, #2a90b3, #143049)', label: 'Mirador' },
+  { bg: 'linear-gradient(135deg, #d6a25a, #6a3b15)', label: 'Park Güell' },
+];
+const NEGOCIOS_TILES = [
+  { bg: 'linear-gradient(135deg, #ff8b3a, #9b1d4d)', label: 'Yoga' },
+  { bg: 'linear-gradient(135deg, #2a2622, #5db8b1)', label: 'Las Dalias' },
+  { bg: 'linear-gradient(135deg, #d8c89f, #708c87)', label: 'Chiringuito' },
+  { bg: 'linear-gradient(135deg, #2ed4b6, #0fb3c8)', label: 'Beach Club' },
+  { bg: 'linear-gradient(135deg, #c0392b, #f39c12)', label: 'Tapas' },
+];
+
+/* ────────────────────────────────────────────────────────────
+   Screen
+   ──────────────────────────────────────────────────────────── */
+function HomeScreen() {
+  const [activeTab, setActiveTab] = useState('lugares');
+
+  return (
+    <div style={{
+      position: 'relative',
+      height: '100%',
+      background: '#fff',
+      display: 'flex', flexDirection: 'column',
+      paddingTop: 56,  // clear iOS status bar
+    }}>
+      <Header />
+
+      <CreateFAB />
+
+      {/* scrollable content — leaves room for bottom nav */}
+      <div style={{
+        flex: 1, overflowY: 'auto',
+        paddingBottom: 100,  // bottom nav clearance
+        scrollbarWidth: 'none',
+      }}>
+        <div style={{ height: 6 }} />
+
+        <Section kicker="Cerca de ti" accent="Turismo y Cultura">
+          {TURISMO_TILES.map((t, i) => <VideoTile key={i} {...t} />)}
+        </Section>
+
+        <div style={{ height: 18 }} />
+
+        <Section kicker="Cerca de ti" accent="Negocios físicos">
+          {NEGOCIOS_TILES.map((t, i) => <VideoTile key={i} {...t} />)}
+        </Section>
+
+        <Segmented />
+        <CategoryRow />
+        <BusinessCard />
+      </div>
+
+      <BottomNav active={activeTab} onChange={setActiveTab} />
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   App — device + annotations
+   ──────────────────────────────────────────────────────────── */
+function App() {
+  return (
+    <div className="stage">
+
+      <div>
+        <span className="badge">Antes</span>
+        <div className="device-wrap">
+          <IOSDevice width={380} height={820}>
+            <HomeScreenOld />
+          </IOSDevice>
+        </div>
+        <p className="caption">Bottom bar de <strong>5 iconos</strong> con "+" central</p>
+      </div>
+
+      <div>
+        <span className="badge" style={{ background: '#22c55e', boxShadow: '0 4px 14px rgba(34,197,94,0.45)' }}>Después</span>
+        <div className="device-wrap">
+          <IOSDevice width={380} height={820}>
+            <HomeScreen />
+          </IOSDevice>
+          <div className="note note-right" style={{ top: 60 }}>
+            <span className="num">1</span>
+            <p><strong>"+" flotante.</strong> Opcional para creadores de contenido. Sale de la nav principal — no es una acción de uso diario.</p>
+          </div>
+          <div className="note note-right" style={{ bottom: 70 }}>
+            <span className="num">2</span>
+            <p><strong>4 tabs con etiqueta.</strong> Lugares · Negocios · Eventos · GeoStories. Estado activo: icono fill + subrayado.</p>
+          </div>
+        </div>
+        <p className="caption">Bottom bar de <strong>4 iconos con label</strong> + FAB</p>
+      </div>
+
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Old screen — for the before/after compare
+   ──────────────────────────────────────────────────────────── */
+function HomeScreenOld() {
+  const oldTabs = [
+    { icon: 'ph-globe' },
+    { icon: 'ph-martini' },
+    { icon: 'ph-plus', center: true },
+    { icon: 'ph-mask-happy' },
+    { icon: 'ph-clock-countdown' },
+  ];
+  return (
+    <div style={{ position: 'relative', height: '100%', background: '#fff', display: 'flex', flexDirection: 'column', paddingTop: 56 }}>
+      <Header />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 80, scrollbarWidth: 'none' }}>
+        <Section kicker="Cerca de ti" accent="Turismo y Cultura">
+          {TURISMO_TILES.map((t, i) => <VideoTile key={i} {...t} />)}
+        </Section>
+        <div style={{ height: 18 }} />
+        <Section kicker="Cerca de ti" accent="Negocios físicos">
+          {NEGOCIOS_TILES.map((t, i) => <VideoTile key={i} {...t} />)}
+        </Section>
+        <Segmented />
+        <CategoryRow />
+        <BusinessCard />
+      </div>
+      <nav style={{
+        position: 'absolute', left: 0, right: 0, bottom: 0,
+        background: '#000', padding: '14px 0 32px',
+        display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)',
+        gap: 0, zIndex: 55,
+      }}>
+        {oldTabs.map((t, i) => (
+          <div key={i} style={{ display: 'grid', placeItems: 'center' }}>
+            {t.center ? (
+              <div style={{
+                width: 38, height: 38, borderRadius: 999,
+                border: '2px solid #fff',
+                display: 'grid', placeItems: 'center',
+              }}>
+                <i className="ph-bold ph-arrow-up" style={{ fontSize: 18, color: '#fff' }}></i>
+              </div>
+            ) : (
+              <i className={t.icon ? 'ph ' + t.icon : ''} style={{ fontSize: 26, color: '#fff' }}></i>
+            )}
+          </div>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+
+</body>
+</html>

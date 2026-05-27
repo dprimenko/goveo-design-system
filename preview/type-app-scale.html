@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 22px 28px;
+    display: grid;
+    grid-template-columns: 130px 1fr 110px;
+    column-gap: 24px;
+    row-gap: 8px;
+    align-items: baseline;
+    color: var(--neutral-900);
+    font-family: var(--font-sans);
+  }
+  .name {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--neutral-500);
+    align-self: center;
+  }
+  .sample { font-weight: 500; }
+  .meta {
+    font-size: 11px;
+    color: var(--neutral-500);
+    font-variant-numeric: tabular-nums;
+    align-self: center;
+  }
+  .d1 { font-size: var(--fs-display1); line-height: var(--lh-display1); }
+  .d2 { font-size: var(--fs-display2); line-height: var(--lh-display2); }
+  .d3 { font-size: var(--fs-display3); line-height: var(--lh-display3); }
+  .h  { font-size: var(--fs-heading);  line-height: var(--lh-heading); font-weight: 600; }
+  .b  { font-size: var(--fs-body);     line-height: var(--lh-body);    font-weight: 400; }
+  .bs { font-size: var(--fs-body-sm);  line-height: var(--lh-body-sm); font-weight: 400; }
+  .c  { font-size: var(--fs-caption);  line-height: var(--lh-caption); font-weight: 400; }
+</style>
+</head>
+<body>
+  <div class="name">display1</div><div class="sample d1">Vídeo Smart City</div><div class="meta">40 / 48 · 400</div>
+  <div class="name">display2</div><div class="sample d2">Vídeo Smart City</div><div class="meta">32 / 40 · 400</div>
+  <div class="name">display3</div><div class="sample d3">Vídeo Smart City</div><div class="meta">24 / 32 · 400</div>
+  <div class="name">heading</div><div class="sample h">Vídeo Smart City</div><div class="meta">20 / 24 · 600</div>
+  <div class="name">body</div><div class="sample b">Vídeo Smart City</div><div class="meta">16 / 24 · 400</div>
+  <div class="name">body-sm</div><div class="sample bs">Vídeo Smart City</div><div class="meta">14 / 20 · 400</div>
+  <div class="name">caption</div><div class="sample c">Vídeo Smart City</div><div class="meta">12 / 16 · 400</div>
+</body>
+</html>

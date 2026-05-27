@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 28px 32px;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .primary { background: var(--primary-500); color: #fff; }
+  .primary:hover { background: var(--primary-700); }
+  .secondary { background: var(--neutral-100); color: var(--neutral-900); border-color: var(--neutral-200); }
+  .text { background: transparent; color: var(--neutral-900); }
+  .text:hover { background: var(--neutral-200); }
+  .small { padding: 8px 12px; font-size: 13px; }
+  .icon { width: 40px; height: 40px; border-radius: 9999px; background: rgba(84,84,84,0.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; padding: 0; }
+  .row { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .row span { font-size: 10px; color: var(--neutral-500); font-family: ui-monospace, monospace; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+  <div class="row"><button class="btn primary">Abrir Goveo</button><span>primary</span></div>
+  <div class="row"><button class="btn primary small">small</button><span>primary · sm</span></div>
+  <div class="row"><button class="btn secondary">Cancelar</button><span>secondary</span></div>
+  <div class="row"><button class="btn text">Ahora no</button><span>text</span></div>
+  <div class="row"><button class="btn icon">📍</button><span>pressable</span></div>
+</body>
+</html>

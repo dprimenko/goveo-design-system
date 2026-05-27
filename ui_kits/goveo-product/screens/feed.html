@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es" data-screen-label="Feed">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goveo · Feed</title>
+  <link rel="icon" href="../../../assets/favicon.png" />
+  <link rel="stylesheet" href="../../../product.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../screens.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+  <style>
+    /* Feed-specific layout — full-bleed dark, no sidebar on mobile */
+    html, body { height: 100%; }
+    body {
+      background: var(--gp-ink-900);
+      color: #fff;
+      overflow: hidden;
+      font-family: var(--gp-font);   /* Inter — body in feed.html lacks .gp-product class */
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .feed-stage {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;        /* matches .feed bg to avoid any subpixel sliver at rounded edges */
+    }
+    .feed-stage__center {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feed {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      height: 100%;
+      max-height: 920px;
+      overflow: hidden;
+      background: #000;
+    }
+    @media (max-width: 759px) {
+      /* On mobile, fill the whole viewport — no phone-shape */
+      .feed { max-width: none; max-height: none; height: 100vh; }
+      .feed-stage__center { padding: 0; }
+    }
+    /* Frame toggle — desktop only */
+    .frame-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 9999px;
+    }
+    @media (max-width: 759px) { .frame-toggle { display: none; } }
+    .frame-toggle__btn {
+      width: 36px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--gp-dur) var(--gp-ease);
+    }
+    .frame-toggle__btn--active { background: #fff; color: #000; }
+    .frame-toggle__btn:hover { color: #fff; }
+    .frame-toggle__btn--active:hover { color: #000; }
+
+    /* iPhone frame styles (we use ios-frame.jsx IOSDevice; tweak only feed sizes inside) */
+    .feed--in-frame {
+      max-width: none;
+      max-height: none;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      overflow: hidden;
+    }
+    /* Kill any 1px-wide horizontal scrollbar from the IOSDevice inner container */
+    .feed--in-frame *::-webkit-scrollbar { display: none; }
+    .feed--in-frame * { scrollbar-width: none; }
+
+    /* When NOT in phone mode, on desktop the feed sits as a phone-ish portrait */
+    @media (min-width: 760px) {
+      .feed:not(.feed--in-frame) {
+        border-radius: 32px;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        transform: translateZ(0);    /* promote to GPU layer; fixes subpixel aliasing on rounded corners */
+      }
+    }
+
+    .feed__scroll {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+    }
+    .feed__scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    .clip {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+    }
+    .feed__scroll { display: flex; flex-direction: column; }
+    .clip { flex: 0 0 100%; }
+
+    .clip__media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .clip__overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .clip__overlay > * { pointer-events: auto; }
+
+    /* Top row: chips + filter */
+    .clip__top {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .clip__top .gp-chip {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px);
+      border-color: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+
+    /* Right action rail — sits just above the bottom bar, fills upward.
+       z-index keeps it above the info gradient so the bottommost icons
+       don't get tinted dark by the overlay. */
+    .clip__actions {
+      position: absolute;
+      right: 8px;
+      bottom: 80px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-family: var(--gp-font);
+      font-size: var(--gp-fs-xs);
+      font-weight: 500;
+      padding: 0;
+    }
+    .action-btn__circle {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.10);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: transform var(--gp-dur-fast) var(--gp-ease), background var(--gp-dur) var(--gp-ease);
+    }
+    .action-btn:active .action-btn__circle { transform: scale(0.94); }
+    .action-btn--liked .action-btn__circle { background: rgba(249,106,63,0.20); border-color: var(--gp-orange-500); }
+    .action-btn--liked i { color: var(--gp-orange-500); }
+
+    /* Bottom info — full-width gradient so it darkens the area
+       behind both the description AND the action rail.
+       Content is padded right so it doesn't run under the rail. */
+    .clip__info {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 64px;
+      padding: 48px 80px 16px 16px;   /* right padding clears the action rail */
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%);
+      z-index: 2;
+    }
+    .clip__publisher {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .clip__publisher img {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid #fff;
+      object-fit: cover;
+    }
+    .clip__publisher-block { min-width: 0; }   /* let it shrink */
+    .clip__publisher-name { font-weight: 600; font-size: var(--gp-fs-base); }
+    .clip__publisher-meta { font-size: var(--gp-fs-xs); opacity: 0.8; }
+    .clip__title { font-size: var(--gp-fs-md); font-weight: 600; margin: 0 0 4px; line-height: 1.3; }
+    .clip__desc  { font-size: var(--gp-fs-sm); opacity: 0.85; line-height: 1.4; margin: 0; }
+    .clip__follow-btn {
+      flex: 0 0 auto;
+      height: 30px;
+      padding: 0 14px;
+      background: var(--gp-orange-500);
+      color: #fff;
+      border: none;
+      border-radius: 9999px;
+      font-size: var(--gp-fs-xs);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .clip__follow-btn:hover { background: var(--gp-orange-700); }
+
+    /* Center play icon (when paused) */
+    .clip__play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.4);
+      display: inline-flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--gp-dur) var(--gp-ease);
+    }
+    .clip--paused .clip__play { opacity: 1; }
+
+    /* Bottom bar — sticks to bottom of phone frame on desktop, viewport on mobile */
+    .feed-bottombar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 8;
+      background: #000;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 8px 28px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+    .feed-tab {
+      background: transparent; border: 0; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; padding: 6px 0;
+      color: rgba(255,255,255,0.92);
+      font-family: var(--gp-font);
+    }
+    .feed-tab i { font-size: 24px; line-height: 1; }
+    .feed-tab__label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1px;
+      color: rgba(255,255,255,0.85);
+    }
+    .feed-tab--active { color: #fff; }
+    .feed-tab--active .feed-tab__label {
+      color: #fff; font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.2px;
+    }
+
+    /* Floating "+" FAB — top-right, for content creators (optional) */
+    .feed-fab-create {
+      position: absolute;
+      top: 16px; right: 16px;
+      z-index: 9;
+      width: 44px; height: 44px;
+      border-radius: 9999px;
+      background: var(--gp-orange-500);
+      border: 0; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(249,106,63,0.45), 0 2px 4px rgba(0,0,0,0.25);
+      transition: transform var(--gp-dur-fast) var(--gp-ease), background var(--gp-dur) var(--gp-ease);
+    }
+    .feed-fab-create:hover { background: var(--gp-orange-700); }
+    .feed-fab-create:active { transform: scale(0.94); }
+
+    /* push the in-clip top row (chips) down so it doesn't collide with the FAB */
+    .clip__top { right: 72px; }
+
+    /* Desktop side panel */
+    .feed-aside {
+      display: none;
+      width: 320px;
+      flex-shrink: 0;
+      padding: 24px;
+      background: var(--gp-ink-800);
+      color: #fff;
+      border-left: 1px solid rgba(255,255,255,0.06);
+    }
+    @media (min-width: 1180px) {
+      .feed-stage { justify-content: flex-start; gap: 0; }
+      .feed-aside { display: flex; flex-direction: column; gap: 16px; height: 100%; overflow-y: auto; }
+    }
+
+    .map-mini {
+      height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .aside-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px;
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="../components/Icon.jsx"></script>
+  <script type="text/babel" src="../components/Button.jsx"></script>
+  <script type="text/babel" src="../components/Field.jsx"></script>
+  <script type="text/babel" src="../components/Badge.jsx"></script>
+  <script type="text/babel" src="../components/Card.jsx"></script>
+  <script type="text/babel" src="../components/Nav.jsx"></script>
+  <script type="text/babel" src="../components/Overlays.jsx"></script>
+  <script type="text/babel" src="../components/ios-frame.jsx"></script>
+
+  <script type="text/babel">
+    const CLIPS = [
+      {
+        id: 1,
+        poster: "https://images.unsplash.com/photo-1543340904-0b1d843bccda?w=720",
+        publisher: "El Fogón de Sevilla",
+        avatar: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=80",
+        category: "Restaurante",
+        title: "Tortilla recién hecha · mesa libre hasta las 12",
+        desc: "Brunch los domingos en pleno casco antiguo. Café de especialidad incluido.",
+        distance: "230 m",
+        likes: 128,
+      },
+      {
+        id: 2,
+        poster: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=720",
+        publisher: "Casa del Flamenco",
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80",
+        category: "Cultura",
+        title: "Flamenco esta noche · 22:00",
+        desc: "Entradas en taquilla 5 min antes. Aforo 60. Bebida incluida.",
+        distance: "1,2 km",
+        likes: 412,
+      },
+      {
+        id: 3,
+        poster: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=720",
+        publisher: "Helado Bueno",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80",
+        category: "Heladería",
+        title: "Sabor del mes: higo y queso payoyo",
+        desc: "Abierto hasta medianoche. Carta vegana disponible.",
+        distance: "muy cerca",
+        likes: 89,
+      },
+    ];
+
+    function Clip({ data }) {
+      const [paused, setPaused] = React.useState(false);
+      const [liked, setLiked] = React.useState(false);
+      const [muted, setMuted] = React.useState(true);
+
+      return (
+        <div className={`clip ${paused ? "clip--paused" : ""}`}>
+          <img className="clip__media" src={data.poster} alt={data.title} />
+
+          <div className="clip__play"><Icon name="play" size={36} weight="fill" /></div>
+
+          {/* Tap area for play/pause — full bleed but below overlay */}
+          <div
+            style={{ position: "absolute", inset: 0, zIndex: 1, cursor: "pointer" }}
+            onClick={() => setPaused((p) => !p)}
+          />
+
+          <div className="clip__overlay">
+            <div className="clip__top">
+              <div className="gp-chip"><Icon name="map-pin" size={14} weight="fill" /> Sevilla</div>
+              <button className="gp-chip" style={{ marginLeft: "auto" }} onClick={() => setMuted(!muted)}>
+                <Icon name={muted ? "speaker-simple-slash" : "speaker-simple-high"} size={14} weight="fill" />
+              </button>
+              <button className="gp-chip" aria-label="Filtros"><Icon name="sliders" size={14} /></button>
+            </div>
+
+            <div className="clip__actions">
+              <button
+                className={`action-btn ${liked ? "action-btn--liked" : ""}`}
+                onClick={() => setLiked(!liked)}
+              >
+                <span className="action-btn__circle"><Icon name="heart" size={22} weight={liked ? "fill" : "regular"} /></span>
+                <span>{data.likes + (liked ? 1 : 0)}</span>
+              </button>
+              <button className="action-btn">
+                <span className="action-btn__circle"><Icon name="chat-circle" size={20} weight="regular" /></span>
+                <span>32</span>
+              </button>
+              <button className="action-btn">
+                <span className="action-btn__circle"><Icon name="paper-plane-tilt" size={20} /></span>
+                <span>Enviar</span>
+              </button>
+              <button className="action-btn">
+                <span className="action-btn__circle"><Icon name="map-pin" size={20} weight="fill" /></span>
+                <span>Cómo<br/>llegar</span>
+              </button>
+            </div>
+
+            <div className="clip__info">
+              <div className="clip__publisher">
+                <img src={data.avatar} alt="" />
+                <div className="clip__publisher-block">
+                  <div className="clip__publisher-name">@{data.publisher.toLowerCase().replace(/\s+/g, ".")}</div>
+                  <div className="clip__publisher-meta">{data.category} · a {data.distance}</div>
+                </div>
+                <button className="clip__follow-btn">Seguir</button>
+              </div>
+              <h3 className="clip__title">{data.title}</h3>
+              <p className="clip__desc">{data.desc}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [tab, setTab] = React.useState("home");
+      const [frameMode, setFrameMode] = React.useState("fit"); // 'fit' | 'phone'
+
+      const TABS = [
+        { id: 'lugares',    icon: 'globe-hemisphere-west', label: 'Lugares'    },
+        { id: 'negocios',   icon: 'storefront',      label: 'Negocios'   },
+        { id: 'home',       icon: 'compass',         label: 'Home'       },
+        { id: 'eventos',    icon: 'mask-happy',      label: 'Eventos'    },
+        { id: 'geostories', icon: 'clock-countdown', label: 'GeoStories' },
+      ];
+
+      const phoneMode = frameMode === "phone";
+      const feedNode = (
+        <div className={`feed ${phoneMode ? "feed--in-frame" : ""}`}>
+          {/* Floating "+" — opcional para creadores de contenido */}
+          <button className="feed-fab-create" aria-label="Subir GeoClip" title="Subir GeoClip">
+            <Icon name="plus" size={20} weight="bold" />
+          </button>
+
+          <div className="feed__scroll">
+            {CLIPS.map((c) => <Clip key={c.id} data={c} />)}
+          </div>
+
+          <nav className="feed-bottombar" aria-label="Navegación principal">
+            {TABS.map(t => {
+              const active = t.id === tab;
+              return (
+                <button
+                  key={t.id}
+                  className={`feed-tab ${active ? 'feed-tab--active' : ''}`}
+                  onClick={() => setTab(t.id)}
+                >
+                  <Icon name={t.icon} weight={active ? 'fill' : 'regular'} size={24} />
+                  <span className="feed-tab__label">{t.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      );
+
+      return (
+        <div className="feed-stage">
+          {/* Frame mode toggle */}
+          <div className="frame-toggle" role="tablist" aria-label="Modo de vista">
+            <button
+              className={`frame-toggle__btn ${frameMode === "fit" ? "frame-toggle__btn--active" : ""}`}
+              onClick={() => setFrameMode("fit")}
+              aria-label="Ajustar a pantalla"
+              title="Ajustar a pantalla"
+            >
+              <Icon name="frame-corners" size={16} />
+            </button>
+            <button
+              className={`frame-toggle__btn ${frameMode === "phone" ? "frame-toggle__btn--active" : ""}`}
+              onClick={() => setFrameMode("phone")}
+              aria-label="Vista iPhone"
+              title="Vista iPhone"
+            >
+              <Icon name="device-mobile" size={16} />
+            </button>
+          </div>
+
+          <div className="feed-stage__center">
+            {phoneMode ? (
+              <IOSDevice dark width={402} height={874}>
+                {feedNode}
+              </IOSDevice>
+            ) : feedNode}
+          </div>
+
+          {/* Desktop side panel — context for the current clip */}
+          {!phoneMode && (
+            <aside className="feed-aside">
+              <div className="aside-card">
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                  <img src={CLIPS[0].avatar} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover" }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600 }}>{CLIPS[0].publisher}</div>
+                    <div style={{ fontSize: 12, opacity: 0.7 }}>{CLIPS[0].category}</div>
+                  </div>
+                  <Badge variant="accent">Premium</Badge>
+                </div>
+                <p style={{ fontSize: 13, opacity: 0.8, lineHeight: 1.4, margin: "0 0 12px" }}>{CLIPS[0].desc}</p>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <Button variant="primary" size="sm" iconLeft={<Icon name="map-pin" weight="fill" />}>Cómo llegar</Button>
+                  <Button variant="secondary" size="sm" style={{ background: "rgba(255,255,255,0.10)", color: "#fff", borderColor: "rgba(255,255,255,0.15)" }}>
+                    Llamar
+                  </Button>
+                </div>
+              </div>
+
+              <div className="map-mini map-placeholder">
+                <div className="map-placeholder__pin" style={{ top: "45%", left: "55%" }} />
+                <div className="map-placeholder__pin map-placeholder__pin--accent" style={{ top: "62%", left: "38%", width: 16, height: 16 }} />
+              </div>
+
+              <div className="aside-card">
+                <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", opacity: 0.6, marginBottom: 10 }}>
+                  Cerca de este sitio
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {CLIPS.slice(1).map((c) => (
+                    <a key={c.id} className="gp-business-card" style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.08)", color: "#fff" }}>
+                      <img className="gp-business-card__avatar" src={c.avatar} />
+                      <div className="gp-business-card__main">
+                        <p className="gp-business-card__title" style={{ color: "#fff" }}>{c.publisher}</p>
+                        <p className="gp-business-card__meta" style={{ color: "rgba(255,255,255,0.6)" }}>{c.category} · {c.distance}</p>
+                      </div>
+                      <Icon name="caret-right" size={14} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

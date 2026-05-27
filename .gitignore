@@ -1,0 +1,27 @@
+node_modules/
+.DS_Store
+*.log
+.env
+.env.local
+dist/
+build/
+
+# Astro
+.astro/
+.netlify/
+.vercel/
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# Uploads (working files, not part of the system)
+uploads/
+
+# Screenshots from runs
+screenshots/
+
+# Misc
+.thumbnail
+*.tsbuildinfo

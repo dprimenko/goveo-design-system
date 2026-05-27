@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 22px 28px;
+    font-family: var(--font-sans);
+    color: var(--neutral-900);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 22px;
+    align-items: center;
+  }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  h4 {
+    margin: 0 0 6px;
+    font-size: 9px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--neutral-500);
+  }
+  .row { display: flex; gap: 10px; align-items: center; font-size: 11px; color: var(--neutral-600); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .row b { color: var(--neutral-900); font-family: var(--font-sans); font-size: 11px; }
+  .sw { width: 32px; height: 32px; border-radius: 8px; flex: 0 0 32px; border: 1px solid rgba(0,0,0,0.06); }
+</style>
+</head>
+<body>
+  <div class="col">
+    <h4>Foreground</h4>
+    <div class="row"><div class="sw" style="background:#292c32"></div><div><b>--fg</b><br>#292c32</div></div>
+    <div class="row"><div class="sw" style="background:#585b61"></div><div><b>--fg-muted</b><br>#585b61</div></div>
+    <div class="row"><div class="sw" style="background:#acaeb3"></div><div><b>--fg-subtle</b><br>#acaeb3</div></div>
+  </div>
+  <div class="col">
+    <h4>Background</h4>
+    <div class="row"><div class="sw" style="background:#ffffff"></div><div><b>--bg</b><br>#ffffff</div></div>
+    <div class="row"><div class="sw" style="background:#f5f7f9"></div><div><b>--bg-elevated</b><br>#f5f7f9</div></div>
+    <div class="row"><div class="sw" style="background:rgba(84,84,84,0.5); backdrop-filter:blur(2px)"></div><div><b>--bg-overlay</b><br>rgba(84,84,84,.5)</div></div>
+  </div>
+  <div class="col">
+    <h4>Accent &amp; border</h4>
+    <div class="row"><div class="sw" style="background:#f96a3f"></div><div><b>--accent</b><br>#f96a3f</div></div>
+    <div class="row"><div class="sw" style="background:#eb5a2c"></div><div><b>--accent-hover</b><br>#eb5a2c</div></div>
+    <div class="row"><div class="sw" style="background:#e9e9eb"></div><div><b>--border</b><br>#e9e9eb</div></div>
+  </div>
+</body>
+</html>

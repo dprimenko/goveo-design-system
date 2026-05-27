@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: var(--zinc-950);
+    color: #fff;
+    padding: 22px 26px;
+    font-family: var(--font-sans);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .label {
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--zinc-500);
+    margin-bottom: 10px;
+  }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .chip {
+    flex: 0 0 56px;
+    height: 56px;
+    border-radius: 12px;
+  }
+  .chip + div { font-size: 11px; color: var(--zinc-400); }
+  .chip + div b { display: block; color: #fff; font-size: 12px; font-weight: 700; }
+  .glass {
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255,255,255,0.10);
+    height: 56px;
+    border-radius: 12px;
+    flex: 0 0 56px;
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label">Landing accent</div>
+    <div class="row" style="margin-bottom:10px">
+      <div class="chip" style="background:#e98027"></div>
+      <div><b>naranja-goveo</b>#e98027 · italic CTAs, bullets, hero word</div>
+    </div>
+    <div class="row">
+      <div class="chip" style="background:#d36d1d"></div>
+      <div><b>naranja-dark</b>#d36d1d · hover state of filled orange CTA</div>
+    </div>
+  </div>
+  <div>
+    <div class="label">Surfaces &amp; overlays</div>
+    <div class="row" style="margin-bottom:10px">
+      <div class="chip" style="background:#09090b; border:1px solid rgba(255,255,255,0.10)"></div>
+      <div><b>landing-bg</b>zinc-950 · marketing pages</div>
+    </div>
+    <div class="row">
+      <div class="glass"></div>
+      <div><b>glass-card</b>white/3% + blur(15px) + 2px white/10% border</div>
+    </div>
+  </div>
+</body>
+</html>

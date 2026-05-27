@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es" data-screen-label="Goveo Product · Showroom">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goveo · Product UI Kit</title>
+  <link rel="icon" href="../../assets/favicon.png" />
+  <link rel="stylesheet" href="../../product.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css" />
+
+  <style>
+    body { background: var(--bg-page); }
+    .doc { max-width: 1100px; margin: 0 auto; padding: 32px 24px 96px; }
+    .doc__head { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border-subtle); }
+    .doc__head h1 { font-size: var(--gp-fs-3xl); font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+    .doc__head p { font-size: var(--gp-fs-md); color: var(--fg-muted); margin: 0; max-width: 56ch; }
+    .doc__nav-pills {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 20px;
+    }
+
+    .sec { padding: 32px 0; border-top: 1px solid var(--border-subtle); }
+    .sec:first-of-type { border-top: none; padding-top: 16px; }
+    .sec__head { margin-bottom: 20px; }
+    .sec__head h2 { font-size: var(--gp-fs-xl); font-weight: 600; margin: 0 0 4px; }
+    .sec__head p  { font-size: var(--gp-fs-sm); color: var(--fg-muted); margin: 0; }
+
+    .row  { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .grid { display: grid; gap: 16px; }
+    .grid--2 { grid-template-columns: repeat(2, 1fr); }
+    .grid--3 { grid-template-columns: repeat(3, 1fr); }
+    .grid--4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 760px) { .grid--3, .grid--4 { grid-template-columns: 1fr 1fr; } }
+
+    .demo-tile {
+      padding: 18px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--gp-radius-md);
+      background: var(--bg-surface);
+    }
+    .demo-tile__label {
+      font-size: var(--gp-fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--fg-subtle);
+      margin-bottom: 12px;
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body class="gp-product">
+  <div id="root"></div>
+
+  <script type="text/babel" src="components/Icon.jsx"></script>
+  <script type="text/babel" src="components/Button.jsx"></script>
+  <script type="text/babel" src="components/Field.jsx"></script>
+  <script type="text/babel" src="components/Badge.jsx"></script>
+  <script type="text/babel" src="components/Card.jsx"></script>
+  <script type="text/babel" src="components/Nav.jsx"></script>
+  <script type="text/babel" src="components/Overlays.jsx"></script>
+
+  <script type="text/babel">
+    function ButtonsSec() {
+      const [loading, setLoading] = React.useState(false);
+      return (
+        <section className="sec" id="buttons">
+          <div className="sec__head">
+            <h2>Botones</h2>
+            <p>4 variantes · 3 tamaños · estados loading/disabled · icon only o con icono lateral.</p>
+          </div>
+          <div className="grid grid--2">
+            <div className="demo-tile">
+              <div className="demo-tile__label">Variantes</div>
+              <div className="row">
+                <Button variant="primary">Primary</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="ghost">Ghost</Button>
+                <Button variant="danger">Danger</Button>
+                <Button variant="danger-ghost">Danger ghost</Button>
+              </div>
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Tamaños</div>
+              <div className="row">
+                <Button variant="primary" size="sm">Small</Button>
+                <Button variant="primary">Medium</Button>
+                <Button variant="primary" size="lg">Large</Button>
+              </div>
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Con icono</div>
+              <div className="row">
+                <Button variant="primary" iconLeft={<Icon name="upload-simple" />}>Subir GeoClip</Button>
+                <Button variant="secondary" iconRight={<Icon name="arrow-right" />}>Continuar</Button>
+                <Button variant="ghost" iconOnly={<Icon name="dots-three" weight="bold" />} aria-label="Más" />
+              </div>
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Estados</div>
+              <div className="row">
+                <Button variant="primary" loading={loading} onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 1400); }}>
+                  Probar loading
+                </Button>
+                <Button variant="primary" disabled>Disabled</Button>
+                <Button variant="primary" block>Block / full width</Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function FieldsSec() {
+      const [name, setName] = React.useState("");
+      const [bio, setBio] = React.useState("");
+      const [city, setCity] = React.useState("sevilla");
+      const [file, setFile] = React.useState(null);
+      const [tos, setTos] = React.useState(false);
+      const [notif, setNotif] = React.useState(true);
+      const [role, setRole] = React.useState("business");
+      return (
+        <section className="sec" id="fields">
+          <div className="sec__head">
+            <h2>Form fields</h2>
+            <p>Inputs, textarea, select, file upload, checkbox, radio y toggle. Todos con estados focus / error / disabled.</p>
+          </div>
+          <div className="grid grid--2">
+            <div className="demo-tile">
+              <div className="demo-tile__label">Text · email · password</div>
+              <Field label="Nombre del negocio" required hint="Ej: El Fogón de Sevilla">
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu negocio" />
+              </Field>
+              <div style={{ height: 16 }} />
+              <Field label="Email" required>
+                <Input
+                  type="email"
+                  placeholder="tu@email.com"
+                  iconLeft={<Icon name="envelope" />}
+                />
+              </Field>
+              <div style={{ height: 16 }} />
+              <Field label="Teléfono" error="Formato no válido">
+                <Input
+                  type="tel"
+                  defaultValue="+34 6"
+                  iconLeft={<Icon name="phone" />}
+                />
+              </Field>
+            </div>
+
+            <div className="demo-tile">
+              <div className="demo-tile__label">Textarea · select</div>
+              <Field label="Descripción" hint="Máximo 280 caracteres">
+                <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Cuéntale a los clientes qué te diferencia…" />
+              </Field>
+              <div style={{ height: 16 }} />
+              <Field label="Ciudad">
+                <Select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  options={[
+                    { value: "sevilla", label: "Sevilla" },
+                    { value: "madrid", label: "Madrid" },
+                    { value: "barcelona", label: "Barcelona" },
+                    { value: "ibiza", label: "Ibiza" },
+                  ]}
+                />
+              </Field>
+            </div>
+
+            <div className="demo-tile">
+              <div className="demo-tile__label">Toggle · checkbox · radio</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                <Toggle label="Recibir notificaciones push" checked={notif} onChange={(e) => setNotif(e.target.checked)} />
+                <Checkbox label="Acepto los términos y condiciones" checked={tos} onChange={(e) => setTos(e.target.checked)} />
+                <div style={{ display: "flex", gap: 16 }}>
+                  <Radio label="Negocio" name="role" checked={role === "business"} onChange={() => setRole("business")} />
+                  <Radio label="Creador" name="role" checked={role === "creator"} onChange={() => setRole("creator")} />
+                  <Radio label="Ambos" name="role" checked={role === "both"} onChange={() => setRole("both")} />
+                </div>
+              </div>
+            </div>
+
+            <div className="demo-tile">
+              <div className="demo-tile__label">File upload</div>
+              <FileUpload
+                title="Sube tu GeoClip"
+                hint="Vídeo vertical · MP4 · hasta 60 MB"
+                accept="video/mp4"
+                file={file}
+                onChange={setFile}
+              />
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function BadgesSec() {
+      const [filters, setFilters] = React.useState(["food", "open-now"]);
+      const toggle = (k) => setFilters((prev) => prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]);
+      return (
+        <section className="sec" id="badges">
+          <div className="sec__head">
+            <h2>Badges · chips · tags</h2>
+            <p>Estados, filtros, etiquetas. Las chips funcionan como filtros toggleables.</p>
+          </div>
+          <div className="grid grid--2">
+            <div className="demo-tile">
+              <div className="demo-tile__label">Badges (status)</div>
+              <div className="row">
+                <Badge>Default</Badge>
+                <Badge variant="accent">Premium</Badge>
+                <Badge variant="success" dot>Publicado</Badge>
+                <Badge variant="warning" dot>En revisión</Badge>
+                <Badge variant="danger" dot>Rechazado</Badge>
+                <Badge variant="info">Nuevo</Badge>
+              </div>
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Chips (filtros)</div>
+              <div className="row">
+                <Chip active={filters.includes("food")} onClick={() => toggle("food")}>Comida</Chip>
+                <Chip active={filters.includes("open-now")} onClick={() => toggle("open-now")}>Abierto ahora</Chip>
+                <Chip active={filters.includes("events")} onClick={() => toggle("events")}>Eventos</Chip>
+                <Chip active={filters.includes("tourism")} onClick={() => toggle("tourism")}>Turismo</Chip>
+                <Chip onClose={() => alert("close")}>Sevilla, 5km</Chip>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function CardsSec() {
+      return (
+        <section className="sec" id="cards">
+          <div className="sec__head">
+            <h2>Cards</h2>
+            <p>Building blocks de cualquier listado: GeoClip, negocio, producto, evento.</p>
+          </div>
+
+          <div className="demo-tile" style={{ marginBottom: 16 }}>
+            <div className="demo-tile__label">GeoClip · poster 9:16</div>
+            <div className="grid grid--4">
+              <GeoClipCard
+                poster="https://images.unsplash.com/photo-1543340904-0b1d843bccda?w=480"
+                title="Brunch en Calle Sierpes"
+                distance="230 m"
+                duration="0:28"
+              />
+              <GeoClipCard
+                poster="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=480"
+                title="Flamenco esta noche"
+                distance="1.2 km"
+                duration="0:30"
+              />
+              <GeoClipCard
+                poster="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=480"
+                title="Helado artesanal"
+                distance="muy cerca"
+                duration="0:18"
+              />
+              <GeoClipCard
+                poster="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=480"
+                title="Mercado de la Encarnación"
+                distance="850 m"
+                duration="0:24"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid--2">
+            <div className="demo-tile">
+              <div className="demo-tile__label">Business list</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <BusinessCard
+                  avatar="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=80"
+                  name="El Fogón de Sevilla"
+                  category="Restaurante · Tapas"
+                  distance="230 m"
+                  rating="4.7"
+                />
+                <BusinessCard
+                  avatar="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80"
+                  name="Casa del Flamenco"
+                  category="Cultura · Espectáculos"
+                  distance="1.2 km"
+                  rating="4.9"
+                  right={<Badge variant="accent">Platinum</Badge>}
+                />
+                <BusinessCard
+                  avatar="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80"
+                  name="Helado Bueno"
+                  category="Heladería"
+                  distance="180 m"
+                  rating="4.6"
+                />
+              </div>
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Productos &amp; eventos</div>
+              <div className="grid grid--2" style={{ marginBottom: 12 }}>
+                <ProductCard
+                  img="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400"
+                  name="Tapa del día"
+                  price="3,50 €"
+                />
+                <ProductCard
+                  img="https://images.unsplash.com/photo-1559054663-e8d23213f55c?w=400"
+                  name="Menú degustación"
+                  price="28,00 €"
+                  oldPrice="35,00 €"
+                />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <EventCard day="14" month="JUN" title="Cata de vinos andaluces" time="20:00" place="Triana" />
+                <EventCard day="21" month="JUN" title="Flamenco en directo" time="22:30" place="Casco Antiguo" />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function NavSec() {
+      const sidebarItems = [
+        { kind: "label", label: "Publicar" },
+        { label: "Inicio", icon: <Icon name="house" />, active: true },
+        { label: "Mis GeoClips", icon: <Icon name="video-camera" />, badge: <Badge variant="accent">3</Badge> },
+        { label: "Productos", icon: <Icon name="package" /> },
+        { label: "Eventos", icon: <Icon name="calendar" /> },
+        { kind: "label", label: "Crecer" },
+        { label: "Estadísticas", icon: <Icon name="chart-line" /> },
+        { label: "Suscripción", icon: <Icon name="crown-simple" /> },
+        { label: "Ajustes", icon: <Icon name="gear" /> },
+      ];
+      const bottomItems = [
+        { label: "Feed", icon: <Icon name="house" size={22} />, active: true },
+        { label: "Buscar", icon: <Icon name="magnifying-glass" size={22} /> },
+        { icon: <Icon name="plus" size={22} weight="bold" />, fab: true },
+        { label: "Mensajes", icon: <Icon name="chat-circle" size={22} /> },
+        { label: "Perfil", icon: <Icon name="user" size={22} /> },
+      ];
+      return (
+        <section className="sec" id="nav">
+          <div className="sec__head">
+            <h2>Navegación</h2>
+            <p>Sidebar (panel web), header con búsqueda y bottom bar móvil.</p>
+          </div>
+          <div className="grid grid--2">
+            <div className="demo-tile" style={{ padding: 0, overflow: "hidden" }}>
+              <Sidebar
+                brand={<><img src="../../assets/goveo-app-icon.jpg" alt="" style={{ borderRadius: 8 }} /><span>Goveo</span></>}
+                items={sidebarItems}
+                footer={<a className="gp-nav-item"><span className="gp-nav-item__icon"><Icon name="sign-out" /></span>Cerrar sesión</a>}
+              />
+            </div>
+            <div className="demo-tile" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              <Header
+                left={<Avatar name="DP" size="sm" />}
+                search={
+                  <Input
+                    iconLeft={<Icon name="magnifying-glass" />}
+                    placeholder="Buscar negocios, eventos, GeoClips…"
+                  />
+                }
+                actions={<>
+                  <Button variant="ghost" iconOnly={<Icon name="bell" />} aria-label="Notificaciones" />
+                  <Button variant="primary" size="sm" iconLeft={<Icon name="upload-simple" />}>Subir clip</Button>
+                </>}
+              />
+              <div style={{ background: "var(--bg-page)", flex: 1, padding: 16, color: "var(--fg-muted)", fontSize: "var(--gp-fs-sm)" }}>
+                ↑ Header with search · ↓ Mobile bottom bar
+              </div>
+              <BottomBar items={bottomItems} />
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function OverlaysSec() {
+      const [modal, setModal] = React.useState(false);
+      const [drawer, setDrawer] = React.useState(false);
+      const { toasts, push, close } = useToasts();
+      return (
+        <section className="sec" id="overlays">
+          <div className="sec__head">
+            <h2>Overlays &amp; states</h2>
+            <p>Modal, drawer, toasts, empty / loading / error.</p>
+          </div>
+          <div className="grid grid--2">
+            <div className="demo-tile">
+              <div className="demo-tile__label">Triggers</div>
+              <div className="row">
+                <Button variant="secondary" onClick={() => setModal(true)}>Abrir modal</Button>
+                <Button variant="secondary" onClick={() => setDrawer(true)}>Abrir drawer</Button>
+                <Button variant="ghost" onClick={() => push({ title: "GeoClip guardado", msg: "Te avisamos cuando se publique.", variant: "success" })}>
+                  Toast success
+                </Button>
+                <Button variant="ghost" onClick={() => push({ title: "Error al subir", msg: "Comprueba tu conexión.", variant: "danger" })}>
+                  Toast error
+                </Button>
+              </div>
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Empty state</div>
+              <EmptyState
+                icon="magnifying-glass"
+                title="No hay GeoClips en esta zona"
+                sub="Prueba a buscar en otra área o cambia los filtros."
+                actions={<>
+                  <Button variant="secondary" size="sm">Cambiar zona</Button>
+                  <Button variant="primary" size="sm">Subir el primero</Button>
+                </>}
+              />
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Loading</div>
+              <LoadingState label="Buscando cerca de ti…" />
+            </div>
+            <div className="demo-tile">
+              <div className="demo-tile__label">Skeleton</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <Skeleton h={20} w="60%" />
+                <Skeleton h={14} w="90%" />
+                <Skeleton h={14} w="75%" />
+                <Skeleton h={120} rounded={10} style={{ marginTop: 8 }} />
+              </div>
+            </div>
+          </div>
+
+          {modal && (
+            <Modal
+              title="Eliminar GeoClip"
+              onClose={() => setModal(false)}
+              footer={<>
+                <Button variant="ghost" onClick={() => setModal(false)}>Cancelar</Button>
+                <Button variant="danger" onClick={() => { setModal(false); push({ title: "GeoClip eliminado", variant: "danger" }); }}>
+                  Eliminar
+                </Button>
+              </>}
+            >
+              <p style={{ margin: 0, color: "var(--fg-muted)" }}>
+                Esta acción no se puede deshacer. El vídeo dejará de ser visible para tus seguidores y clientes inmediatamente.
+              </p>
+            </Modal>
+          )}
+          {drawer && (
+            <Drawer
+              title="Filtros"
+              onClose={() => setDrawer(false)}
+              footer={<>
+                <Button variant="ghost" block onClick={() => setDrawer(false)}>Limpiar</Button>
+                <Button variant="primary" block onClick={() => setDrawer(false)}>Aplicar (8)</Button>
+              </>}
+            >
+              <Field label="Distancia">
+                <Select options={[{ value: "1", label: "1 km" }, { value: "5", label: "5 km" }, { value: "10", label: "10 km" }]} defaultValue="5" />
+              </Field>
+              <div style={{ height: 16 }} />
+              <Field label="Categorías">
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <Checkbox label="Restaurantes" defaultChecked />
+                  <Checkbox label="Cultura" />
+                  <Checkbox label="Eventos" defaultChecked />
+                  <Checkbox label="Compras" />
+                </div>
+              </Field>
+              <div style={{ height: 16 }} />
+              <Field label="Solo abierto ahora">
+                <Toggle defaultChecked />
+              </Field>
+            </Drawer>
+          )}
+          <ToastStack toasts={toasts} onClose={close} />
+        </section>
+      );
+    }
+
+    function App() {
+      return (
+        <main className="doc">
+          <header className="doc__head">
+            <h1>Goveo · Product UI Kit</h1>
+            <p>
+              Sistema unificado para la app móvil y el panel web. Building blocks: botones, formularios,
+              cards, navegación, overlays, toasts y estados. Las pantallas (feed, perfil, upload, búsqueda)
+              están en <code style={{ background: "var(--bg-muted)", padding: "2px 6px", borderRadius: 4 }}>screens/</code>.
+            </p>
+            <div className="doc__nav-pills">
+              <a href="#buttons"><Chip>Botones</Chip></a>
+              <a href="#fields"><Chip>Formularios</Chip></a>
+              <a href="#badges"><Chip>Badges / chips</Chip></a>
+              <a href="#cards"><Chip>Cards</Chip></a>
+              <a href="#nav"><Chip>Navegación</Chip></a>
+              <a href="#overlays"><Chip>Overlays</Chip></a>
+              <a href="screens/feed.html"><Chip iconLeft={<Icon name="arrow-right" size={12} weight="bold" />}>Pantalla: Feed</Chip></a>
+              <a href="screens/publisher.html"><Chip iconLeft={<Icon name="arrow-right" size={12} weight="bold" />}>Pantalla: Publisher</Chip></a>
+              <a href="screens/upload.html"><Chip iconLeft={<Icon name="arrow-right" size={12} weight="bold" />}>Pantalla: Upload</Chip></a>
+              <a href="screens/search.html"><Chip iconLeft={<Icon name="arrow-right" size={12} weight="bold" />}>Pantalla: Búsqueda</Chip></a>
+            </div>
+          </header>
+
+          <ButtonsSec />
+          <FieldsSec />
+          <BadgesSec />
+          <CardsSec />
+          <NavSec />
+          <OverlaysSec />
+        </main>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

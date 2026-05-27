@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: var(--zinc-950);
+    color: #fff;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-family: var(--font-sans);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    column-gap: 20px;
+    align-items: baseline;
+  }
+  .name {
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--zinc-500);
+  }
+  em { color: var(--naranja-goveo); font-style: italic; }
+  .glow { text-shadow: var(--orange-glow); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="name">poster-xl</div>
+    <div class="gv-poster-xl">Geolocaliza <em class="glow">tu mejor Reel</em></div>
+  </div>
+  <div class="row">
+    <div class="name">poster-lg</div>
+    <div class="gv-poster-lg">Únete <em>gratis</em> a la Vídeo Smart City</div>
+  </div>
+  <div class="row">
+    <div class="name">poster-md</div>
+    <div class="gv-poster-md">¡Empieza gratis!</div>
+  </div>
+  <div class="row">
+    <div class="name">eyebrow</div>
+    <div class="gv-poster-sm" style="color: var(--zinc-500)">PRUEBA LA REVOLUCIÓN · POTENCIA PERFIL · DOMINIO TOTAL</div>
+  </div>
+</body>
+</html>

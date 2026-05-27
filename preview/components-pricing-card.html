@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: var(--zinc-950);
+    padding: 18px 22px;
+    font-family: var(--font-sans);
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .plan {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 36px;
+    padding: 22px 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .plan.featured {
+    border: 2px solid #e98027;
+    box-shadow: 0 0 60px rgba(233,128,39,0.25);
+    background: var(--zinc-950);
+  }
+  .badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e98027;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 6px 18px;
+    border-radius: 9999px;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+    line-height: 1;
+  }
+  .eyebrow {
+    font-size: 9px;
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--zinc-500);
+  }
+  .price {
+    margin: 14px 0;
+    font-size: 36px;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1;
+  }
+  .price small { font-size: 11px; font-weight: 700; color: var(--zinc-600); margin-left: 4px; }
+  .feat {
+    font-size: 10px;
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+    color: var(--zinc-400);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+  }
+  .feat .ck { color: #e98027; }
+  .featured .feat { color: #e9e9eb; }
+  .cta {
+    margin-top: 14px;
+    background: #e98027;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 14px;
+    width: 100%;
+    font-size: 10px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="plan">
+    <h3>Premium</h3>
+    <div class="eyebrow">Visibilidad local</div>
+    <div class="price">29€<small>/pago</small></div>
+    <div class="feat"><span class="ck">✔</span> Perfil profesional</div>
+    <div class="feat"><span class="ck">✔</span> Visibilidad prioritaria</div>
+    <div class="feat"><span class="ck">✔</span> Hasta 20 vídeos</div>
+    <button class="cta" style="background:#fff;color:#000">Contratar Premium</button>
+  </div>
+  <div class="plan featured">
+    <div class="badge">Completo</div>
+    <h3>Platinum</h3>
+    <div class="eyebrow" style="color:#e98027">Potencia perfil</div>
+    <div class="price" style="text-shadow: var(--orange-glow)">59€<small>/pago</small></div>
+    <div class="feat"><span class="ck">★</span> Exclusividad por zona</div>
+    <div class="feat"><span class="ck">★</span> Hasta 50 vídeos · 200 productos</div>
+    <div class="feat"><span class="ck">★</span> GeoStories + estadísticas</div>
+    <button class="cta">Activar Platinum</button>
+  </div>
+</body>
+</html>

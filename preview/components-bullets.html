@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: var(--zinc-950);
+    padding: 24px 28px;
+    font-family: var(--font-sans);
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  li {
+    font-size: 11px;
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+    color: var(--zinc-400);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ck { font-size: 16px; line-height: 1; }
+  .check { color: #e98027; }
+  .star  { color: #e98027; }
+  .bolt  { color: #e98027; }
+
+  .label {
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--zinc-500);
+    margin-bottom: 8px;
+  }
+
+  .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: #000;
+    border-radius: 9999px;
+    width: 22px; height: 22px;
+    font-size: 11px;
+    font-weight: 900;
+    font-style: italic;
+    flex-shrink: 0;
+  }
+  li.step { color: #fff; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label">Plan features</div>
+    <ul>
+      <li><span class="ck check">✔</span> Geolocalización exacta</li>
+      <li><span class="ck check">✔</span> Botones Web / WhatsApp / Reserva</li>
+      <li><span class="ck star">★</span> Hasta 50 vídeos</li>
+      <li><span class="ck bolt">⚡</span> Top 3 categoría</li>
+    </ul>
+  </div>
+  <div>
+    <div class="label">Onboarding steps</div>
+    <ul>
+      <li class="step"><span class="num">1</span> Descarga la aplicación Goveo.</li>
+      <li class="step"><span class="num">2</span> Regístrate como Usuario y Publisher.</li>
+      <li class="step"><span class="num">3</span> Sube tu GeoClip (30 s).</li>
+    </ul>
+  </div>
+</body>
+</html>

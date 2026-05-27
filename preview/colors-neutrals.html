@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 24px 28px;
+    font-family: var(--font-sans);
+    color: var(--neutral-900);
+  }
+  .title {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--neutral-500);
+    margin-bottom: 14px;
+  }
+  .ramp {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--neutral-200);
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .swatch span { display:block; font-weight: 500; opacity: 0.75; font-size: 9px; }
+  .light { color: rgba(0,0,0,0.7); }
+  .dark { color: rgba(255,255,255,0.92); }
+</style>
+</head>
+<body>
+  <div class="title">Neutrals · custom cool-gray ramp</div>
+  <div class="ramp">
+    <div class="swatch light" style="background:#ffffff"><span>white</span>#ffffff</div>
+    <div class="swatch light" style="background:#f5f7f9"><span>100</span>#f5f7f9</div>
+    <div class="swatch light" style="background:#e9e9eb"><span>200</span>#e9e9eb</div>
+    <div class="swatch light" style="background:#c8cbce"><span>300</span>#c8cbce</div>
+    <div class="swatch light" style="background:#acaeb3"><span>400</span>#acaeb3</div>
+    <div class="swatch dark" style="background:#8a8f94"><span>500</span>#8a8f94</div>
+    <div class="swatch dark" style="background:#585b61"><span>600/700</span>#585b61</div>
+    <div class="swatch dark" style="background:#3b3f48"><span>800</span>#3b3f48</div>
+    <div class="swatch dark" style="background:#292c32"><span>900★</span>#292c32</div>
+    <div class="swatch dark" style="background:#09090b"><span>zinc-950</span>#09090b</div>
+    <div class="swatch dark" style="background:#000000"><span>black</span>#000000</div>
+  </div>
+</body>
+</html>

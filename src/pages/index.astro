@@ -1,0 +1,1188 @@
+---
+// src/pages/index.astro
+// Landing principal — adaptada de landing-test.html al stack Astro+React+SCSS.
+//
+// Cambios respecto al HTML original:
+//  - Tailwind CDN eliminado. Las utilidades inline ("text-4xl font-black italic …")
+//    se han traducido a clases semánticas en SCSS que consumen los tokens del
+//    design-system existente (_colors / _typography / _spacing / _border).
+//  - Los iconos SVG inline pasan a `phosphor-astro` (mismo set que el resto del
+//    proyecto, ya instalado en package.json).
+//  - La lógica de tabs + modal + WhatsApp + descarga de imagen se mantiene en
+//    vanilla TS dentro de un `<script>` no-inline (Astro lo bundlea solo).
+//  - Las URLs de Stripe y los precios se exponen como `const` arriba para que
+//    sean fáciles de tocar sin entrar en el markup.
+//
+// Para usarlo: copia este archivo a `src/pages/index.astro` en goveo-astro.
+// No requiere instalar nada nuevo.
+
+import { Upload } from 'phosphor-astro';
+
+const PLAN_URLS = {
+	premium: {
+		mensual:   'https://buy.stripe.com/cNiaEY7ZXgt6auc4VMdMI1f',
+		semestral: 'https://buy.stripe.com/14A28sgwt4Ko31KcoedMI1j',
+		anual:     'https://buy.stripe.com/9B65kE4NL90E6dW0FwdMI1m',
+	},
+	platinum: {
+		mensual:   'https://buy.stripe.com/aFa8wQfsp5Os6dW2NEdMI1g',
+		semestral: 'https://buy.stripe.com/28E7sM6VT2CgeKsewmdMI1k',
+		anual:     'https://buy.stripe.com/6oU6oIfspekYfOw2NEdMI1n',
+	},
+	boost: {
+		mensual:   'https://buy.stripe.com/fZu4gAgwt4Ko9q8gEudMI1i',
+		semestral: 'https://buy.stripe.com/4gM3cw4NL0u859S1JAdMI1l',
+		anual:     'https://buy.stripe.com/14A3cw9412Cg0TCgEudMI1o',
+	},
+};
+
+const PRICING_DATA = {
+	premium:  { m: 29,  s: 147, a: 243,  saveS: 'Ahorras 26€',  saveA: 'Ahorras 105€' },
+	platinum: { m: 59,  s: 299, a: 495,  saveS: 'Ahorras 53€',  saveA: 'Ahorras 213€' },
+	boost:    { m: 150, s: 765, a: 1260, saveS: 'Ahorras 135€', saveA: 'Ahorras 540€' },
+};
+
+const BANNER_BG = 'https://es.goveo.app/assets/img/bg/header-bg11-madrid-feb24.jpg';
+const LOGO_NEW  = 'https://es.goveo.app/assets/img/logo-newgoveo.png';
+const PROMO_IMG = 'https://es.goveo.app/assets/img/sharenewgoveo.png';
+const INTRO_VID = 'https://res.cloudinary.com/goveo/video/upload/v1777898197/Promo_Goveo_Tiendas_15c_para_Intro_Video_User_6-mayo2026_2_wt9bh0.mp4';
+---
+
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>GOVEO.APP | Únete a la Revolución · La Vídeo Smart City · El nuevo Marketing Local</title>
+	<meta name="description" content="Goveo es la vídeo Smart City. Geoclips: vídeos cortos geolocalizados que conectan al ciudadano y al turista con la oferta local. El nuevo marketing local." />
+	<link rel="icon" type="image/png" href="/favicon.png" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+	<!-- ============ FREE PLAN MODAL ============ -->
+	<div id="free-plan-modal" class="modal" data-modal hidden>
+		<div class="glass-card modal__card">
+			<button class="modal__close" data-close-modal aria-label="Cerrar">&times;</button>
+
+			<div class="modal__icon" aria-hidden="true">
+				<Upload size={32} color="white" weight="regular" />
+			</div>
+			<h2 class="poster--md">¡Empieza gratis!</h2>
+
+			<ol class="steps">
+				<li><span class="steps__num">1</span><span>Descarga la aplicación Goveo.</span></li>
+				<li><span class="steps__num">2</span><span>Regístrate como Usuario y Publisher.</span></li>
+				<li><span class="steps__num">3</span><span>Sube tu GeoClip (Video 30s geolocalizado).</span></li>
+			</ol>
+
+			<div class="modal__whatsapp">
+				<p class="eyebrow">Recibe los pasos en tu móvil</p>
+				<input type="tel" id="whatsapp-phone" class="input input--orange-text" placeholder="TU TELÉFONO (ej: 34600111222)" />
+				<button id="whatsapp-send" class="btn btn--orange">Enviarme instrucciones por WhatsApp</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============ TOP BANNER + LOGO ============ -->
+	<div class="banner" style={`background-image: url('${BANNER_BG}')`}>
+		<div class="banner__fade"></div>
+	</div>
+
+	<div class="logo-cap">
+		<img src={LOGO_NEW} alt="Goveo Logo" />
+	</div>
+
+	<!-- ============ HERO ============ -->
+	<section class="hero">
+		<h2 class="poster--lg">Únete <em>Gratis</em> a la Vídeo Smart City</h2>
+		<h2 class="poster--lg hero__line">El nuevo <em>Marketing</em> local</h2>
+		<h1 class="poster--xl hero__big">geolocaliza <em class="orange-glow">tu mejor Reel</em></h1>
+		<p class="hero__sub">Basta de fotos y de caos/ruido de las Redes</p>
+		<h2 class="poster--lg">Atrae <em>los clientes</em> fácilmente</h2>
+		<p class="hero__sub">Bienvenidos al <span class="strong-white">"Instagram" de los negocios físicos</span>.</p>
+	</section>
+
+	<!-- ============ ¿QUÉ ES UN GEOCLIP? ============ -->
+	<section class="explainer section-band">
+		<div class="explainer__inner">
+			<div class="explainer__copy">
+				<h2 class="poster--lg">¿Qué es un <em>GeoClip</em>?</h2>
+				<p class="lead">Un vídeo corto geolocalizado que permite que el cliente te encuentre y te conozca al instante.</p>
+				<ul class="bullets">
+					<li><span class="bullet">✔</span><span>Geolocalización exacta para tráfico real.</span></li>
+					<li><span class="bullet">✔</span><span>Perfil Publisher y primer GeoClip sin coste.</span></li>
+				</ul>
+				<a href="#plan-free" class="btn btn--white btn--cta" data-open-modal>
+					¡Subir mi primer vídeo gratis!
+				</a>
+			</div>
+			<div class="explainer__video">
+				<div class="phone-frame">
+					<video poster={BANNER_BG} controls playsinline preload="metadata">
+						<source src={INTRO_VID} type="video/mp4" />
+					</video>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ ¡EMPIEZA GRATIS! CARD ============ -->
+	<section class="free-card-section" id="plan-free">
+		<div class="glass-card free-card">
+			<div class="modal__icon" aria-hidden="true">
+				<Upload size={32} color="white" weight="regular" />
+			</div>
+			<h2 class="poster--md">¡Empieza gratis!</h2>
+
+			<ol class="steps">
+				<li><span class="steps__num">1</span><span>Descarga la aplicación Goveo.</span></li>
+				<li><span class="steps__num">2</span><span>Regístrate como Usuario y Publisher.</span></li>
+				<li><span class="steps__num">3</span><span>Sube tu GeoClip (Video Vertical · 30 segundos · 60 MB).</span></li>
+			</ol>
+
+			<a href="#descarga-app" class="btn btn--white btn--full">Ir a descargar la app</a>
+
+			<div class="fineprint">
+				<p>Contenido sujeto a aprobación de calidad.</p>
+				<p>Goveo se reserva el derecho de admisión.</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ TARIFAS ============ -->
+	<section id="tarifas" class="pricing">
+		<header class="pricing__head">
+			<h2 class="poster--lg">Potencia <em>tu negocio</em> en serio</h2>
+			<h2 class="poster--xl pricing__title">configura <em>tu plan</em></h2>
+			<h2 class="poster--lg pricing__sub">Oferta <em>Lanzamiento</em> adicional 20%</h2>
+
+			<div class="tabs" role="tablist">
+				<button type="button" data-tab="mensual"   class="tab tab--active" role="tab" aria-selected="true">Mensual</button>
+				<button type="button" data-tab="semestral" class="tab" role="tab" aria-selected="false">Semestral (-15%)</button>
+				<button type="button" data-tab="anual"     class="tab" role="tab" aria-selected="false">Anual (-30%)</button>
+			</div>
+		</header>
+
+		<div class="pricing__grid">
+			<!-- FREE -->
+			<article class="plan">
+				<header class="plan__head">
+					<h3 class="poster--md">FREE</h3>
+					<p class="eyebrow">Prueba la revolución</p>
+				</header>
+				<div class="plan__price">
+					<span class="plan__now">0€</span>
+					<p class="plan__save plan__save--always">Haz crecer tu negocio sin coste.</p>
+				</div>
+				<ul class="plan__feats">
+					<li class="plan__group">Negocios</li>
+					<li><span class="bullet">✔</span> Perfil Publisher</li>
+					<li><span class="bullet">✔</span> 1 GeoClip Presentación (30 s)</li>
+					<li><span class="bullet">✔</span> Visibilidad en zona de proximidad</li>
+					<li><span class="bullet">✔</span> Geolocalización exacta</li>
+					<li><span class="bullet">✔</span> Verificación de actividad periódica</li>
+					<li><span class="bullet">✔</span> Publicaciones de eventos</li>
+					<li class="plan__group">Creadores de contenido</li>
+					<li><span class="bullet">✔</span> Vídeo de lugares y cultura</li>
+					<li><span class="bullet">✔</span> Vídeos de eventos</li>
+					<li class="plan__group">Contenido revisado y sujeto a aprobación de calidad.</li>
+				</ul>
+				<p class="fineprint fineprint--inline">Sin compromiso</p>
+				<button type="button" class="btn btn--outline btn--full" data-open-modal>Empieza gratis</button>
+			</article>
+
+			<!-- PREMIUM -->
+			<article class="plan" data-plan="premium">
+				<header class="plan__head">
+					<h3 class="poster--md">PREMIUM</h3>
+					<p class="eyebrow">Visibilidad local</p>
+				</header>
+				<div class="plan__price">
+					<span class="plan__old" data-old="premium">35€</span>
+					<div class="plan__nowrap">
+						<span class="plan__now" data-price="premium">29€</span>
+						<span class="plan__per">/pago</span>
+					</div>
+					<p class="plan__save" data-save="premium">Ahorro</p>
+				</div>
+				<ul class="plan__feats">
+					<li><span class="bullet">✔</span> Perfil Profesional</li>
+					<li><span class="bullet">✔</span> Visibilidad prioritaria</li>
+					<li><span class="bullet">✔</span> Perfil local</li>
+					<li><span class="bullet">✔</span> Botones Web / WhatsApp / Reserva</li>
+					<li><span class="bullet">✔</span> Hasta 20 vídeos</li>
+					<li><span class="bullet">✔</span> Directo: sin comisiones</li>
+				</ul>
+				<p class="fineprint fineprint--inline">+ I.V.A.</p>
+				<button type="button" class="btn btn--white btn--full" data-go-plan="premium">Contratar Premium</button>
+			</article>
+
+			<!-- PLATINUM (featured) -->
+			<article class="plan plan--featured" data-plan="platinum">
+				<div class="plan__badge">Completo</div>
+				<header class="plan__head">
+					<h3 class="poster--md">PLATINUM</h3>
+					<p class="eyebrow eyebrow--orange">Potencia perfil</p>
+				</header>
+				<div class="plan__price">
+					<span class="plan__old" data-old="platinum">71€</span>
+					<div class="plan__nowrap">
+						<span class="plan__now orange-glow" data-price="platinum">59€</span>
+						<span class="plan__per">/pago</span>
+					</div>
+					<p class="plan__save" data-save="platinum">Ahorro</p>
+				</div>
+				<ul class="plan__feats">
+					<li>Premium y además:</li>
+					<li><span class="bullet bullet--big">★</span> Exclusividad. Nº limitado por categoría y zona</li>
+					<li><span class="bullet bullet--big">★</span> Visibilidad provincial y nacional</li>
+					<li><span class="bullet bullet--big">★</span> GeoStories</li>
+					<li><span class="bullet bullet--big">★</span> Hasta 50 vídeos</li>
+					<li><span class="bullet bullet--big">★</span> Hasta 200 productos</li>
+					<li><span class="bullet bullet--big">★</span> Estadísticas</li>
+				</ul>
+				<p class="fineprint fineprint--inline">+ I.V.A.</p>
+				<button type="button" class="btn btn--orange btn--full" data-go-plan="platinum">Activar Platinum</button>
+			</article>
+
+			<!-- BOOST -->
+			<article class="plan" data-plan="boost">
+				<header class="plan__head">
+					<h3 class="poster--md">BOOST</h3>
+					<p class="eyebrow">Dominio total</p>
+				</header>
+				<div class="plan__price">
+					<span class="plan__old" data-old="boost">144€</span>
+					<div class="plan__nowrap">
+						<span class="plan__per">Desde</span>
+						<span class="plan__now" data-price="boost">120€</span>
+						<span class="plan__per">/pago</span>
+					</div>
+					<p class="plan__save" data-save="boost">Ahorro</p>
+				</div>
+				<ul class="plan__feats">
+					<li><span class="bullet bullet--big">★</span> Visibilidad prioritaria</li>
+					<li><span class="bullet bullet--big">⚡</span> Dominio en zona</li>
+					<li><span class="bullet bullet--big">⚡</span> Top 3 categoría</li>
+					<li><span class="bullet bullet--big">⚡</span> Soporte VIP</li>
+				</ul>
+				<p class="fineprint fineprint--inline">+ I.V.A.</p>
+				<button type="button" class="btn btn--ghost btn--full" data-go-plan="boost">Solicitar Boost</button>
+			</article>
+		</div>
+	</section>
+
+	<!-- ============ NOTA CALIDAD ============ -->
+	<section class="pricing">
+		<header class="pricing__head">
+			<h2 class="poster--lg">- Sujeto a <em>calidad</em> del negocio y contenidos -</h2>
+		</header>
+	</section>
+
+	<!-- ============ AYUDA FORM ============ -->
+	<section id="ayuda" class="help pricing">
+		<h2 class="poster--lg help__title">¿Te <em>ayudamos</em>?</h2>
+
+		<div class="glass-card help__card">
+			<header class="help__card-head">
+				<h2 class="poster--md">Ayuda</h2>
+				<p class="eyebrow">Te diremos si tu vídeo encaja y te guiamos.</p>
+			</header>
+			<form id="goveo-form" class="form">
+				<input type="text" name="empresa" required placeholder="NOMBRE DEL NEGOCIO" class="input" />
+				<input type="url" name="instagram_url" required placeholder="URL DEL VÍDEO DE INSTAGRAM" class="input input--orange-text" />
+				<div class="form__row">
+					<input type="text" name="zona" required placeholder="DIRECCIÓN" class="input" />
+					<input type="tel" name="telefono" required placeholder="TELÉFONO" class="input" />
+				</div>
+				<input type="email" name="email" required placeholder="EMAIL CORPORATIVO" class="input" />
+				<button type="submit" class="btn btn--orange btn--full btn--lg">Solicitar asistencia</button>
+			</form>
+		</div>
+	</section>
+
+	<!-- ============ MÁS INFO ============ -->
+	<section class="pricing">
+		<header class="pricing__head">
+			<h2 class="poster--lg help__title">Más información</h2>
+			<div class="help__more">
+				<a href="https://es.goveo.app/negocios2" class="btn btn--outline btn--full">Más detalle</a>
+			</div>
+		</header>
+	</section>
+
+	<!-- ============ PROMO SHARE ============ -->
+	<section class="promo section-band-soft">
+		<div class="promo__inner glass-card">
+			<div class="promo__copy">
+				<span class="chip-pill">Promo exclusiva</span>
+				<h2 class="poster--lg">Comparte <em>en redes</em></h2>
+				<h3 class="poster--lg">Consigue seguidores <em>y ahorra</em></h3>
+				<p class="promo__body">
+					Publica esta gráfica en tus historias o perfil de Instagram.
+					<span class="strong-white-underline">Para atraer seguidores al perfil de Goveo.</span>
+				</p>
+				<p class="promo__body">
+					O consigue 100/200 <span class="strong-white-underline">primeros seguidores.</span>
+				</p>
+				<p class="promo__body">
+					Te damos un <span class="strong-white-underline">20% de descuento</span> durante 6 meses en cualquier plan.
+				</p>
+
+				<button type="button" id="download-promo" class="btn btn--white btn--icon" data-url={PROMO_IMG} data-filename="promo-goveo.png">
+					<svg class="btn__icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+					</svg>
+					Descargar gráfica
+				</button>
+				<p class="hero__sub promo__note">
+					Descarga la imagen y compártela en redes (Feed/Stories) de FB e IG.
+					Etiquétanos y te enviamos el código descuento.
+				</p>
+			</div>
+
+			<div class="promo__image">
+				<div class="promo__glow" aria-hidden="true"></div>
+				<div class="promo__frame">
+					<img src={PROMO_IMG} alt="Gráfica Promo Goveo" />
+					<div class="promo__overlay">
+						<p class="promo__hashtag">#goveo.app</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ FOOTER ============ -->
+	<footer id="descarga-app" class="footer">
+		<div class="footer__stores">
+			<a href="https://goveo.app" target="_blank" rel="noopener" class="store">
+				<img src="https://es.goveo.app/assets/img/web-app.png" alt="Web App" />
+			</a>
+			<a href="https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=app.goveo.android" target="_blank" rel="noopener" class="store">
+				<img src="https://es.goveo.app/assets/img/android_download.png" alt="Google Play" />
+			</a>
+			<a href="https://apps.apple.com/us/app/goveo/id1480569862?l=es&amp;ls=1" target="_blank" rel="noopener" class="store">
+				<img src="https://es.goveo.app/assets/img/ios_download.svg" alt="App Store" />
+			</a>
+		</div>
+		<p class="footer__copy">GOVEO.APP 2026 — Innovation in motion</p>
+	</footer>
+
+	<!-- ============ INTERACTIVITY ============ -->
+	<script define:vars={{ PLAN_URLS, PRICING_DATA }}>
+		// Pricing tabs ----------------------------------------------------------
+		let currentTab = 'mensual';
+
+		function updatePricing(tab) {
+			currentTab = tab;
+			document.querySelectorAll('[data-tab]').forEach((btn) => {
+				const active = btn.dataset.tab === tab;
+				btn.classList.toggle('tab--active', active);
+				btn.setAttribute('aria-selected', String(active));
+			});
+
+			['premium', 'platinum', 'boost'].forEach((plan) => {
+				const data = PRICING_DATA[plan];
+				const key = tab === 'mensual' ? 'm' : tab === 'semestral' ? 's' : 'a';
+				const price = data[key];
+				const old = Math.round(price * 1.20);
+
+				const priceEl = document.querySelector(`[data-price="${plan}"]`);
+				if (priceEl) priceEl.textContent = `${price}€`;
+				const oldEl = document.querySelector(`[data-old="${plan}"]`);
+				if (oldEl) oldEl.textContent = `${old}€`;
+
+				const saveEl = document.querySelector(`[data-save="${plan}"]`);
+				if (saveEl) {
+					if (tab === 'semestral')    { saveEl.textContent = data.saveS; saveEl.style.opacity = '1'; }
+					else if (tab === 'anual')   { saveEl.textContent = data.saveA; saveEl.style.opacity = '1'; }
+					else                        { saveEl.style.opacity = '0'; }
+				}
+			});
+		}
+
+		document.querySelectorAll('[data-tab]').forEach((btn) => {
+			btn.addEventListener('click', () => updatePricing(btn.dataset.tab));
+		});
+
+		// Go to Stripe checkout -------------------------------------------------
+		document.querySelectorAll('[data-go-plan]').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				const plan = btn.dataset.goPlan;
+				const url = PLAN_URLS[plan]?.[currentTab];
+				if (url) window.open(url, '_blank', 'noopener');
+			});
+		});
+
+		// Free plan modal -------------------------------------------------------
+		const modal = document.getElementById('free-plan-modal');
+		document.querySelectorAll('[data-open-modal]').forEach((btn) => {
+			btn.addEventListener('click', (e) => {
+				e.preventDefault();
+				modal.hidden = false;
+				modal.style.display = 'flex';
+				document.body.style.overflow = 'hidden';
+			});
+		});
+		modal.addEventListener('click', (e) => {
+			if (e.target === modal) closeModal();
+		});
+		document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+			btn.addEventListener('click', closeModal);
+		});
+		function closeModal() {
+			modal.style.display = 'none';
+			modal.hidden = true;
+			document.body.style.overflow = '';
+		}
+
+		// WhatsApp send ---------------------------------------------------------
+		document.getElementById('whatsapp-send')?.addEventListener('click', () => {
+			const phone = document.getElementById('whatsapp-phone').value.trim();
+			if (!phone) { alert('Por favor introduce un teléfono'); return; }
+			const text = encodeURIComponent(
+				'Hola Goveo! Quiero empezar a subir mis GeoClips. ' +
+				'1.- Descarga la aplicación GOVEO. ' +
+				'2.- Regístrate como Usuario y Publisher. ' +
+				'3.- Sube tu GeoClip (Video 30s geolocalizado).'
+			);
+			window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank', 'noopener');
+		});
+
+		// Descarga de imagen promo ---------------------------------------------
+		document.getElementById('download-promo')?.addEventListener('click', async (e) => {
+			const btn = e.currentTarget;
+			const url = btn.dataset.url;
+			const filename = btn.dataset.filename || 'goveo.png';
+			try {
+				const res = await fetch(url);
+				if (!res.ok) throw new Error('fetch failed');
+				const blob = await res.blob();
+				const blobUrl = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = blobUrl;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(() => {
+					a.remove();
+					URL.revokeObjectURL(blobUrl);
+				}, 100);
+			} catch {
+				window.open(url, '_blank', 'noopener');
+			}
+		});
+	</script>
+</body>
+
+<style lang="scss" is:global>
+	@use "../design-system/settings/colors";
+	@use "../design-system/settings/typography";
+	@use "../design-system/settings/spacing";
+	@use "../design-system/settings/border";
+	@use "../design-system/settings/sizes";
+
+	/* ----- Landing-only orange (slightly warmer than primary-700).
+	   Mantenido como token local para no contaminar el design-system. */
+	$naranja-goveo: #e98027;
+	$naranja-dark:  #d36d1d;
+	$zinc-950: #09090b;
+	$zinc-900: #18181b;
+	$zinc-800: #27272a;
+	$zinc-700: #3f3f46;
+	$zinc-600: #52525b;
+	$zinc-500: #71717a;
+	$zinc-400: #a1a1aa;
+	$orange-glow: 0 0 20px rgba(233, 128, 39, 0.5);
+
+	html { scroll-behavior: smooth; }
+
+	body {
+		background-color: $zinc-950;
+		color: #fff;
+		font-family: typography.$font-family;
+		margin: 0;
+		padding: 0;
+		overflow-x: hidden;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	em { font-style: italic; color: $naranja-goveo; }
+	.orange-glow { text-shadow: $orange-glow; }
+	.strong-white { color: #fff; font-weight: 700; }
+	.strong-white-underline {
+		color: #fff;
+		font-weight: 900;
+		text-decoration: underline;
+		text-decoration-color: $naranja-goveo;
+		text-underline-offset: 2px;
+	}
+
+	/* ===== "Poster" type — italic + uppercase + 900, la voz de marca ===== */
+	%poster {
+		font-family: typography.$font-family;
+		font-style: italic;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: -0.02em;
+		line-height: 0.9;
+		margin: 0;
+	}
+	.poster--xl { @extend %poster; font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem); letter-spacing: -0.03em; }
+	.poster--lg { @extend %poster; font-size: clamp(2rem, 3vw + 0.5rem, 3rem); }
+	.poster--md { @extend %poster; font-size: 1.5rem; }
+
+	.eyebrow {
+		font-size: 0.5625rem;
+		font-weight: 900;
+		font-style: italic;
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+		color: $zinc-500;
+		margin: 0;
+	}
+	.eyebrow--orange { color: $naranja-goveo; }
+
+	/* ===== Glass card recipe ===== */
+	.glass-card {
+		background: rgba(255, 255, 255, 0.03);
+		backdrop-filter: blur(15px);
+		border: 2px solid rgba(255, 255, 255, 0.1);
+		border-radius: 3.5rem;
+	}
+
+	/* ===== Banner ===== */
+	.banner {
+		width: 100%;
+		height: 300px;
+		background-size: cover;
+		background-position: top;
+		position: relative;
+
+		&__fade {
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to bottom, transparent, $zinc-950);
+		}
+	}
+
+	.logo-cap {
+		display: flex;
+		justify-content: center;
+		margin-top: -10rem;
+		margin-bottom: spacing.$spacing-32;
+		position: relative;
+		z-index: 20;
+
+		img {
+			height: 160px;
+			width: 160px;
+			object-fit: contain;
+			filter: drop-shadow(0 25px 25px rgba(0,0,0,0.5));
+		}
+	}
+
+	/* ===== Hero ===== */
+	.hero {
+		position: relative;
+		text-align: center;
+		z-index: 20;
+		padding: 0 spacing.$spacing-24;
+		max-width: 56rem;
+		margin: 0 auto;
+
+		&__line { margin-top: spacing.$spacing-24; }
+		&__big {
+			margin: spacing.$spacing-24 0;
+			text-wrap: balance;
+		}
+		&__sub {
+			font-size: 1.125rem;
+			font-weight: 500;
+			font-style: italic;
+			color: $zinc-400;
+			max-width: 36rem;
+			margin: spacing.$spacing-16 auto;
+			line-height: 1.2;
+		}
+	}
+
+	/* ===== Bands ===== */
+	.section-band {
+		background: rgba($zinc-900, 0.4);
+		border-top: 1px solid rgba(255,255,255,0.05);
+		border-bottom: 1px solid rgba(255,255,255,0.05);
+		margin-top: spacing.$spacing-80;
+	}
+	.section-band-soft { background: rgba($zinc-900, 0.2); }
+
+	/* ===== Explainer ===== */
+	.explainer {
+		padding: spacing.$spacing-80 spacing.$spacing-24;
+
+		&__inner {
+			max-width: 64rem;
+			margin: 0 auto;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: spacing.$spacing-48;
+			align-items: center;
+		}
+
+		&__copy h2 { margin-bottom: spacing.$spacing-24; }
+		.lead {
+			color: $zinc-400;
+			font-size: 1.125rem;
+			font-weight: 500;
+			font-style: italic;
+			margin: spacing.$spacing-24 0;
+		}
+		&__video { display: flex; justify-content: center; }
+	}
+
+	.phone-frame {
+		width: 100%;
+		max-width: 320px;
+		aspect-ratio: 9 / 16;
+		background: #000;
+		border-radius: 2.5rem;
+		border: 6px solid $zinc-800;
+		overflow: hidden;
+		box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+
+		video { width: 100%; height: 100%; object-fit: cover; }
+	}
+
+	/* ===== Bullets / steps ===== */
+	.bullets {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: spacing.$spacing-16;
+
+		li {
+			display: grid;
+			grid-template-columns: 1.5rem 1fr;
+			gap: spacing.$spacing-16;
+			align-items: start;
+			font-size: 0.8125rem;
+			font-weight: 700;
+			font-style: italic;
+			text-transform: uppercase;
+			color: colors.$neutral-200;
+		}
+	}
+	.bullet {
+		color: $naranja-goveo;
+		font-weight: 900;
+		font-style: italic;
+
+		&--big { font-size: 1.125rem; line-height: 0.8; }
+	}
+
+	.steps {
+		list-style: none;
+		padding: 0;
+		margin: spacing.$spacing-24 0;
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+		gap: spacing.$spacing-16;
+
+		li {
+			display: grid;
+			grid-template-columns: 1.5rem 1fr;
+			gap: spacing.$spacing-8;
+			align-items: start;
+			font-size: 0.875rem;
+			font-weight: 700;
+			font-style: italic;
+			color: #fff;
+		}
+
+		&__num {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 1.5rem;
+			height: 1.5rem;
+			border-radius: 9999px;
+			background: #fff;
+			color: #000;
+			font-weight: 900;
+			font-style: italic;
+			font-size: 0.75rem;
+		}
+	}
+
+	/* ===== Buttons ===== */
+	.btn {
+		display: inline-block;
+		font-family: typography.$font-family;
+		font-style: italic;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		font-size: 0.6875rem;
+		padding: 1.25rem 2rem;
+		border: 1px solid transparent;
+		border-radius: 1rem;
+		cursor: pointer;
+		text-decoration: none;
+		text-align: center;
+		transition: all 0.3s ease;
+
+		&--full { width: 100%; padding: 1.125rem; }
+		&--cta  { padding: 1.25rem 2.5rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.4); }
+		&--lg   { padding: 1.5rem; font-size: 0.875rem; }
+		&--icon { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; }
+
+		&__icon { width: 1.25rem; height: 1.25rem; }
+
+		&--white  { background: #fff; color: #000; &:hover { background: $naranja-goveo; color: #fff; } }
+		&--orange { background: $naranja-goveo; color: #fff; box-shadow: 0 10px 25px rgba(233,128,39,0.35); &:hover { background: $naranja-dark; } }
+		&--outline{ background: transparent; color: $naranja-goveo; border-color: $naranja-goveo; &:hover { background: $naranja-goveo; color: #fff; } }
+		&--ghost  { background: transparent; color: $zinc-500; border-color: $zinc-700; &:hover { color: #fff; border-color: #fff; } }
+	}
+
+	/* ===== Free plan card ===== */
+	.free-card-section {
+		position: relative;
+		z-index: 30;
+		margin: -2.5rem 0 spacing.$spacing-80;
+		padding: 0 spacing.$spacing-24;
+	}
+
+	.free-card {
+		max-width: 32rem;
+		margin: 0 auto;
+		padding: 3rem;
+		text-align: center;
+		border-color: rgba(233, 128, 39, 0.4);
+		box-shadow: 0 0 50px rgba(233, 128, 39, 0.15);
+	}
+
+	.modal__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
+		background: $naranja-goveo;
+		border-radius: 9999px;
+		margin-bottom: spacing.$spacing-24;
+	}
+
+	.fineprint {
+		border-top: 1px solid rgba(255,255,255,0.1);
+		margin-top: spacing.$spacing-24;
+		padding-top: spacing.$spacing-24;
+		color: $zinc-500;
+		font-size: 0.5625rem;
+		font-weight: 700;
+		font-style: italic;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		line-height: 1.6;
+
+		p { margin: 0; }
+
+		&--inline {
+			border: none;
+			margin: 0 0 0.75rem;
+			padding: 0;
+		}
+	}
+
+	/* ===== Pricing ===== */
+	.pricing {
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: spacing.$spacing-96 spacing.$spacing-16;
+
+		&__head { text-align: center; margin-bottom: spacing.$spacing-64; }
+		&__title { margin-top: spacing.$spacing-8; }
+		&__sub   { margin-top: spacing.$spacing-24; }
+		&__grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: spacing.$spacing-24;
+			align-items: stretch;
+
+			@media (max-width: 1200px) { grid-template-columns: repeat(2, 1fr); }
+			@media (max-width: 700px)  { grid-template-columns: 1fr; }
+		}
+	}
+
+	.tabs {
+		display: inline-flex;
+		gap: 2px;
+		padding: 0.375rem;
+		margin-top: spacing.$spacing-40;
+		background: rgba(0,0,0,0.5);
+		border: 1px solid rgba(255,255,255,0.1);
+		border-radius: 1rem;
+	}
+	.tab {
+		font-family: typography.$font-family;
+		padding: 0.625rem 1.25rem;
+		border-radius: 0.75rem;
+		font-size: 0.625rem;
+		font-weight: 900;
+		font-style: italic;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		background: transparent;
+		border: none;
+		color: $zinc-500;
+		cursor: pointer;
+		transition: all 0.25s ease;
+
+		&:hover { color: $zinc-400; }
+		&--active {
+			background: $naranja-goveo !important;
+			color: #fff !important;
+			box-shadow: 0 4px 15px rgba(233,128,39,0.4);
+		}
+	}
+
+	.plan {
+		background: rgba(255,255,255,0.05);
+		border: 1px solid rgba(255,255,255,0.1);
+		border-radius: 3rem;
+		padding: spacing.$spacing-32;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		overflow: visible;
+		transition: border-color 0.3s ease;
+		box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+
+		&:hover { border-color: rgba(255,255,255,0.2); }
+
+		&--featured {
+			background: $zinc-950;
+			border: 2px solid $naranja-goveo;
+			box-shadow: 0 0 60px rgba(233,128,39,0.25);
+			z-index: 2;
+
+			@media (min-width: 1200px) { transform: scale(1.02) translateY(-0.5rem); }
+		}
+
+		&__badge {
+			position: absolute;
+			top: -0.75rem;
+			left: 50%;
+			transform: translateX(-50%);
+			background: $naranja-goveo;
+			color: #fff;
+			font-size: 0.5625rem;
+			font-weight: 900;
+			font-style: italic;
+			text-transform: uppercase;
+			letter-spacing: 0.22em;
+			padding: 0.5rem 1.5rem;
+			border-radius: 9999px;
+			box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+		}
+
+		&__head { margin-bottom: spacing.$spacing-32; }
+		&__head h3 { line-height: 1; color: #fff; }
+		&__head .eyebrow { margin-top: 0.25rem; }
+
+		&__price { margin-bottom: spacing.$spacing-40; }
+		&__old {
+			display: block;
+			font-size: 1.125rem;
+			font-weight: 700;
+			font-style: italic;
+			color: $zinc-600;
+			text-decoration: line-through;
+			line-height: 1;
+			margin-bottom: 0.25rem;
+		}
+		&__nowrap { display: flex; align-items: baseline; gap: 0.5rem; }
+		&__now {
+			font-size: 3.75rem;
+			font-weight: 900;
+			font-style: italic;
+			line-height: 1;
+			color: #fff;
+		}
+		&__per {
+			font-size: 0.875rem;
+			font-weight: 700;
+			font-style: italic;
+			color: $zinc-600;
+		}
+		&__save {
+			font-size: 0.625rem;
+			font-weight: 900;
+			font-style: italic;
+			text-transform: uppercase;
+			letter-spacing: 0.15em;
+			color: $naranja-goveo;
+			margin-top: spacing.$spacing-16;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+
+			&--always { opacity: 1 !important; }
+		}
+
+		&__feats {
+			list-style: none;
+			padding: 0;
+			margin: 0 0 spacing.$spacing-40;
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			gap: spacing.$spacing-16;
+
+			li {
+				display: grid;
+				grid-template-columns: 1.5rem 1fr;
+				gap: 0.5rem;
+				align-items: center;
+				font-size: 0.6875rem;
+				font-weight: 700;
+				font-style: italic;
+				text-transform: uppercase;
+				color: $zinc-400;
+			}
+		}
+		&__group {
+			grid-template-columns: 1fr !important;
+			color: #fff !important;
+			margin-top: 0.25rem;
+		}
+
+		&--featured .plan__feats li { color: colors.$neutral-200; }
+	}
+
+	/* ===== Form ===== */
+	.input {
+		width: 100%;
+		font-family: typography.$font-family;
+		background: rgba(255,255,255,0.05);
+		border: 1px solid rgba(255,255,255,0.1);
+		color: #fff;
+		padding: 1rem;
+		border-radius: 0.75rem;
+		font-size: 0.875rem;
+		font-weight: 700;
+		font-style: italic;
+		text-transform: uppercase;
+		outline: none;
+		transition: all 0.2s ease;
+		box-sizing: border-box;
+
+		&::placeholder { color: $zinc-600; }
+		&:focus { border-color: $naranja-goveo; background: rgba(255,255,255,0.1); }
+		&--orange-text { color: $naranja-goveo; border-color: rgba(255,255,255,0.2); }
+	}
+
+	.form {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+
+		&__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+	}
+
+	.help {
+		text-align: center;
+
+		&__title { margin-bottom: spacing.$spacing-32; }
+		&__card {
+			max-width: 28rem;
+			margin: 0 auto;
+			padding: 3rem;
+			border-color: rgba(233, 128, 39, 0.4);
+		}
+		&__card-head { margin-bottom: spacing.$spacing-40; }
+		&__card-head h2 { margin-bottom: 0.5rem; line-height: 0.9; }
+		&__more { max-width: 28rem; margin: 0 auto; }
+	}
+
+	/* ===== Promo share ===== */
+	.promo {
+		padding: spacing.$spacing-96 spacing.$spacing-24;
+
+		&__inner {
+			max-width: 72rem;
+			margin: 0 auto;
+			padding: spacing.$spacing-64;
+			border-color: rgba(233, 128, 39, 0.3);
+			border-radius: 4rem;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: spacing.$spacing-48;
+			align-items: center;
+
+			@media (max-width: 768px) { grid-template-columns: 1fr; padding: spacing.$spacing-40; }
+		}
+
+		&__copy {
+			h2, h3 { margin-bottom: spacing.$spacing-16; }
+		}
+		&__body {
+			color: $zinc-400;
+			font-size: 1rem;
+			font-weight: 500;
+			font-style: italic;
+			line-height: 1.5;
+			margin: spacing.$spacing-16 0;
+		}
+		&__note { margin-top: spacing.$spacing-16; }
+
+		&__image { position: relative; }
+		&__glow {
+			position: absolute;
+			inset: -4px;
+			background: linear-gradient(to right, $naranja-goveo, $naranja-dark);
+			border-radius: 1.5rem;
+			filter: blur(20px);
+			opacity: 0.25;
+			transition: opacity 1s ease;
+		}
+		&__image:hover &__glow { opacity: 0.5; }
+		&__frame {
+			position: relative;
+			background: $zinc-950;
+			border-radius: 1.5rem;
+			overflow: hidden;
+			border: 1px solid rgba(255,255,255,0.1);
+			aspect-ratio: 1 / 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: transform 0.7s ease; }
+			&:hover img { transform: scale(1.05); }
+		}
+		&__overlay {
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+			display: flex;
+			align-items: flex-end;
+			padding: spacing.$spacing-32;
+		}
+		&__hashtag {
+			color: #fff;
+			font-weight: 900;
+			font-style: italic;
+			font-size: 1.5rem;
+			text-transform: uppercase;
+			letter-spacing: -0.02em;
+			line-height: 1;
+			margin: 0;
+		}
+	}
+
+	.chip-pill {
+		display: inline-block;
+		background: rgba(233,128,39,0.1);
+		color: $naranja-goveo;
+		border: 1px solid rgba(233,128,39,0.2);
+		font-size: 0.625rem;
+		font-weight: 900;
+		font-style: italic;
+		text-transform: uppercase;
+		letter-spacing: 0.22em;
+		padding: 0.5rem 1rem;
+		border-radius: 9999px;
+		margin-bottom: spacing.$spacing-24;
+	}
+
+	/* ===== Footer ===== */
+	.footer {
+		padding: spacing.$spacing-64 spacing.$spacing-16;
+		text-align: center;
+		border-top: 1px solid rgba(255,255,255,0.05);
+
+		&__stores {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: spacing.$spacing-24;
+			margin-bottom: spacing.$spacing-32;
+
+			.store {
+				transition: transform 0.2s ease;
+				&:hover { transform: scale(1.05); }
+				img { height: 3.5rem; }
+			}
+		}
+		&__copy {
+			color: colors.$neutral-900;
+			font-size: 0.5rem;
+			font-weight: 900;
+			font-style: italic;
+			text-transform: uppercase;
+			letter-spacing: 0.4em;
+			margin: 0;
+		}
+	}
+
+	/* ===== Modal ===== */
+	.modal {
+		display: none;
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background: rgba(0,0,0,0.85);
+		backdrop-filter: blur(10px);
+		align-items: center;
+		justify-content: center;
+		padding: 1.25rem;
+
+		&[hidden] { display: none !important; }
+
+		&__card {
+			max-width: 32rem;
+			width: 100%;
+			padding: 3rem;
+			text-align: center;
+			border-color: rgba(233, 128, 39, 0.4);
+			position: relative;
+		}
+		&__close {
+			position: absolute;
+			top: 1.5rem;
+			right: 2rem;
+			background: transparent;
+			border: none;
+			color: $zinc-500;
+			font-size: 1.5rem;
+			font-weight: 900;
+			cursor: pointer;
+			line-height: 1;
+
+			&:hover { color: #fff; }
+		}
+		&__whatsapp {
+			margin-top: spacing.$spacing-32;
+			padding-top: spacing.$spacing-24;
+			border-top: 1px solid rgba(255,255,255,0.1);
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+	}
+
+	/* ===== Responsive ===== */
+	@media (max-width: 768px) {
+		.banner { height: 220px; }
+		.logo-cap { margin-top: -7rem; img { height: 120px; width: 120px; } }
+		.explainer__inner { grid-template-columns: 1fr; }
+		.pricing { padding: spacing.$spacing-48 spacing.$spacing-16; }
+		.modal__card, .free-card { padding: spacing.$spacing-32; }
+	}
+</style>
+</html>

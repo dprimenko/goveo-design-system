@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 20px 26px;
+    font-family: var(--font-sans);
+    color: var(--neutral-900);
+  }
+  .title {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--neutral-500);
+    margin-bottom: 14px;
+  }
+  .row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .icon {
+    width: 40px; height: 40px;
+    background: var(--neutral-100);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--neutral-900);
+  }
+  .icon img { width: 24px; height: 24px; }
+  .name { font-size: 10px; color: var(--neutral-600); font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+  <div class="title">In-product icons · Custom brand SVGs (bottom-bar)</div>
+  <div class="row">
+    <div class="col"><div class="icon"><img src="../assets/icons/earth.svg"></div><div class="name">earth</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/mask.svg"></div><div class="name">mask</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/video.svg"></div><div class="name">video</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/shop.svg"></div><div class="name">shop</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/person.svg"></div><div class="name">person</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/add.svg"></div><div class="name">add</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/shopping_cart.svg"></div><div class="name">cart</div></div>
+    <div class="col"><div class="icon"><img src="../assets/icons/search_product.svg"></div><div class="name">search</div></div>
+  </div>
+</body>
+</html>

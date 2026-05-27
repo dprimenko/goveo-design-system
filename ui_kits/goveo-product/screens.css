@@ -1,0 +1,138 @@
+/* =============================================================
+   Goveo Product · screens
+   Shared layout primitives used by feed / publisher / upload / search
+   ============================================================ */
+
+/* ---------- App shell (desktop sidebar + main) ---------- */
+.app-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: var(--bg-page);
+}
+.app-shell__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.app-shell__main > .gp-header { position: sticky; top: 0; z-index: var(--gp-z-sticky); }
+.app-shell__main > .screen { flex: 1; padding: var(--gp-space-6) var(--gp-space-6) var(--gp-space-10); max-width: 1180px; width: 100%; }
+
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .app-shell > nav.gp-sidebar { display: none; }
+  .app-shell__main > .screen { padding: var(--gp-space-4) var(--gp-space-4) calc(64px + var(--gp-space-4)); }
+}
+
+/* Mobile-only bottom bar */
+.mobile-bottombar {
+  display: none;
+  position: sticky;
+  bottom: 0;
+  z-index: var(--gp-z-sticky);
+}
+@media (max-width: 900px) { .mobile-bottombar { display: block; } }
+
+/* ---------- Screen header (page title + actions) ---------- */
+.screen-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: var(--gp-space-6);
+}
+.screen-head__main { flex: 1; min-width: 0; }
+.screen-head__title { font-size: var(--gp-fs-2xl); font-weight: 600; letter-spacing: -0.015em; margin: 0; }
+.screen-head__sub   { font-size: var(--gp-fs-sm); color: var(--fg-muted); margin: 4px 0 0; }
+.screen-head__actions { display: flex; gap: 8px; }
+
+/* ---------- Page-level grid helpers ---------- */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--gp-space-3);
+}
+.grid-cards--lg { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.grid-cards--xl { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+
+/* ---------- Tabs (under hero) ---------- */
+.gp-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--gp-space-5);
+}
+.gp-tab {
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  font-family: var(--gp-font);
+  font-size: var(--gp-fs-base);
+  font-weight: 500;
+  color: var(--fg-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--gp-dur) var(--gp-ease), border-color var(--gp-dur) var(--gp-ease);
+}
+.gp-tab:hover { color: var(--fg-default); }
+.gp-tab--active {
+  color: var(--fg-default);
+  border-bottom-color: var(--gp-orange-500);
+}
+.gp-tab__count {
+  margin-left: 6px;
+  font-size: var(--gp-fs-xs);
+  color: var(--fg-subtle);
+  font-weight: 500;
+}
+
+/* ---------- Filter bar (horizontal chips) ---------- */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  margin-bottom: var(--gp-space-4);
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-bar > .gp-chip { flex-shrink: 0; }
+
+/* ---------- Stats line ---------- */
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gp-space-6);
+  padding: var(--gp-space-3) 0;
+}
+.stat__value { font-size: var(--gp-fs-lg); font-weight: 600; color: var(--fg-default); line-height: 1; }
+.stat__label { font-size: var(--gp-fs-xs); color: var(--fg-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+
+/* ---------- Map placeholder ---------- */
+.map-placeholder {
+  background:
+    radial-gradient(circle at 30% 40%, rgba(249,106,63,0.10) 0%, transparent 50%),
+    linear-gradient(135deg, #e8eef4 0%, #f5f6f7 100%);
+  position: relative;
+  overflow: hidden;
+}
+.map-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(155,170,190,0.20) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155,170,190,0.20) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.map-placeholder__pin {
+  position: absolute;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--gp-orange-500);
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(249,106,63,0.4), 0 0 0 8px rgba(249,106,63,0.15);
+}
+.map-placeholder__pin--accent { background: var(--gp-ink-800); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }

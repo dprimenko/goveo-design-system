@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: var(--zinc-950);
+    padding: 28px 32px;
+    font-family: var(--font-sans);
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 22px;
+    align-items: center;
+  }
+  .box {
+    height: 84px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0 10px;
+  }
+  .caption {
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--zinc-500);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-align: center;
+  }
+  .b1 { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.10); backdrop-filter: blur(15px); }
+  .b2 { background: #e98027; box-shadow: 0 4px 15px rgba(233,128,39,0.4); }
+  .b3 { background: rgba(255,255,255,0.05); border: 2px solid rgba(233,128,39,0.40); box-shadow: 0 0 50px rgba(233,128,39,0.15); }
+  .b4 { background: #e98027; box-shadow: 0 0 60px rgba(233,128,39,0.25); }
+</style>
+</head>
+<body>
+  <div>
+    <div class="box b1">Glass card</div>
+    <div class="caption">white/3% + blur(15)<br>border 2px white/10%</div>
+  </div>
+  <div>
+    <div class="box b2">Tab pill</div>
+    <div class="caption">0 4px 15px<br>orange/40%</div>
+  </div>
+  <div>
+    <div class="box b3">Hero glow card</div>
+    <div class="caption">0 0 50px<br>orange/15%</div>
+  </div>
+  <div>
+    <div class="box b4">Recommended</div>
+    <div class="caption">0 0 60px<br>orange/25%</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,462 @@
+/* =============================================================
+   Goveo App UI Kit · styles
+   Mobile-first; phone-framed at >768px.
+   Mirrors src/features/feed/* and src/components/mobile-sidebar/*
+   ============================================================ */
+
+body {
+  margin: 0;
+  background: #0a0a0a;
+  font-family: var(--font-sans);
+  color: var(--neutral-900);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Phone frame (desktop only) -------------------- */
+.gv-stage {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  max-height: 100vh;
+  background: #000;
+  overflow: hidden;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  body {
+    padding: 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .gv-stage {
+    width: 420px;
+    flex: 0 0 420px;
+    aspect-ratio: 9 / 19.5;
+    height: min(900px, 90vh);
+    max-height: 90vh;
+    border-radius: 56px;
+    border: 12px solid #1c1c1e;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 2px #2a2a2c inset;
+    margin: 0;
+  }
+  .gv-stage::before {
+    content: "";
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 28px;
+    background: #000;
+    border-radius: 0 0 18px 18px;
+    z-index: 50;
+  }
+}
+
+/* ---------- Feed -------------------------------------------- */
+.gv-feed {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+.gv-feed::-webkit-scrollbar { display: none; }
+
+.gv-feed__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 8;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+@media (min-width: 768px) { .gv-feed__header { padding-top: 60px; } }
+
+.gv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(84,84,84,0.5);
+  backdrop-filter: blur(6px);
+  border: none;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+.gv-chip i { font-size: 18px; }
+
+.gv-icon-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(84,84,84,0.5);
+  backdrop-filter: blur(6px);
+  border: none;
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ---------- GeoStory card ----------------------------------- */
+.gv-story {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  scroll-snap-align: start;
+  background: #000;
+}
+/* Each story child must be at least as tall as the feed viewport.
+   Without min-height: 100%, the story can collapse to its overlay
+   height because .gv-feed is position: absolute and child height: 100%
+   is sometimes computed as auto when content is absolute-positioned. */
+
+.gv-story__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gv-story__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.gv-story__sound {
+  position: absolute;
+  top: 76px;
+  left: 16px;
+  z-index: 3;
+}
+@media (min-width: 768px) { .gv-story__sound { top: 120px; } }
+
+.gv-story__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  padding: 16px;
+  padding-bottom: 80px; /* keep clear of bottom bar */
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 50%);
+  pointer-events: none;
+}
+.gv-story__overlay > * { pointer-events: auto; }
+
+.gv-story__info {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.gv-story__distance {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.gv-story__title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.gv-story__user {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.92;
+}
+.gv-story__desc {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.gv-story__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 8px;
+}
+.gv-story__avatar {
+  width: 48px; height: 48px;
+  border-radius: 9999px;
+  border: 1px solid #fff;
+  cursor: pointer;
+  object-fit: cover;
+}
+.gv-story__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+}
+.gv-story__action i { font-size: 30px; }
+
+/* ---------- Bottom bar ------------------------------------ */
+.gv-bottombar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  background: #fff;
+  border-top: 1px solid var(--neutral-200);
+  height: 64px;
+  padding: 0 16px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.gv-bottombar--dark {
+  background: #000;
+  border-top: 1px solid #000;
+}
+.gv-bottombar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #000;
+}
+.gv-bottombar--dark .gv-bottombar__item { color: #fff; }
+.gv-bottombar__item img {
+  width: 24px;
+  height: 24px;
+}
+.gv-bottombar--dark .gv-bottombar__item img {
+  filter: invert(1);
+}
+.gv-bottombar__item--selected span { text-decoration: underline; font-weight: 600; }
+
+/* ---------- Sidebar drawer -------------------------------- */
+.gv-sidebar__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 50;
+  display: flex;
+}
+.gv-sidebar {
+  width: min(80%, 320px);
+  height: 100%;
+  background: #fff;
+  border-right: 1px solid var(--neutral-200);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: slideIn 0.25s ease;
+}
+@keyframes slideIn { from { transform: translateX(-100%); } }
+
+.gv-sidebar__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--neutral-900);
+}
+.gv-sidebar__head img { width: 110px; height: auto; }
+
+.gv-sidebar__nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.gv-sidebar__nav a {
+  display: block;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--neutral-900);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.gv-sidebar__nav a:hover { background: var(--neutral-200); }
+.gv-sidebar__cta a {
+  background: var(--primary-500);
+  color: #fff;
+}
+.gv-sidebar__cta a:hover { background: var(--primary-700); }
+
+.gv-sidebar__download {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gv-sidebar__download-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
+.gv-store-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8px 14px;
+  background: #000;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  border: 1px solid var(--neutral-900);
+}
+.gv-store-badge span { font-size: 9px; opacity: 0.75; letter-spacing: 0.05em; }
+.gv-store-badge strong { font-size: 14px; font-weight: 700; }
+.gv-store-badge--sm { width: 100%; padding: 6px 12px; }
+.gv-store-badge--sm strong { font-size: 12px; }
+
+/* ---------- New store badges (modal + sidebar) -----------
+   SVG badges following the official Apple & Google Play brand
+   guidelines: black surface, 6px corner radius, 1px #A6A6A6 stroke,
+   canonical 3:1 aspect ratio. Render as block-level <a> at 40px tall. */
+.store-badge {
+  display: inline-block;
+  background: transparent;
+  border: none;
+  padding: 0;
+  height: 40px;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.store-badge:hover { opacity: 0.85; transform: translateY(-1px); }
+.store-badge:active { transform: translateY(0); }
+.store-badge__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gv-sidebar__footer {
+  font-size: 12px;
+  color: var(--neutral-600);
+}
+
+/* ---------- Download modal -------------------------------- */
+.gv-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.gv-modal {
+  width: 310px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+.gv-modal__close {
+  position: absolute;
+  top: 8px; right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--neutral-500);
+  cursor: pointer;
+  line-height: 1;
+}
+.gv-modal__close:hover { color: var(--neutral-900); }
+.gv-modal__logo img {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+.gv-modal__title {
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.3;
+  color: var(--neutral-900);
+}
+.gv-modal__sub {
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+  color: var(--neutral-600);
+}
+.gv-modal__stores {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ---------- App buttons (light surface) ------------------- */
+.gv-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.gv-btn--primary { background: var(--primary-500); color: #fff; }
+.gv-btn--primary:hover { background: var(--primary-700); }
+.gv-btn--text { background: transparent; color: var(--neutral-900); }
+.gv-btn--text:hover { background: var(--neutral-200); }

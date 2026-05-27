@@ -1,0 +1,99 @@
+---
+/**
+ * Goveo · BottomNav — Astro component
+ *
+ * Usage:
+ *   import BottomNav from '~/components/BottomNav.astro';
+ *   <BottomNav active="home" />
+ *
+ * Requires Phosphor's web CSS to be loaded once (in your Layout):
+ *   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+ *   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+ *   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+ */
+
+interface Props {
+  active?: 'lugares' | 'negocios' | 'home' | 'eventos' | 'geostories';
+}
+
+const { active = 'home' } = Astro.props;
+
+const TABS = [
+  { id: 'lugares',    label: 'Lugares',    icon: 'globe-hemisphere-west', href: '/lugares' },
+  { id: 'negocios',   label: 'Negocios',   icon: 'storefront',            href: '/negocios' },
+  { id: 'home',       label: 'Home',       icon: 'compass',               href: '/' },
+  { id: 'eventos',    label: 'Eventos',    icon: 'mask-happy',            href: '/eventos' },
+  { id: 'geostories', label: 'GeoStories', icon: 'clock-countdown',       href: '/geostories' },
+] as const;
+---
+
+<button class="fab" aria-label="Subir GeoClip" type="button">
+  <i class="ph-bold ph-plus"></i>
+</button>
+
+<nav class="bar" aria-label="Navegación principal">
+  {TABS.map(t => {
+    const isActive = t.id === active;
+    return (
+      <a href={t.href} class:list={['tab', { 'tab--active': isActive }]}>
+        <i class={isActive ? `ph-fill ph-${t.icon}` : `ph ph-${t.icon}`}></i>
+        <span class="tab__label">{t.label}</span>
+      </a>
+    );
+  })}
+</nav>
+
+<style>
+  .fab {
+    position: fixed;
+    top: 16px; right: 16px;
+    z-index: 9;
+    width: 48px; height: 48px;
+    border-radius: 9999px;
+    background: var(--accent, #f96a3f);
+    border: 0; cursor: pointer;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(249,106,63,0.45), 0 2px 4px rgba(0,0,0,0.25);
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .fab:hover  { background: var(--accent-hover, #eb5a2c); }
+  .fab:active { transform: scale(0.94); }
+  .fab i { font-size: 22px; }
+
+  .bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 8;
+    background: #000;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 8px env(safe-area-inset-bottom);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+  .tab {
+    background: transparent; border: 0; cursor: pointer;
+    text-decoration: none;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 6px 0;
+    color: rgba(255,255,255,0.92);
+    font-family: var(--font-sans, Inter, system-ui, sans-serif);
+  }
+  .tab i { font-size: 24px; line-height: 1; }
+  .tab__label {
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.1px;
+  }
+  .tab--active,
+  .tab--active i,
+  .tab--active .tab__label { color: #fff; }
+  .tab--active .tab__label {
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.2px;
+  }
+</style>

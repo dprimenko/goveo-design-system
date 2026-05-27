@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Goveo · Export Guide</title>
+<link rel="stylesheet" href="export/tokens.css" />
+<style>
+  /* ---------- page shell ---------- */
+  html, body { background: var(--landing-bg); color: var(--landing-fg); }
+  body {
+    font-family: var(--font-sans);
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: var(--space-64) var(--space-32) var(--space-96);
+  }
+  @media (max-width: 768px) {
+    .wrap { padding: var(--space-40) var(--space-24) var(--space-64); }
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: grid;
+    gap: var(--space-24);
+    margin-bottom: var(--space-80);
+    border-bottom: 1px solid var(--landing-border);
+    padding-bottom: var(--space-48);
+  }
+  .crumb {
+    display: flex; align-items: center; gap: var(--space-16);
+    color: var(--landing-fg-muted);
+  }
+  .pin {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-pill);
+    background: var(--landing-accent);
+    display: grid; place-items: center;
+    box-shadow: var(--shadow-orange-cta);
+    color: #fff; font-weight: 900; font-style: italic;
+    font-size: 18px; line-height: 1;
+  }
+  .pin::after { content: '▶'; font-size: 11px; }
+  h1.title {
+    font-size: clamp(2.5rem, 5vw + 0.5rem, 4.25rem);
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.03em; line-height: 0.9;
+    margin: 0; max-width: 16ch;
+    text-wrap: balance;
+  }
+  h1.title .accent {
+    color: var(--landing-accent);
+    text-shadow: var(--orange-glow);
+  }
+  .lede {
+    font-size: var(--fs-heading);
+    line-height: 1.5;
+    color: var(--landing-fg-muted);
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  /* ---------- section heading ---------- */
+  section { margin-bottom: var(--space-96); scroll-margin-top: 24px; }
+  .eyebrow {
+    font-size: 0.6875rem; font-weight: 900; font-style: italic;
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--landing-fg-subtle);
+    margin: 0 0 var(--space-16);
+  }
+  h2.section-title {
+    font-size: clamp(1.75rem, 2.5vw + 0.5rem, 2.5rem);
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.02em; line-height: 0.95;
+    margin: 0 0 var(--space-16);
+  }
+  .section-lede {
+    color: var(--landing-fg-muted);
+    max-width: 65ch;
+    margin: 0 0 var(--space-32);
+    font-size: var(--fs-body);
+    line-height: 1.6;
+  }
+
+  /* ---------- target chooser ---------- */
+  .tabs {
+    display: flex; gap: var(--space-8);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-32);
+    padding: var(--space-4);
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    border-radius: var(--radius-pill);
+    width: max-content;
+    max-width: 100%;
+  }
+  .tab {
+    background: transparent; border: 0; cursor: pointer;
+    padding: var(--space-8) var(--space-24);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 0.8125rem;
+    color: var(--landing-fg-muted);
+    transition: all 0.25s ease;
+  }
+  .tab:hover { color: var(--landing-fg); }
+  .tab[aria-pressed="true"] {
+    background: var(--landing-accent);
+    color: #fff;
+    box-shadow: var(--shadow-orange-cta);
+  }
+  .tab .count {
+    margin-left: 8px;
+    font-size: 0.625rem;
+    opacity: 0.7;
+    font-style: normal;
+    letter-spacing: 0.1em;
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ---------- steps ---------- */
+  .steps { display: grid; gap: var(--space-24); }
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--space-24);
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    border-radius: var(--radius-24);
+    padding: var(--space-32);
+  }
+  .step:hover { border-color: var(--landing-border-strong); }
+  .step-num {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-pill);
+    background: var(--landing-bg);
+    border: 1.5px solid var(--landing-accent);
+    color: var(--landing-accent);
+    display: grid; place-items: center;
+    font-weight: 900; font-style: italic; font-size: 1.25rem;
+  }
+  .step h3 {
+    margin: 0 0 var(--space-8);
+    font-size: var(--fs-heading);
+    font-weight: 700;
+    color: var(--landing-fg);
+  }
+  .step p {
+    margin: 0 0 var(--space-16);
+    color: var(--landing-fg-muted);
+    line-height: 1.6;
+  }
+  .step p:last-child { margin-bottom: 0; }
+
+  /* ---------- code blocks ---------- */
+  pre {
+    margin: var(--space-16) 0 0;
+    background: #050507;
+    border: 1px solid var(--landing-border);
+    border-radius: var(--radius-16);
+    padding: var(--space-24);
+    overflow-x: auto;
+    font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: #e4e4e7;
+    position: relative;
+  }
+  pre code .tk-kw  { color: #e98027; }
+  pre code .tk-str { color: #a3e635; }
+  pre code .tk-com { color: #71717a; font-style: italic; }
+  pre code .tk-fn  { color: #fbbf24; }
+  pre code .tk-tag { color: #67e8f9; }
+  pre code .tk-pun { color: #a1a1aa; }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    color: var(--landing-fg-muted);
+    padding: 4px 10px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .copy-btn:hover {
+    background: var(--landing-accent);
+    color: #fff;
+    border-color: transparent;
+  }
+  .copy-btn.copied { background: #22c55e; color: #fff; border-color: transparent; }
+
+  /* ---------- file tree ---------- */
+  .filetree {
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    border-radius: var(--radius-16);
+    padding: var(--space-24) var(--space-32);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.85;
+    color: var(--landing-fg-muted);
+  }
+  .filetree .dir { color: var(--landing-accent); }
+  .filetree .file { color: var(--landing-fg); }
+  .filetree .note { color: var(--zinc-500); }
+
+  /* ---------- download grid ---------- */
+  .files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-16);
+  }
+  .file-card {
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    border-radius: var(--radius-16);
+    padding: var(--space-24);
+    text-decoration: none;
+    color: var(--landing-fg);
+    transition: all 0.25s ease;
+    display: grid; gap: var(--space-8);
+  }
+  .file-card:hover {
+    border-color: var(--landing-accent);
+    background: rgba(233,128,39,0.06);
+    transform: translateY(-2px);
+  }
+  .file-card .icon {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.6875rem;
+    color: var(--landing-accent);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  .file-card .name { font-weight: 700; font-size: var(--fs-body); }
+  .file-card .desc { color: var(--landing-fg-muted); font-size: var(--fs-body-sm); line-height: 1.5; }
+
+  /* ---------- rules list ---------- */
+  .rules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-16);
+  }
+  .rule {
+    background: var(--landing-bg-soft);
+    border: 1px solid var(--landing-border);
+    border-radius: var(--radius-16);
+    padding: var(--space-24);
+    display: grid; gap: var(--space-8);
+  }
+  .rule .num {
+    font-style: italic; font-weight: 900; font-size: 2rem; line-height: 1;
+    color: var(--landing-accent);
+  }
+  .rule h4 {
+    margin: 0; font-size: var(--fs-body); font-weight: 700;
+    color: var(--landing-fg);
+  }
+  .rule p {
+    margin: 0; color: var(--landing-fg-muted);
+    font-size: var(--fs-body-sm); line-height: 1.55;
+  }
+
+  /* ---------- token preview ---------- */
+  .token-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-8);
+    margin-top: var(--space-16);
+  }
+  .swatch {
+    border-radius: var(--radius-8);
+    padding: var(--space-16);
+    border: 1px solid var(--landing-border);
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.6875rem;
+    aspect-ratio: 1.2;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .swatch.light { color: #292c32; text-shadow: none; }
+
+  /* ---------- TOC nav ---------- */
+  .toc {
+    position: sticky; top: 0;
+    background: rgba(9,9,11,0.92);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--landing-border);
+    margin: 0 calc(50% - 50vw) var(--space-64);
+    padding: var(--space-16) var(--space-32);
+    z-index: 20;
+  }
+  .toc-inner {
+    max-width: 1240px; margin: 0 auto;
+    display: flex; gap: var(--space-32);
+    align-items: center; justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .toc-brand {
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 0.875rem;
+    display: flex; align-items: center; gap: var(--space-8);
+  }
+  .toc-brand .pin { width: 20px; height: 20px; font-size: 11px; }
+  .toc-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
+  .toc-links a {
+    color: var(--landing-fg-muted); text-decoration: none;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+  .toc-links a:hover { color: var(--landing-accent); }
+</style>
+</head>
+<body>
+  <nav class="toc">
+    <div class="toc-inner">
+      <span class="toc-brand"><span class="pin"></span>Goveo · Export</span>
+      <span class="toc-links">
+        <a href="#overview">Overview</a>
+        <a href="#files">Files</a>
+        <a href="#install">Install</a>
+        <a href="#rules">Rules</a>
+        <a href="#download">Download</a>
+      </span>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <!-- ============== MASTHEAD ============== -->
+    <header class="masthead" id="overview">
+      <div class="crumb">
+        <span class="pin"></span>
+        <span style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">
+          Goveo Design System · Export Guide
+        </span>
+      </div>
+      <h1 class="title">
+        Llévate el sistema a <span class="accent">cualquier proyecto.</span>
+      </h1>
+      <p class="lede">
+        Un único paquete de tokens — colores, tipografía, espaciado, radios, sombras —
+        que funciona en <strong style="color: var(--landing-fg);">Astro</strong>,
+        en <strong style="color: var(--landing-fg);">React Native</strong> y en
+        cualquier herramienta que entienda JSON. Copia los archivos, sigue tres pasos
+        y empieza a construir con la misma marca.
+      </p>
+    </header>
+
+    <!-- ============== WHAT'S IN THE BOX ============== -->
+    <section id="files">
+      <p class="eyebrow">¿Qué descargas?</p>
+      <h2 class="section-title">Un paquete, <span style="color:var(--landing-accent)">cinco formatos.</span></h2>
+      <p class="section-lede">
+        Todos los archivos comparten el mismo <code style="color:var(--landing-accent)">tokens.json</code>
+        como fuente de verdad. Elige el formato que mejor encaja con tu stack:
+      </p>
+
+      <div class="files-grid">
+        <a href="export/tokens.json" class="file-card" download>
+          <span class="icon">⌐ JSON</span>
+          <span class="name">tokens.json</span>
+          <span class="desc">Fuente de verdad. Compatible con Style Dictionary, Tokens Studio, scripts custom.</span>
+        </a>
+        <a href="export/tokens.css" class="file-card" download>
+          <span class="icon">⌐ CSS</span>
+          <span class="name">tokens.css</span>
+          <span class="desc">Variables CSS + utility classes (.gv-poster-xl, .gv-dark…). Para Astro y cualquier web.</span>
+        </a>
+        <a href="export/tokens.ts" class="file-card" download>
+          <span class="icon">⌐ TS</span>
+          <span class="name">tokens.ts</span>
+          <span class="desc">Objeto tipado en TypeScript. React Native, React, Astro islands.</span>
+        </a>
+        <a href="export/tokens.js" class="file-card" download>
+          <span class="icon">⌐ JS</span>
+          <span class="name">tokens.js</span>
+          <span class="desc">JS plano sin tipos, para proyectos sin TypeScript.</span>
+        </a>
+        <a href="export/tailwind.preset.js" class="file-card" download>
+          <span class="icon">⌐ PRESET</span>
+          <span class="name">tailwind.preset.js</span>
+          <span class="desc">Preset listo para inyectar en tu tailwind.config.mjs.</span>
+        </a>
+        <a href="export/README.md" class="file-card" download>
+          <span class="icon">⌐ DOCS</span>
+          <span class="name">README.md</span>
+          <span class="desc">Esta misma guía en Markdown, para que viva junto al código.</span>
+        </a>
+      </div>
+
+      <div class="filetree" style="margin-top: var(--space-32);">
+<span class="dir">export/</span>
+├── <span class="file">tokens.json</span>              <span class="note">← Source of truth</span>
+├── <span class="file">tokens.css</span>               <span class="note">← CSS variables + utilidades</span>
+├── <span class="file">tokens.ts</span>                <span class="note">← TypeScript</span>
+├── <span class="file">tokens.js</span>                <span class="note">← Plain JS</span>
+├── <span class="file">tailwind.preset.js</span>       <span class="note">← Tailwind preset</span>
+├── <span class="file">README.md</span>
+├── <span class="dir">astro/</span>
+│   └── <span class="file">landing-example.astro</span>
+└── <span class="dir">react-native/</span>
+    ├── <span class="file">theme.ts</span>             <span class="note">← Provider + useTheme()</span>
+    └── <span class="file">components.example.tsx</span></div>
+    </section>
+
+    <!-- ============== INSTALL ============== -->
+    <section id="install">
+      <p class="eyebrow">Cómo empezar</p>
+      <h2 class="section-title">Elige tu <span style="color:var(--landing-accent)">stack.</span></h2>
+      <p class="section-lede">Pestañas con instrucciones paso a paso para cada destino.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab" aria-pressed="true"   data-target="p-astro">Astro <span class="count">CSS</span></button>
+        <button class="tab" aria-pressed="false" data-target="p-tw">Astro <span class="count">Tailwind</span></button>
+        <button class="tab" aria-pressed="false" data-target="p-rn">React Native <span class="count">Expo</span></button>
+        <button class="tab" aria-pressed="false" data-target="p-other">Otros <span class="count">Style Dict.</span></button>
+      </div>
+
+      <!-- ASTRO CSS -->
+      <div class="panel active" id="p-astro">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Copia el archivo de tokens</h3>
+              <p>Cópialo a tu carpeta de estilos. Es un único archivo CSS sin dependencias.</p>
+              <pre><code><span class="tk-com"># desde la raíz del export</span>
+cp export/tokens.css apps/web/src/styles/tokens.css</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Impórtalo en tu layout raíz</h3>
+              <p>Una sola vez. Las variables y utilidades estarán disponibles en toda la app.</p>
+              <pre><code><span class="tk-com">// src/layouts/Layout.astro</span>
+<span class="tk-pun">---</span>
+<span class="tk-kw">import</span> <span class="tk-str">'../styles/tokens.css'</span>;
+<span class="tk-pun">---</span></code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Usa las variables en cualquier componente</h3>
+              <p>Acceso directo a los tokens semánticos (<code>--bg</code>, <code>--fg</code>, <code>--accent</code>) o crudos (<code>--primary-500</code>, <code>--space-24</code>).</p>
+              <pre><code><span class="tk-pun">&lt;</span><span class="tk-tag">div</span> <span class="tk-fn">class</span>=<span class="tk-str">"card"</span><span class="tk-pun">&gt;</span>...<span class="tk-pun">&lt;/</span><span class="tk-tag">div</span><span class="tk-pun">&gt;</span>
+
+<span class="tk-pun">&lt;</span><span class="tk-tag">style</span><span class="tk-pun">&gt;</span>
+  <span class="tk-fn">.card</span> {
+    <span class="tk-kw">background</span>: <span class="tk-fn">var</span>(--bg-elevated);
+    <span class="tk-kw">color</span>: <span class="tk-fn">var</span>(--fg);
+    <span class="tk-kw">border-radius</span>: <span class="tk-fn">var</span>(--radius-16);
+    <span class="tk-kw">padding</span>: <span class="tk-fn">var</span>(--space-24);
+    <span class="tk-kw">box-shadow</span>: <span class="tk-fn">var</span>(--shadow-app);
+  }
+<span class="tk-pun">&lt;/</span><span class="tk-tag">style</span><span class="tk-pun">&gt;</span></code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Para la landing dark, añade <code>.gv-dark</code></h3>
+              <p>Aplica todo el surface oscuro + tipografía poster con utilidades listas.</p>
+              <pre><code><span class="tk-pun">&lt;</span><span class="tk-tag">body</span> <span class="tk-fn">class</span>=<span class="tk-str">"gv-dark"</span><span class="tk-pun">&gt;</span>
+  <span class="tk-pun">&lt;</span><span class="tk-tag">h1</span> <span class="tk-fn">class</span>=<span class="tk-str">"gv-poster-xl"</span><span class="tk-pun">&gt;</span>
+    Geolocaliza <span class="tk-pun">&lt;</span><span class="tk-tag">span</span> <span class="tk-fn">style</span>=<span class="tk-str">"color:var(--landing-accent)"</span><span class="tk-pun">&gt;</span>tu mejor reel<span class="tk-pun">&lt;/</span><span class="tk-tag">span</span><span class="tk-pun">&gt;</span>
+  <span class="tk-pun">&lt;/</span><span class="tk-tag">h1</span><span class="tk-pun">&gt;</span>
+<span class="tk-pun">&lt;/</span><span class="tk-tag">body</span><span class="tk-pun">&gt;</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASTRO TAILWIND -->
+      <div class="panel" id="p-tw">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Añade Tailwind a Astro</h3>
+              <p>Salta este paso si ya lo tienes.</p>
+              <pre><code><span class="tk-fn">npx</span> astro add tailwind</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Copia el preset</h3>
+              <pre><code>cp export/tailwind.preset.js apps/web/goveo.preset.js</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Inyéctalo en tu <code>tailwind.config.mjs</code></h3>
+              <pre><code><span class="tk-kw">import</span> goveo <span class="tk-kw">from</span> <span class="tk-str">'./goveo.preset.js'</span>;
+
+<span class="tk-kw">export default</span> {
+  <span class="tk-fn">presets</span>: [goveo],
+  <span class="tk-fn">content</span>: [<span class="tk-str">'./src/**/*.{astro,tsx,ts,jsx,js,md,mdx}'</span>],
+};</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Usa las utilities</h3>
+              <p>Toda la paleta y el tipo scale como clases nativas de Tailwind.</p>
+              <pre><code><span class="tk-pun">&lt;</span><span class="tk-tag">h1</span> <span class="tk-fn">class</span>=<span class="tk-str">"font-sans italic font-black uppercase tracking-tighter
+           text-display1 text-white leading-none"</span><span class="tk-pun">&gt;</span>
+  Geolocaliza
+  <span class="tk-pun">&lt;</span><span class="tk-tag">span</span> <span class="tk-fn">class</span>=<span class="tk-str">"text-naranja-goveo"</span><span class="tk-pun">&gt;</span>tu mejor reel<span class="tk-pun">&lt;/</span><span class="tk-tag">span</span><span class="tk-pun">&gt;</span>
+<span class="tk-pun">&lt;/</span><span class="tk-tag">h1</span><span class="tk-pun">&gt;</span>
+
+<span class="tk-pun">&lt;</span><span class="tk-tag">button</span> <span class="tk-fn">class</span>=<span class="tk-str">"bg-primary-500 hover:bg-primary-700 text-white
+                rounded-card-xl px-32 py-16 shadow-orange-cta"</span><span class="tk-pun">&gt;</span>
+  Empieza Gratis
+<span class="tk-pun">&lt;/</span><span class="tk-tag">button</span><span class="tk-pun">&gt;</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REACT NATIVE -->
+      <div class="panel" id="p-rn">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Copia tokens + theme</h3>
+              <pre><code><span class="tk-fn">mkdir</span> -p apps/mobile/src/theme
+cp export/tokens.ts                 apps/mobile/src/theme/tokens.ts
+cp export/react-native/theme.ts     apps/mobile/src/theme/index.ts</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Instala expo-font y los TTF de Inter</h3>
+              <p>RN no aplica <code>fontStyle:'italic'</code> ni <code>fontWeight:'900'</code> de forma fiable en Android, así que cargamos cada combinación como una familia independiente. Descarga los TTF desde <code>rsms.me/inter</code>.</p>
+              <pre><code><span class="tk-fn">npx</span> expo install expo-font</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Carga las fuentes al arrancar</h3>
+              <pre><code><span class="tk-kw">import</span> * <span class="tk-kw">as</span> Font <span class="tk-kw">from</span> <span class="tk-str">'expo-font'</span>;
+<span class="tk-kw">import</span> { useEffect, useState } <span class="tk-kw">from</span> <span class="tk-str">'react'</span>;
+
+<span class="tk-kw">export default function</span> <span class="tk-fn">App</span>() {
+  <span class="tk-kw">const</span> [ready, setReady] = <span class="tk-fn">useState</span>(<span class="tk-kw">false</span>);
+  <span class="tk-fn">useEffect</span>(() =&gt; {
+    Font.<span class="tk-fn">loadAsync</span>({
+      <span class="tk-str">'Inter'</span>:             <span class="tk-fn">require</span>(<span class="tk-str">'./assets/fonts/Inter-Regular.ttf'</span>),
+      <span class="tk-str">'Inter-Medium'</span>:      <span class="tk-fn">require</span>(<span class="tk-str">'./assets/fonts/Inter-Medium.ttf'</span>),
+      <span class="tk-str">'Inter-Semibold'</span>:    <span class="tk-fn">require</span>(<span class="tk-str">'./assets/fonts/Inter-SemiBold.ttf'</span>),
+      <span class="tk-str">'Inter-Bold'</span>:        <span class="tk-fn">require</span>(<span class="tk-str">'./assets/fonts/Inter-Bold.ttf'</span>),
+      <span class="tk-str">'Inter-Black'</span>:       <span class="tk-fn">require</span>(<span class="tk-str">'./assets/fonts/Inter-Black.ttf'</span>),
+      <span class="tk-str">'Inter-BlackItalic'</span>: <span class="tk-fn">require</span>(<span class="tk-str">'./assets/fonts/Inter-BlackItalic.ttf'</span>),
+    }).<span class="tk-fn">then</span>(() =&gt; <span class="tk-fn">setReady</span>(<span class="tk-kw">true</span>));
+  }, []);
+  <span class="tk-kw">if</span> (!ready) <span class="tk-kw">return null</span>;
+  <span class="tk-kw">return</span> &lt;<span class="tk-tag">YourApp</span> /&gt;;
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Construye con tokens</h3>
+              <p>Todos los valores numéricos están en <strong>dp/px</strong>, listos para <code>StyleSheet</code>.</p>
+              <pre><code><span class="tk-kw">import</span> { StyleSheet, View, Text, Pressable } <span class="tk-kw">from</span> <span class="tk-str">'react-native'</span>;
+<span class="tk-kw">import</span> { tokens }   <span class="tk-kw">from</span> <span class="tk-str">'./src/theme/tokens'</span>;
+<span class="tk-kw">import</span> { textStyles, elevate } <span class="tk-kw">from</span> <span class="tk-str">'./src/theme'</span>;
+
+<span class="tk-kw">export function</span> <span class="tk-fn">PrimaryCTA</span>({ label, onPress }) {
+  <span class="tk-kw">return</span> (
+    &lt;<span class="tk-tag">Pressable</span> onPress={onPress} style={s.btn}&gt;
+      &lt;<span class="tk-tag">Text</span> style={s.label}&gt;{label}&lt;/<span class="tk-tag">Text</span>&gt;
+    &lt;/<span class="tk-tag">Pressable</span>&gt;
+  );
+}
+
+<span class="tk-kw">const</span> s = StyleSheet.<span class="tk-fn">create</span>({
+  btn: {
+    backgroundColor: tokens.colors.primary[<span class="tk-str">500</span>],
+    paddingVertical: tokens.space[<span class="tk-str">16</span>],
+    paddingHorizontal: tokens.space[<span class="tk-str">24</span>],
+    borderRadius: tokens.radius[<span class="tk-str">16</span>],
+    ...<span class="tk-fn">elevate</span>(<span class="tk-str">'orangeCta'</span>),
+  },
+  label: {
+    ...textStyles.heading,
+    color: tokens.light.fgOnPrimary,
+    fontFamily: <span class="tk-str">'Inter-Black'</span>,
+    fontStyle: <span class="tk-str">'italic'</span>,
+    textTransform: <span class="tk-str">'uppercase'</span>,
+  },
+});</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">5</div>
+            <div>
+              <h3>Cambia el surface con ThemeProvider</h3>
+              <p>Alterna entre <code>light</code> (chrome de app), <code>dark</code> (modo oscuro in-app) y <code>landing</code> (marketing) sin tocar componentes.</p>
+              <pre><code><span class="tk-kw">import</span> { ThemeProvider, buildTheme, useTheme } <span class="tk-kw">from</span> <span class="tk-str">'./src/theme'</span>;
+
+&lt;<span class="tk-tag">ThemeProvider</span> value={<span class="tk-fn">buildTheme</span>(<span class="tk-str">'landing'</span>)}&gt;
+  &lt;<span class="tk-tag">YourScreen</span> /&gt;
+&lt;/<span class="tk-tag">ThemeProvider</span>&gt;
+
+<span class="tk-com">// dentro de cualquier componente:</span>
+<span class="tk-kw">const</span> { semantic } = <span class="tk-fn">useTheme</span>();
+<span class="tk-com">// semantic.bg, semantic.accent, semantic.fg…</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OTHER -->
+      <div class="panel" id="p-other">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Style Dictionary</h3>
+              <p>El archivo <code>tokens.json</code> está estructurado para servir como entrada a Style Dictionary y generar formatos adicionales (iOS, Android, Flutter…).</p>
+              <pre><code><span class="tk-com">// sd.config.js</span>
+<span class="tk-kw">module.exports</span> = {
+  source: [<span class="tk-str">'export/tokens.json'</span>],
+  platforms: {
+    ios:     { transformGroup: <span class="tk-str">'ios'</span>,     buildPath: <span class="tk-str">'build/ios/'</span>,     files: [...] },
+    android: { transformGroup: <span class="tk-str">'android'</span>, buildPath: <span class="tk-str">'build/android/'</span>, files: [...] },
+  },
+};</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Figma (Tokens Studio)</h3>
+              <p>Importa <code>tokens.json</code> directamente desde el plugin <strong>Tokens Studio for Figma</strong> (File → Import → JSON). La estructura ya respeta el formato W3C-compatible.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Next.js / Vite / cualquier bundler</h3>
+              <p>Misma receta que Astro: importa <code>tokens.css</code> en tu entry y/o usa <code>tokens.ts</code> donde necesites tokens en JS.</p>
+              <pre><code><span class="tk-com">// app/layout.tsx (Next.js App Router)</span>
+<span class="tk-kw">import</span> <span class="tk-str">'./tokens.css'</span>;
+<span class="tk-kw">import</span> { tokens } <span class="tk-kw">from</span> <span class="tk-str">'./tokens'</span>;</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== TOKEN PREVIEW ============== -->
+    <section id="preview">
+      <p class="eyebrow">Lo que llevas</p>
+      <h2 class="section-title">Una <span style="color:var(--landing-accent)">paleta</span>, dos surfaces.</h2>
+
+      <h3 style="margin: var(--space-32) 0 var(--space-8); font-size: var(--fs-body); color: var(--landing-fg-muted); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Brand · orange ramp</h3>
+      <div class="token-row">
+        <div class="swatch light" style="background:var(--primary-50)">primary-50<br>#fff3f0</div>
+        <div class="swatch light" style="background:var(--primary-100)">primary-100<br>#ffe4dd</div>
+        <div class="swatch light" style="background:var(--primary-200)">primary-200<br>#ffc8bb</div>
+        <div class="swatch light" style="background:var(--primary-300)">primary-300<br>#ffa38e</div>
+        <div class="swatch" style="background:var(--primary-400)">primary-400<br>#ff7d5e</div>
+        <div class="swatch" style="background:var(--primary-500)">primary-500<br>#f96a3f</div>
+        <div class="swatch" style="background:var(--primary-700)">primary-700<br>#eb5a2c</div>
+        <div class="swatch" style="background:var(--primary-900)">primary-900<br>#b33d1a</div>
+      </div>
+
+      <h3 style="margin: var(--space-32) 0 var(--space-8); font-size: var(--fs-body); color: var(--landing-fg-muted); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Landing · zinc + naranja</h3>
+      <div class="token-row">
+        <div class="swatch" style="background:var(--naranja-goveo)">naranja-goveo<br>#e98027</div>
+        <div class="swatch" style="background:var(--naranja-dark)">naranja-dark<br>#d36d1d</div>
+        <div class="swatch" style="background:var(--zinc-950)">zinc-950<br>#09090b</div>
+        <div class="swatch" style="background:var(--zinc-900)">zinc-900<br>#18181b</div>
+        <div class="swatch" style="background:var(--zinc-700)">zinc-700<br>#3f3f46</div>
+        <div class="swatch" style="background:var(--zinc-500)">zinc-500<br>#71717a</div>
+      </div>
+
+      <h3 style="margin: var(--space-32) 0 var(--space-8); font-size: var(--fs-body); color: var(--landing-fg-muted); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Type scale</h3>
+      <div style="background: var(--landing-bg-soft); border: 1px solid var(--landing-border); border-radius: var(--radius-16); padding: var(--space-32); display: grid; gap: var(--space-16);">
+        <span class="gv-display1">Display1 — 40 / 48</span>
+        <span class="gv-display2">Display2 — 32 / 40</span>
+        <span class="gv-display3">Display3 — 24 / 32</span>
+        <span class="gv-heading">Heading — 20 / 24</span>
+        <span class="gv-body">Body — 16 / 24 — un párrafo común de la app</span>
+        <span class="gv-body-sm" style="color:var(--landing-fg-muted)">Body small — 14 / 20</span>
+        <span class="gv-caption" style="color:var(--landing-fg-subtle)">Caption — 12 / 16</span>
+        <span class="gv-poster-lg" style="margin-top: var(--space-16);">Poster · italic 900</span>
+        <span class="gv-eyebrow">Eyebrow tracking</span>
+      </div>
+    </section>
+
+    <!-- ============== RULES ============== -->
+    <section id="rules">
+      <p class="eyebrow">Antes de empezar</p>
+      <h2 class="section-title">Reglas <span style="color:var(--landing-accent)">no-negociables.</span></h2>
+      <p class="section-lede">Si las respetas, tu pantalla parece Goveo. Si no, parece otra cosa.</p>
+
+      <div class="rules">
+        <div class="rule">
+          <span class="num">01</span>
+          <h4>App y landing, nunca juntos</h4>
+          <p>La marca tiene dos voces: chrome calmado y poster italianizado. Elige una por pantalla.</p>
+        </div>
+        <div class="rule">
+          <span class="num">02</span>
+          <h4>Naranja solo en acentos</h4>
+          <p>1-2 palabras de un titular, CTAs y bullets ✔ ★ ⚡. Nunca en cuerpos de texto.</p>
+        </div>
+        <div class="rule">
+          <span class="num">03</span>
+          <h4>Fondos: blanco o casi-negro</h4>
+          <p>#ffffff o #09090b. Sin medios tonos, sin gradientes decorativos.</p>
+        </div>
+        <div class="rule">
+          <span class="num">04</span>
+          <h4>Solo Inter</h4>
+          <p>No mezcles familias. Las voces vienen del peso (400-900) y de italic/uppercase, no de otro tipo.</p>
+        </div>
+        <div class="rule">
+          <span class="num">05</span>
+          <h4>Radios por surface</h4>
+          <p>App 8-16 px. Landing 48-64 px. Si dudas, app más cuadrado, landing más blando.</p>
+        </div>
+        <div class="rule">
+          <span class="num">06</span>
+          <h4>Hit targets ≥ 44</h4>
+          <p>Móvil y web. Las chips/pills suelen necesitar padding extra para llegar.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== DOWNLOAD CTA ============== -->
+    <section id="download" style="text-align: center; padding: var(--space-64) var(--space-32); background: var(--landing-bg-soft); border: 2px solid var(--landing-border); border-radius: var(--radius-card-xl); box-shadow: var(--shadow-orange);">
+      <p class="eyebrow" style="margin-bottom: var(--space-16);">Listo para empezar</p>
+      <h2 class="section-title" style="margin: 0 auto var(--space-24); max-width: 18ch;">
+        Descarga el <span style="color:var(--landing-accent)">paquete completo.</span>
+      </h2>
+      <p style="color: var(--landing-fg-muted); max-width: 56ch; margin: 0 auto var(--space-32); line-height: 1.6;">
+        Cada archivo es accesible individualmente arriba. Aquí descargas la carpeta entera para meterla
+        sin más en tu monorepo o publicarla como paquete npm.
+      </p>
+      <a href="export/" download style="display: inline-block; background: var(--landing-accent); color: #fff; padding: var(--space-16) var(--space-40); border-radius: var(--radius-pill); font-style: italic; font-weight: 900; text-transform: uppercase; text-decoration: none; box-shadow: var(--shadow-orange-cta); transition: background 0.3s ease; letter-spacing: 0.02em;">
+        Ver carpeta /export ▸
+      </a>
+      <p style="color: var(--landing-fg-subtle); margin: var(--space-24) 0 0; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;">
+        v1.0.0 · extraído de dprimenko/goveo-astro
+      </p>
+    </section>
+  </div>
+
+<script>
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.setAttribute('aria-pressed', 'false'));
+      tab.setAttribute('aria-pressed', 'true');
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+
+  // Copy buttons on every <pre>
+  document.querySelectorAll('pre').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', () => {
+      const text = pre.querySelector('code')?.innerText ?? pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1600);
+      });
+    });
+    pre.appendChild(btn);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOVEO.APP | Únete a la Revolución La video Smart City. El nuevo Marketing Local</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'naranja-goveo': '#e98027', 
+                'naranja-dark': '#d36d1d',
+                'zinc-950': '#09090b',
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        html { scroll-behavior: smooth; }
+        body { background-color: #09090b; color: #ffffff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        
+        .top-banner {
+            width: 100%;
+            height: 300px;
+            background-image: url('https://es.goveo.app/assets/img/bg/header-bg11-madrid-feb24.jpg'); 
+            background-size: cover;
+            background-position: top;
+            position: relative;
+        }
+
+        .top-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, #09090b);
+        }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .orange-glow { text-shadow: 0 0 20px rgba(233, 128, 39, 0.5); }
+
+        #freePlanModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .video-vertical-container {
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .input-modal {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e98027;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .input-modal:focus {
+            border-color: #e98027;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+        .pricing-tab-active { 
+            background-color: #e98027 !important; 
+            color: white !important; 
+            box-shadow: 0 4px 15px rgba(233, 128, 39, 0.4); 
+        }
+    </style>
+</head>
+
+<body class="antialiased overflow-x-hidden">
+
+    <div id="freePlanModal">
+
+
+
+
+
+
+        
+        <div class="glass-card p-8 md:p-12 rounded-[3.5rem] max-w-lg w-full relative border-naranja-goveo/40">
+            <button onclick="closeModal()" class="absolute top-6 right-8 text-zinc-500 hover:text-white font-black text-2xl">&times;</button>
+            <div class="text-center">
+                <div class="inline-block bg-naranja-goveo p-4 rounded-full mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </div>
+                <h2 class="text-3xl font-black italic uppercase leading-none mb-4">¡EMPIEZA GRATIS!</h2>
+                <div class="space-y-4 text-left mb-8">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-white text-black rounded-full h-6 w-6 flex items-center justify-center font-black shrink-0">1</span>
+                        <p class="font-bold text-sm uppercase italic">Descarga la aplicación GOVEO.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="bg-white text-black rounded-full h-6 w-6 flex items-center justify-center font-black shrink-0">2</span>
+                        <p class="font-bold text-sm uppercase italic">Regístrate como Usuario y Publisher.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="bg-white text-black rounded-full h-6 w-6 flex items-center justify-center font-black shrink-0">3</span>
+                        <p class="font-bold text-sm italic">Sube tu GeoClip (Video 30s geolocalizado).</p>
+                    </div>
+                    
+                    <div class="mt-8 pt-6 border-t border-white/10">
+                        <p class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-3 italic text-center">Recibe los pasos en tu móvil</p>
+                        <input type="tel" id="whatsappPhone" placeholder="TU TELÉFONO (ej: 34600111222)" class="w-full input-modal p-4 rounded-xl text-center mb-3 italic text-sm">
+                        <button onclick="sendWhatsAppInstructions()" class="w-full bg-naranja-goveo text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-naranja-dark transition-all italic shadow-lg">
+                            Enviarme instrucciones por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="top-banner"></div>
+
+    <div class="flex justify-center -mt-40 mb-8 relative z-20">
+        <img src="https://es.goveo.app/assets/img/logo-newgoveo.png" alt="Goveo Logo" class="h-40 w-40 object-contain drop-shadow-2xl">
+    </div>
+
+
+   <section class="relative px-6 text-center z-20">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-black italic leading-none text-white">Únete  <span class="text-naranja-goveo">Gratis </span> a la Vídeo Smart City </h2>
+
+        </div>
+    </section>
+<br>
+
+
+    <section class="relative px-6 text-center z-20">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-black italic leading-none text-white">El nuevo <span class="text-naranja-goveo">Marketing </span> local</h2>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-[0.9] tracking-tighter italic uppercase">geolocaliza <span class="text-naranja-goveo orange-glow">tu mejor Reel</span></h1>
+            <p class="text-lg md:text-xl font-medium text-zinc-400 mb-4 max-w-2xl mx-auto leading-tight italic">Basta de fotos y de caos/ruido de las Redes</p>
+            <h2 class="text-4xl font-black italic leading-none text-white">Atrae <span class="text-naranja-goveo">los clientes </span> fácilmente</h2>
+            <br>
+            <p class="text-lg md:text-xl font-medium text-zinc-400 mb-4 max-w-2xl mx-auto leading-tight italic">Bienvenidos al <span class="text-white font-bold">"Instagram" de los negocios físicos</span>.</p>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-zinc-900/40 border-y border-white/5">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h2 class="text-4xl font-black italic uppercase leading-none text-white">¿QUÉ ES UN <span class="text-naranja-goveo">GEOCLIP</span>?</h2>
+                <p class="text-zinc-400 text-lg font-medium">Un vídeo corto geolocalizado que permite que el cliente te encuentre y te conozca al instante.</p>
+                <ul class="space-y-4">
+                    <li class="flex gap-4">
+                        <span class="text-naranja-goveo font-black text-xl">✓</span>
+                        <p class="text-zinc-300 text-sm font-bold uppercase italic">Geolocalización exacta para tráfico real.</p>
+                    </li>
+                    <li class="flex gap-4">
+                        <span class="text-naranja-goveo font-black text-xl">✓</span>
+                        <p class="text-zinc-300 text-sm font-bold uppercase italic">Perfil Publisher y primer GeoClip sin coste.</p>
+                    </li>
+                </ul>
+                <div class="pt-6">
+                    <a href="#plan-free" class="inline-block bg-white text-black px-10 py-5 rounded-2xl font-black uppercase text-xs italic hover:bg-naranja-goveo hover:text-white transition-all shadow-xl tracking-widest">
+                        ¡SUBIR MI PRIMER VÍDEO GRATIS!
+                    </a>
+                </div>
+            </div>
+            <div class="video-vertical-container relative rounded-[2.5rem] overflow-hidden border-[6px] border-zinc-800 bg-black aspect-[9/16] shadow-2xl">
+                <video class="w-full h-full object-cover" poster="https://es.goveo.app/assets/img/bg/header-bg11-madrid-feb24.jpg" controls>
+                    <source src="https://res.cloudinary.com/goveo/video/upload/v1777898197/Promo_Goveo_Tiendas_15c_para_Intro_Video_User_6-mayo2026_2_wt9bh0.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+
+
+<section class="relative px-6 z-30 -mt-10 mb-20">
+        <div class="max-w-lg mx-auto">
+            <div class="glass-card p-8 md:p-12 rounded-[3.5rem] w-full border-naranja-goveo/40 shadow-[0_0_50px_rgba(233,128,39,0.15)]">
+                
+                <div class="text-center">
+                    <div class="inline-block bg-naranja-goveo p-4 rounded-full mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    </div>
+                    <h2 class="text-3xl font-black italic uppercase leading-none mb-4">¡EMPIEZA GRATIS!</h2>
+                    
+                    <div class="space-y-4 text-left mb-8">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-white text-black rounded-full h-6 w-6 flex items-center justify-center font-black shrink-0 text-xs">1</span>
+                            <p class="font-bold text-sm uppercase italic">Descarga la aplicación GOVEO.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="bg-white text-black rounded-full h-6 w-6 flex items-center justify-center font-black shrink-0 text-xs">2</span>
+                            <p class="font-bold text-sm uppercase italic">Regístrate como Usuario y Publisher.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="bg-white text-black rounded-full h-6 w-6 flex items-center justify-center font-black shrink-0 text-xs">3</span>
+                            <p class="font-bold text-sm italic">Sube tu GeoClip (Video Vertical- 30 segundos - 60MB).</p>
+                        </div>
+
+                        <div class="mt-6">
+    <a href="#descarga-app" class="block w-full text-center bg-white text-black py-4 rounded-xl font-black uppercase text-xs italic hover:bg-naranja-goveo hover:text-white transition-all shadow-lg tracking-widest">
+        IR A DESCARGAR LA APP
+    </a>
+</div>
+                    </div>
+
+                    <div class="border-t border-white/10 pt-6">
+                        <p class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2 italic">Contenido sujeto a aprobación de calidad</p>
+                        <p class="text-[9px] font-black text-zinc-500 tracking-widest mb-2 italic">Goveo se reserva el derecho de admisión.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+    <section id="tarifas" class="max-w-[1440px] mx-auto px-4 py-24 bg-zinc-950">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black italic leading-none text-white">Potencia <span class="text-naranja-goveo">tu negocio</span> en serio</h2>
+            <h2 class="text-4xl md:text-6xl font-black italic uppercase text-white tracking-tighter">CONFIGURA <span class="text-naranja-goveo">TU PLAN</span></h2>
+
+   
+<br>
+
+   
+      <h2 class="text-4xl font-black italic leading-none text-white">OFERTA<span class="text-naranja-goveo">LANZAMIENTO</span> adicional 20% </h2>
+            
+            <div class="flex justify-center mt-10">
+                <div class="bg-black/50 border border-white/10 p-1.5 rounded-2xl flex gap-1">
+                    <button onclick="changeTab('mensual')" id="t-mensual" class="pricing-tab-active px-6 py-2.5 rounded-xl font-black uppercase text-[10px] transition-all">Mensual</button>
+                    <button onclick="changeTab('semestral')" id="t-semestral" class="px-6 py-2.5 rounded-xl font-black uppercase text-[10px] text-zinc-500 hover:text-zinc-300 transition-all">Semestral (-15%)</button>
+                    <button onclick="changeTab('anual')" id="t-anual" class="px-6 py-2.5 rounded-xl font-black uppercase text-[10px] text-zinc-500 hover:text-zinc-300 transition-all">Anual (-30%)</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
+            
+            <div id="plan-free" class="glass-card p-8 rounded-[3rem] flex flex-col border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden transition-all hover:border-white/20">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black italic uppercase text-white leading-none">FREE</h3>
+                    <p class="text-[9px] font-bold text-zinc-500 uppercase italic mt-1 tracking-widest">PRUEBA LA REVOLUCIÓN</p>
+                </div>
+                <div class="mb-10">
+                    <div class="flex items-baseline">
+                        <span class="text-6xl font-black italic text-white leading-none">0€</span>
+                    </div>
+                    <p class="text-naranja-goveo text-[10px] font-black uppercase italic mt-4">Haz crecer tu negocio sin coste.</p>
+                </div>
+
+                <li class="flex items-center gap-3 text-white !text-white">
+  <span class="!text-white"></span> Negocios
+</li>
+<br>
+                <ul class="flex-grow space-y-4 text-[11px] text-zinc-400 font-bold uppercase italic mb-10">
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Perfil Publisher</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> 1 GeoClip Presentación (30 seg)</li>
+                         <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Visibilidad en zona de proximidad</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Geolocalización Exacta</li>
+                      <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> <span>Verificación de actividad periódica</span> </li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Publicaciones de Eventos</li>
+
+                
+        
+         
+
+              <li class="flex items-center gap-3 text-white !text-white">
+  <span class="!text-white"></span> Creadores Contenido
+</li>
+  <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Video de Lugares y Cultura</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Videos  de Eventos</li>
+
+                                  <li class="flex items-center gap-3 text-white !text-white">
+  <span class="!text-white"></span> Contenido revisado y sujeto a aprobación de calidad.
+
+                </ul>
+                <p class="text-[9px] font-bold text-zinc-500 italic mt-1 tracking-widest">SIN COMPROMISO</p>
+                <button onclick="openModal()" class="w-full border border-naranja-goveo text-naranja-goveo py-5 rounded-2xl font-black uppercase text-[11px] italic hover:bg-naranja-goveo hover:text-white transition-all mt-4">
+                    EMPIEZA GRATIS
+                </button>
+            </div>
+
+            <div class="glass-card p-8 rounded-[3rem] flex flex-col border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden transition-all hover:border-white/20">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black italic uppercase text-white leading-none">PREMIUM</h3>
+                    
+                    <p class="text-[9px] font-bold text-zinc-500 uppercase italic mt-1 tracking-widest">VISIBILIDAD LOCAL</p>
+                      
+                </div>
+                <div class="mb-10">
+                    <div class="flex flex-col">
+                        <span id="old-premium" class="text-xl font-bold italic text-zinc-600 line-through leading-none mb-1">35€</span>
+                        <div class="flex items-baseline">
+                            <span id="p-premium" class="text-6xl font-black italic text-white leading-none">29€</span>
+                            <span class="text-zinc-600 font-bold text-sm ml-2 italic">/pago</span>
+                        </div>
+                         
+                    </div>
+                    <p id="s-premium" class="text-naranja-goveo text-[10px] font-black uppercase italic mt-4 opacity-0 transition-opacity">Ahorro</p>
+                </div>
+                <ul class="flex-grow space-y-4 text-[11px] text-zinc-400 font-bold uppercase italic mb-10">
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Perfil Profesional</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Visibilidad Prioritaria</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Perfil Local</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Botones Web/WhatsApp/Reserva</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Hasta 20 vídeos</li>
+                       <li class="flex items-center gap-3"><span class="text-naranja-goveo">✔</span> Directo: Sin Comisiones</li>
+                   
+                    
+                </ul>
+                <p class="text-[9px] font-bold text-zinc-500 italic mt-1 tracking-widest">+ I.V.A.</p>
+                <button onclick="goToPlan('premium')" class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase text-[11px] italic hover:bg-naranja-goveo hover:text-white transition-all mt-4">
+                    CONTRATAR PREMIUM
+                </button>
+            </div>
+
+            <div class="relative p-[2px] rounded-[3.8rem] bg-gradient-to-b from-naranja-goveo to-naranja-dark xl:scale-105 shadow-[0_0_60px_rgba(233,128,39,0.25)] z-10">
+                <div class="bg-zinc-950 p-8 rounded-[3.7rem] h-full flex flex-col border border-naranja-goveo/20">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-naranja-goveo text-white text-[9px] font-black px-6 py-2.5 rounded-full uppercase italic tracking-widest shadow-xl">COMPLETO</div>
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-black italic uppercase text-white leading-none">PLATINUM</h3>
+                        <p class="text-[9px] font-bold text-naranja-goveo uppercase italic mt-1 tracking-widest">  POTENCIA PERFIL</p>
+                    </div>
+                    <div class="mb-10">
+                        <div class="flex flex-col">
+                            <span id="old-platinum" class="text-xl font-bold italic text-zinc-600 line-through leading-none mb-1">71€</span>
+                            <div class="flex items-baseline">
+                                <span id="p-platinum" class="text-6xl font-black italic text-white leading-none orange-glow">59€</span>
+                                <span class="text-zinc-600 font-bold text-sm ml-2 italic">/pago</span>
+                            </div>
+
+                          
+                        </div>
+                        <p id="s-platinum" class="text-naranja-goveo text-[10px] font-black uppercase italic mt-4 opacity-0 transition-opacity">Ahorro</p>
+                    </div>
+                    <ul class="flex-grow space-y-4 text-[11px] text-zinc-200 font-bold uppercase italic mb-10">
+                                <li class="flex items-center gap-3"><span class="text-naranja-goveo"></span> Premium y :</li>
+                 
+<li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span> Exclusividad. Nº Limitado por categoria y zona</li>
+<li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span> Visibilidad provincial y Nacional</li>
+                   <li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span> Geostories</li>
+                        <li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span> Hasta 50 vídeos</li>
+                          <li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span> Hasta 200 productos</li>
+                           <li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span> Estadisticas</li>
+                           
+                            
+
+                    </ul>
+                    <p class="text-[9px] font-bold text-zinc-500 italic mt-1 tracking-widest">+ I.V.A.</p>
+                    <button onclick="goToPlan('platinum')" class="w-full bg-naranja-goveo text-white py-6 rounded-2xl font-black uppercase text-[11px] italic shadow-lg hover:bg-naranja-dark transition-all mt-4">
+                        ACTIVAR PLATINUM
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 rounded-[3rem] flex flex-col border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden transition-all hover:border-white/20 opacity-90 hover:opacity-100">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black italic uppercase text-white leading-none">BOOST</h3>
+                    <p class="text-[9px] font-bold text-zinc-500 uppercase italic mt-1 tracking-widest">DOMINIO TOTAL</p>
+                </div>
+                <div class="mb-10">
+                    <div class="flex flex-col">
+                        <span id="old-boost" class="text-xl font-bold italic text-zinc-600 line-through leading-none mb-1">144€</span>
+                        <div class="flex items-baseline">
+                               <span class="text-zinc-600 font-bold text-sm ml-2 italic">Desde</span>
+                               <span id="p-boost" class="text-6xl font-black italic text-white leading-none">120€</span>
+                            <span class="text-zinc-600 font-bold text-sm ml-2 italic">/pago</span>
+                        </div>
+                    </div>
+                    <p id="s-boost" class="text-naranja-goveo text-[10px] font-black uppercase italic mt-4 opacity-0 transition-opacity">Ahorro</p>
+                </div>
+                <ul class="flex-grow space-y-4 text-[11px] text-zinc-400 font-bold uppercase italic mb-10">
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo text-lg">★</span>visibilidad Prioritaria</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">⚡</span> Dominio en zona</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">⚡</span> Top 3 Categoría</li>
+                    <li class="flex items-center gap-3"><span class="text-naranja-goveo">⚡</span> Soporte VIP</li>
+                </ul>
+                <p class="text-[9px] font-bold text-zinc-500 italic mt-1 tracking-widest">+ I.V.A.</p>
+                <button onclick="goToPlan('boost')" class="w-full border border-zinc-700 text-zinc-500 py-5 rounded-2xl font-black uppercase text-[11px] italic hover:border-white hover:text-white transition-all mt-4">
+                    SOLICITAR BOOST
+                </button>
+            </div>
+
+
+
+        </div>
+    </section>
+
+
+
+
+
+    <section id="tarifas" class="max-w-[1440px] mx-auto px-4 py-24 bg-zinc-950">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black italic leading-none text-white">-Sujeto <span class="text-naranja-goveo"> a calidad </span> del negocio y contenidos-</h2>
+    
+
+   
+        </div>
+    </section>
+
+
+
+
+
+
+    <section id="AYUDA" class="max-w-[1440px] mx-auto px-4 py-24 bg-zinc-950">
+        <div class="text-center mb-16">
+       
+
+            <h2 class="text-4xl font-black italic uppercase leading-none text-white mb-8">
+        
+                ¿Te ayudamos <span class="text-naranja-goveo"></span>?
+            </h2>
+            
+            <div class="max-w-md mx-auto">
+                <div class="glass-card p-8 md:p-12 rounded-[3.5rem] shadow-2xl border-naranja-goveo/40">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-black italic uppercase leading-[0.9] mb-4 text-white text-balance"> AYUDA</h2>
+                        <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest italic">
+                            te DIREMOS SI TU video encaja y te guiamos.
+
+                        </p>
+                    </div>
+                    
+                    <form id="goveoForm" class="space-y-3">
+                        <input type="text" name="empresa" required placeholder="NOMBRE DEL NEGOCIO" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold text-sm text-white focus:border-naranja-goveo outline-none">
+                        <input type="url" name="instagram_url" required placeholder="URL DEL VÍDEO DE INSTAGRAM" class="w-full bg-white/5 border border-white/20 p-4 rounded-xl font-bold text-sm text-naranja-goveo focus:border-naranja-goveo outline-none placeholder:text-zinc-600">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="text" name="zona" required placeholder="DIRECCION" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold text-sm text-white focus:border-naranja-goveo outline-none">
+                            <input type="tel" name="telefono" required placeholder="TELÉFONO" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold text-sm text-white focus:border-naranja-goveo outline-none">
+                        </div>
+                        <input type="email" name="email" required placeholder="EMAIL CORPORATIVO" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold text-sm text-white focus:border-naranja-goveo outline-none">
+                        
+                        <button type="submit" id="submitBtn" class="w-full bg-naranja-goveo text-white py-6 rounded-2xl font-black uppercase tracking-widest text-sm mt-6 hover:bg-naranja-dark transition-all italic shadow-lg">
+                            Solicitar asistencia
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="AYUDA" class="max-w-[1440px] mx-auto px-4 py-24 bg-zinc-950">
+    <div class="text-center mb-16">
+        <h2 class="text-4xl font-black italic uppercase leading-none text-white mb-8">
+            Más información <span class="text-naranja-goveo"></span>
+        </h2>
+
+        <div class="max-w-md mx-auto">
+            <!-- Cambio de <button> a <a> y de 'onclick' a 'href' -->
+            <a href="https://es.goveo.app/negocios2" 
+               class="inline-block w-full border border-naranja-goveo text-naranja-goveo py-5 rounded-2xl font-black uppercase text-[11px] italic hover:bg-naranja-goveo hover:text-white transition-all mt-4 text-center">
+                Más detalle
+            </a>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="py-24 px-6 bg-zinc-900/20">
+    <div class="max-w-6xl mx-auto glass-card p-10 md:p-16 rounded-[4rem] border-naranja-goveo/30 relative overflow-hidden">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            
+            <div class="space-y-8">
+                <div class="inline-block bg-naranja-goveo/10 text-naranja-goveo text-[10px] font-black px-4 py-2 rounded-full uppercase italic tracking-widest border border-naranja-goveo/20">
+                    PROMO EXCLUSIVA
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black italic uppercase leading-[0.9] text-white">
+                    Comparte <span class="text-naranja-goveo"></span>
+                </h2>
+                <h3 class="text-4xl md:text-5xl font-black italic uppercase leading-[0.9] text-white">
+                    Consigue seguidores<span class="text-naranja-goveo">y ahorra</span>
+                </h3>
+                <p class="text-zinc-400 text-lg font-medium leading-relaxed italic">
+                    Publica esta gráfica en tus historias o perfil de Instagram.
+                    <span class="text-white font-black underline decoration-naranja-goveo"> Para atraer seguidores a perfil de goveo.</span> 
+
+  <p class="text-zinc-400 text-lg font-medium leading-relaxed italic">
+                    O consigue 100/200 
+                    <span class="text-white font-black underline decoration-naranja-goveo"> primeros seguidores.</span> 
+
+
+                <p class="text-zinc-400 text-lg font-medium leading-relaxed italic">
+                  Te damos un <span class="text-white font-black underline decoration-naranja-goveo">20% DE DESCUENTO</span> durante 6 meses en cualquier plan.
+                </p>
+                <div class="pt-4">
+                    <!-- Botón configurado con la URL real y nombre de archivo -->
+                    <button onclick="descargarImagen('https://es.goveo.app/assets/img/sharenewgoveo.png', 'promo-goveo.png')" 
+                        class="bg-white text-black px-8 py-4 rounded-2xl font-black uppercase text-xs italic hover:bg-naranja-goveo hover:text-white transition-all shadow-xl tracking-widest flex items-center gap-3">
+                        
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        DESCARGAR GRÁFICA
+                    </button>
+
+                    <br>
+                    <p class="text-zinc-400 text-sm font-medium leading-relaxed italic">
+                        Descarga la imagen y compártela en redes (Feed/Stories) de FB e IG. 
+                        Etiquétanos y te enviamos el código descuento.
+                    </p>
+                </div>
+            </div>
+
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-naranja-goveo to-naranja-dark rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative bg-zinc-950 rounded-3xl overflow-hidden border border-white/10 shadow-2xl aspect-video md:aspect-square flex items-center justify-center">
+                    <img src="https://es.goveo.app/assets/img/sharenewgoveo.png" alt="Gráfica Promo Goveo" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-8">
+                        <p class="text-white font-black italic text-2xl uppercase tracking-tighter leading-none">#goveo.app</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+async function descargarImagen(url, nombreArchivo) {
+    try {
+        const respuesta = await fetch(url);
+        if (!respuesta.ok) throw new Error('Error al obtener la imagen');
+        
+        const blob = await respuesta.blob();
+        const urlBlob = window.URL.createObjectURL(blob);
+        
+        const enlace = document.createElement('a');
+        enlace.style.display = 'none';
+        enlace.href = urlBlob;
+        enlace.download = nombreArchivo;
+        
+        document.body.appendChild(enlace);
+        enlace.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(enlace);
+            window.URL.revokeObjectURL(urlBlob);
+        }, 100);
+    } catch (error) {
+        console.error("Fallo la descarga automática, abriendo imagen...", error);
+        window.open(url, '_blank');
+    }
+}
+</script>
+
+
+    <footer class="py-16 text-center border-t border-white/5">
+        <div class="flex flex-wrap justify-center gap-6 mb-8 px-4">
+             <a href="https://goveo.app" target="_blank" class="hover:scale-105 transition-transform"><img src="https://es.goveo.app/assets/img/web-app.png" alt="Web App" class="h-12 md:h-14"></a>
+             <a href="https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=app.goveo.android" target="_blank" class="hover:scale-105 transition-transform"><img src="https://es.goveo.app/assets/img/android_download.png" alt="Google Play" class="h-12 md:h-14"></a>
+             <a href="https://apps.apple.com/us/app/goveo/id1480569862?l=es&ls=1" target="_blank" class="hover:scale-105 transition-transform"><img src="https://es.goveo.app/assets/img/ios_download.svg" alt="App Store" class="h-12 md:h-14"></a>
+        </div>
+        <footer id="descarga-app" class="py-16 text-center border-t border-white/5"></footer>
+        <p class="text-zinc-800 text-[8px] uppercase tracking-[0.4em] font-black italic">GOVEO.APP 2026 — INNOVATION IN MOTION</p>
+    </footer>
+
+    <script>
+        const planUrls = {
+            premium: { mensual: "https://buy.stripe.com/cNiaEY7ZXgt6auc4VMdMI1f", semestral: "https://buy.stripe.com/14A28sgwt4Ko31KcoedMI1j", anual: "https://buy.stripe.com/9B65kE4NL90E6dW0FwdMI1m" },
+            platinum: { mensual: "https://buy.stripe.com/aFa8wQfsp5Os6dW2NEdMI1g", semestral: "https://buy.stripe.com/28E7sM6VT2CgeKsewmdMI1k", anual: "https://buy.stripe.com/6oU6oIfspekYfOw2NEdMI1n" },
+            boost: { mensual: "https://buy.stripe.com/fZu4gAgwt4Ko9q8gEudMI1i", semestral: "https://buy.stripe.com/4gM3cw4NL0u859S1JAdMI1l", anual: "https://buy.stripe.com/14A3cw9412Cg0TCgEudMI1o" }
+        };
+
+        const pricingData = {
+            premium: { m: 29, s: 147, a: 243, saveS: "Ahorras 26€", saveA: "Ahorras 105€" },
+            platinum: { m: 59, s: 299, a: 495, saveS: "Ahorras 53€", saveA: "Ahorras 213€" },
+            boost: { m: 150, s: 765, a: 1260, saveS: "Ahorras 135€", saveA: "Ahorras 540€" }
+        };
+
+        let currentActiveTab = 'mensual';
+
+        function changeTab(tab) {
+            currentActiveTab = tab;
+            ['mensual', 'semestral', 'anual'].forEach(t => {
+                const btn = document.getElementById(`t-${t}`);
+                if(btn) {
+                    btn.className = t === tab 
+                        ? 'pricing-tab-active px-6 py-2.5 rounded-xl font-black uppercase text-[10px] transition-all' 
+                        : 'px-6 py-2.5 rounded-xl font-black uppercase text-[10px] text-zinc-500 transition-all hover:text-zinc-300';
+                }
+            });
+
+            ['premium', 'platinum', 'boost'].forEach(plan => {
+                const pKey = tab === 'mensual' ? 'm' : (tab === 'semestral' ? 's' : 'a');
+                const currentPrice = pricingData[plan][pKey];
+                const priceEl = document.getElementById(`p-${plan}`);
+                if(priceEl) priceEl.innerText = currentPrice + "€";
+                const oldPriceEl = document.getElementById(`old-${plan}`);
+                if(oldPriceEl) {
+                    const oldPrice = Math.round(currentPrice * 1.20);
+                    oldPriceEl.innerText = oldPrice + "€";
+                }
+                const sLabel = document.getElementById(`s-${plan}`);
+                if (sLabel) {
+                    if (tab === 'semestral') { sLabel.innerText = pricingData[plan].saveS; sLabel.style.opacity = 1; }
+                    else if (tab === 'anual') { sLabel.innerText = pricingData[plan].saveA; sLabel.style.opacity = 1; }
+                    else { sLabel.style.opacity = 0; }
+                }
+            });
+        }
+
+        function goToPlan(plan) {
+            const url = planUrls[plan][currentActiveTab];
+            window.open(url, '_blank');
+        }
+
+        function openModal() {
+            document.getElementById('freePlanModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('freePlanModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function sendWhatsAppInstructions() {
+            const phone = document.getElementById('whatsappPhone').value.trim();
+            if(!phone) return alert('Por favor introduce un teléfono');
+            const text = encodeURIComponent("Hola Goveo! Quiero empezar a subir mis GeoClips. 1.-Descarga la aplicación GOVEO. 2-Regístrate como Usuario y Publisher.y 3.  Sube tu GeoClip (Video 30s geolocalizado).  ");
+            window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank');
+        }
+    </script>
+</body>
+</html>

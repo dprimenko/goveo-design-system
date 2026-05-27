@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es" data-screen-label="Search">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goveo · Buscar</title>
+  <link rel="icon" href="../../../assets/favicon.png" />
+  <link rel="stylesheet" href="../../../product.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../screens.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+  <style>
+    .search {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--gp-space-6);
+      align-items: start;
+    }
+    @media (max-width: 900px) { .search { grid-template-columns: 1fr; } }
+
+    /* Desktop filter sidebar */
+    .filters {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--gp-radius-md);
+      padding: var(--gp-space-4);
+      display: flex; flex-direction: column;
+      gap: var(--gp-space-4);
+      position: sticky;
+      top: 80px;
+    }
+    @media (max-width: 900px) { .filters { display: none; } }
+
+    .filters__group { display: flex; flex-direction: column; gap: 10px; }
+    .filters__group h4 {
+      font-size: var(--gp-fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--fg-subtle);
+      margin: 0;
+    }
+    .filters__list { display: flex; flex-direction: column; gap: 8px; }
+
+    /* Big search input */
+    .big-search { margin-bottom: var(--gp-space-4); }
+    .big-search .gp-input { height: 52px; font-size: var(--gp-fs-md); }
+    .big-search .gp-input-wrap__icon { left: 18px; }
+    .big-search .gp-input-wrap > .gp-input { padding-left: 48px; }
+
+    /* Active filters row */
+    .active-filters {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-bottom: var(--gp-space-4);
+      font-size: var(--gp-fs-sm);
+      color: var(--fg-muted);
+    }
+
+    /* Results header */
+    .results-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--gp-space-4);
+    }
+    .results-head__left { display: flex; align-items: baseline; gap: 8px; }
+    .results-head__count { font-size: var(--gp-fs-lg); font-weight: 600; }
+    .results-head__sub { font-size: var(--gp-fs-sm); color: var(--fg-muted); }
+
+    /* Tabs row */
+    .results-tabs {
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px;
+      background: var(--bg-muted);
+      border-radius: var(--gp-radius-md);
+    }
+    .results-tab {
+      padding: 6px 12px;
+      background: transparent;
+      border: none;
+      border-radius: var(--gp-radius-sm);
+      font-size: var(--gp-fs-sm);
+      font-weight: 500;
+      color: var(--fg-muted);
+      cursor: pointer;
+    }
+    .results-tab--active { background: var(--bg-surface); color: var(--fg-default); box-shadow: var(--shadow-xs); }
+
+    /* Mobile filter trigger */
+    .mobile-filter-row {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: var(--gp-space-3);
+    }
+    @media (max-width: 900px) { .mobile-filter-row { display: flex; } }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body class="gp-product">
+  <div id="root"></div>
+
+  <script type="text/babel" src="../components/Icon.jsx"></script>
+  <script type="text/babel" src="../components/Button.jsx"></script>
+  <script type="text/babel" src="../components/Field.jsx"></script>
+  <script type="text/babel" src="../components/Badge.jsx"></script>
+  <script type="text/babel" src="../components/Card.jsx"></script>
+  <script type="text/babel" src="../components/Nav.jsx"></script>
+  <script type="text/babel" src="../components/Overlays.jsx"></script>
+
+  <script type="text/babel">
+    const CATEGORIES = [
+      { id: "food", label: "Restauración", icon: "fork-knife" },
+      { id: "shop", label: "Tiendas", icon: "shopping-bag" },
+      { id: "culture", label: "Cultura", icon: "ticket" },
+      { id: "tourism", label: "Turismo", icon: "binoculars" },
+      { id: "events", label: "Eventos", icon: "confetti" },
+      { id: "nightlife", label: "Vida nocturna", icon: "wine" },
+    ];
+
+    const CLIPS = [
+      { id: 1, poster: "https://images.unsplash.com/photo-1543340904-0b1d843bccda?w=480", title: "Brunch en Sierpes", distance: "230 m", duration: "0:28" },
+      { id: 2, poster: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=480", title: "Flamenco esta noche", distance: "1,2 km", duration: "0:30" },
+      { id: 3, poster: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=480", title: "Helado artesanal", distance: "180 m", duration: "0:18" },
+      { id: 4, poster: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=480", title: "Mercado Encarnación", distance: "850 m", duration: "0:24" },
+      { id: 5, poster: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=480", title: "Tapas en Triana", distance: "1,5 km", duration: "0:26" },
+      { id: 6, poster: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=480", title: "Cata de Jerez", distance: "1,1 km", duration: "0:22" },
+    ];
+
+    const BUSINESSES = [
+      { id: 1, avatar: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=80", name: "El Fogón de Sevilla", category: "Restaurante · Tapas", distance: "230 m", rating: "4.7", plan: "Platinum" },
+      { id: 2, avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80", name: "Casa del Flamenco", category: "Cultura · Espectáculos", distance: "1,2 km", rating: "4.9", plan: "Premium" },
+      { id: 3, avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80", name: "Helado Bueno", category: "Heladería", distance: "180 m", rating: "4.6" },
+      { id: 4, avatar: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=80", name: "Bodega Triana", category: "Vinos · Tapas", distance: "1,5 km", rating: "4.5", plan: "Premium" },
+    ];
+
+    const EVENTS = [
+      { day: "14", month: "JUN", title: "Cata de vinos andaluces", time: "20:00", place: "El Fogón de Sevilla" },
+      { day: "21", month: "JUN", title: "Flamenco en directo", time: "22:30", place: "Casa del Flamenco" },
+      { day: "05", month: "JUL", title: "Festival Sierpes Verde", time: "18:00", place: "Plaza San Francisco" },
+    ];
+
+    const sidebarItems = [
+      { label: "Feed", icon: <Icon name="house" /> },
+      { label: "Buscar", icon: <Icon name="magnifying-glass" weight="fill" />, active: true },
+      { label: "Mapa", icon: <Icon name="map-trifold" /> },
+      { label: "Mis sitios", icon: <Icon name="bookmark-simple" /> },
+      { label: "Mensajes", icon: <Icon name="chat-circle" />, badge: <Badge variant="accent">2</Badge> },
+      { kind: "label", label: "Cuenta" },
+      { label: "Ajustes", icon: <Icon name="gear" /> },
+    ];
+
+    const bottomItems = [
+      { label: "Feed", icon: <Icon name="house" size={22} /> },
+      { label: "Buscar", icon: <Icon name="magnifying-glass" size={22} weight="fill" />, active: true },
+      { icon: <Icon name="plus" size={22} weight="bold" />, fab: true },
+      { label: "Mensajes", icon: <Icon name="chat-circle" size={22} /> },
+      { label: "Perfil", icon: <Icon name="user" size={22} /> },
+    ];
+
+    function App() {
+      const [query, setQuery] = React.useState("");
+      const [tab, setTab] = React.useState("all");
+      const [city, setCity] = React.useState("Sevilla");
+      const [distance, setDistance] = React.useState("5");
+      const [openNow, setOpenNow] = React.useState(true);
+      const [premium, setPremium] = React.useState(false);
+      const [activeCats, setActiveCats] = React.useState(new Set(["food"]));
+      const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+      const toggleCat = (id) => {
+        setActiveCats((prev) => {
+          const n = new Set(prev);
+          n.has(id) ? n.delete(id) : n.add(id);
+          return n;
+        });
+      };
+
+      const activeFiltersCount =
+        activeCats.size + (openNow ? 1 : 0) + (premium ? 1 : 0) + (distance !== "5" ? 1 : 0);
+
+      const clearAll = () => {
+        setActiveCats(new Set());
+        setOpenNow(false);
+        setPremium(false);
+        setDistance("5");
+      };
+
+      const FiltersBody = ({ inDrawer }) => (
+        <>
+          <div className="filters__group">
+            <h4>Ciudad</h4>
+            <Select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              options={[
+                { value: "Sevilla", label: "Sevilla" },
+                { value: "Madrid", label: "Madrid" },
+                { value: "Barcelona", label: "Barcelona" },
+                { value: "Ibiza", label: "Ibiza" },
+              ]}
+            />
+          </div>
+
+          <div className="filters__group">
+            <h4>Distancia</h4>
+            <div className="filters__list">
+              {["1", "5", "10", "25"].map((km) => (
+                <Radio key={km} label={`${km} km a la redonda`} name={inDrawer ? "dist-d" : "dist"} checked={distance === km} onChange={() => setDistance(km)} />
+              ))}
+            </div>
+          </div>
+
+          <div className="filters__group">
+            <h4>Categorías</h4>
+            <div className="filters__list">
+              {CATEGORIES.map((c) => (
+                <Checkbox
+                  key={c.id}
+                  label={c.label}
+                  checked={activeCats.has(c.id)}
+                  onChange={() => toggleCat(c.id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="filters__group">
+            <h4>Otros</h4>
+            <div className="filters__list">
+              <Toggle label="Solo abiertos ahora" checked={openNow} onChange={(e) => setOpenNow(e.target.checked)} />
+              <Toggle label="Solo Premium / Platinum" checked={premium} onChange={(e) => setPremium(e.target.checked)} />
+            </div>
+          </div>
+
+          {activeFiltersCount > 0 && (
+            <Button variant="ghost" size="sm" iconLeft={<Icon name="x" weight="bold" />} onClick={clearAll}>
+              Limpiar {activeFiltersCount} filtros
+            </Button>
+          )}
+        </>
+      );
+
+      const showClips = tab === "all" || tab === "clips";
+      const showBiz   = tab === "all" || tab === "business";
+      const showEvts  = tab === "all" || tab === "events";
+
+      return (
+        <div className="app-shell">
+          <Sidebar
+            brand={<><img src="../../../assets/goveo-app-icon.jpg" style={{ width: 28, height: 28, borderRadius: 6 }} /><span>Goveo</span></>}
+            items={sidebarItems}
+          />
+
+          <div className="app-shell__main">
+            <div className="screen">
+              <div className="screen-head">
+                <div className="screen-head__main">
+                  <h1 className="screen-head__title">Buscar cerca de ti</h1>
+                  <p className="screen-head__sub">GeoClips, negocios y eventos en {city} y alrededores.</p>
+                </div>
+              </div>
+
+              {/* Big search */}
+              <div className="big-search">
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="¿Qué te apetece? Tapas, flamenco, helado…"
+                  iconLeft={<Icon name="magnifying-glass" size={18} />}
+                  iconRight={query ? <Icon name="x" size={16} weight="bold" /> : null}
+                  onTrailingClick={() => setQuery("")}
+                />
+              </div>
+
+              {/* Quick category chips */}
+              <div className="filter-bar">
+                {CATEGORIES.map((c) => (
+                  <Chip
+                    key={c.id}
+                    active={activeCats.has(c.id)}
+                    onClick={() => toggleCat(c.id)}
+                    iconLeft={<Icon name={c.icon} size={14} />}
+                  >
+                    {c.label}
+                  </Chip>
+                ))}
+              </div>
+
+              {/* Mobile filter trigger */}
+              <div className="mobile-filter-row">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  iconLeft={<Icon name="sliders" />}
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  Filtros {activeFiltersCount > 0 && <Badge variant="accent" style={{ marginLeft: 4 }}>{activeFiltersCount}</Badge>}
+                </Button>
+                <div style={{ marginLeft: "auto" }}>
+                  <Select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    options={[
+                      { value: "Sevilla", label: "Sevilla" },
+                      { value: "Madrid", label: "Madrid" },
+                      { value: "Barcelona", label: "Barcelona" },
+                      { value: "Ibiza", label: "Ibiza" },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              <div className="search">
+                {/* Desktop filters sidebar */}
+                <aside className="filters">
+                  <FiltersBody inDrawer={false} />
+                </aside>
+
+                <main>
+                  {/* Results header */}
+                  <div className="results-head">
+                    <div className="results-head__left">
+                      <span className="results-head__count">142 resultados</span>
+                      <span className="results-head__sub">en {distance} km · {city}</span>
+                    </div>
+                    <div className="results-tabs">
+                      <button className={`results-tab ${tab === "all" ? "results-tab--active" : ""}`} onClick={() => setTab("all")}>Todo</button>
+                      <button className={`results-tab ${tab === "clips" ? "results-tab--active" : ""}`} onClick={() => setTab("clips")}>GeoClips</button>
+                      <button className={`results-tab ${tab === "business" ? "results-tab--active" : ""}`} onClick={() => setTab("business")}>Negocios</button>
+                      <button className={`results-tab ${tab === "events" ? "results-tab--active" : ""}`} onClick={() => setTab("events")}>Eventos</button>
+                    </div>
+                  </div>
+
+                  {/* Active filters strip */}
+                  {(activeCats.size > 0 || openNow || premium) && (
+                    <div className="active-filters">
+                      <span>Filtros activos:</span>
+                      {[...activeCats].map((id) => {
+                        const c = CATEGORIES.find((x) => x.id === id);
+                        return <Chip key={id} active onClose={() => toggleCat(id)}>{c.label}</Chip>;
+                      })}
+                      {openNow && <Chip active onClose={() => setOpenNow(false)}>Abierto ahora</Chip>}
+                      {premium && <Chip active onClose={() => setPremium(false)}>Solo Premium</Chip>}
+                    </div>
+                  )}
+
+                  {/* GeoClips */}
+                  {showClips && (
+                    <section style={{ marginBottom: 32 }}>
+                      {tab === "all" && <h3 className="gp-h4" style={{ marginBottom: 12 }}>GeoClips destacados</h3>}
+                      <div className="grid-cards">
+                        {CLIPS.map((c) => <GeoClipCard key={c.id} {...c} />)}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Businesses */}
+                  {showBiz && (
+                    <section style={{ marginBottom: 32 }}>
+                      {tab === "all" && <h3 className="gp-h4" style={{ marginBottom: 12 }}>Negocios cerca</h3>}
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {BUSINESSES.map((b) => (
+                          <BusinessCard
+                            key={b.id}
+                            avatar={b.avatar}
+                            name={b.name}
+                            category={b.category}
+                            distance={b.distance}
+                            rating={b.rating}
+                            right={b.plan ? <Badge variant="accent">{b.plan}</Badge> : <Icon name="caret-right" size={16} />}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Events */}
+                  {showEvts && (
+                    <section style={{ marginBottom: 32 }}>
+                      {tab === "all" && <h3 className="gp-h4" style={{ marginBottom: 12 }}>Próximos eventos</h3>}
+                      <div style={{ display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+                        {EVENTS.map((e, i) => <EventCard key={i} {...e} />)}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* No-results example trigger */}
+                  {query.toLowerCase() === "nada" && (
+                    <EmptyState
+                      icon="magnifying-glass"
+                      title="No encontramos nada con esa búsqueda"
+                      sub="Prueba con otras palabras, cambia los filtros o amplía la distancia."
+                      actions={<>
+                        <Button variant="secondary" size="sm" onClick={() => setDistance("25")}>Ampliar a 25 km</Button>
+                        <Button variant="primary" size="sm" onClick={() => setQuery("")}>Limpiar búsqueda</Button>
+                      </>}
+                    />
+                  )}
+                </main>
+              </div>
+            </div>
+
+            <div className="mobile-bottombar">
+              <BottomBar items={bottomItems} />
+            </div>
+          </div>
+
+          {drawerOpen && (
+            <Drawer
+              title="Filtros"
+              onClose={() => setDrawerOpen(false)}
+              footer={<>
+                <Button variant="ghost" block onClick={clearAll}>Limpiar</Button>
+                <Button variant="primary" block onClick={() => setDrawerOpen(false)}>
+                  Aplicar {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+                </Button>
+              </>}
+            >
+              <FiltersBody inDrawer={true} />
+            </Drawer>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

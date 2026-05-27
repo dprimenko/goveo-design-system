@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body {
+    background: #fff;
+    padding: 24px 28px;
+    font-family: var(--font-sans);
+    color: var(--neutral-900);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  .cell {
+    border-radius: 16px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .light { background: #fff; border: 1px solid var(--neutral-200); }
+  .dark { background: var(--zinc-950); }
+  .grad { background: linear-gradient(135deg, #f96a3f 0%, #e98027 50%, #d44d23 100%); }
+  .cell img { max-height: 78%; max-width: 78%; object-fit: contain; }
+  .label {
+    position: absolute;
+    bottom: 8px; left: 10px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .light .label { color: var(--neutral-500); }
+</style>
+</head>
+<body>
+  <div class="cell light">
+    <img src="../assets/goveo-logo.png" alt="Goveo logo">
+    <div class="label">Light bg</div>
+  </div>
+  <div class="cell dark">
+    <img src="../assets/goveo-logo.png" alt="Goveo logo">
+    <div class="label">Dark bg</div>
+  </div>
+  <div class="cell grad">
+    <img src="../assets/goveo-app-icon.jpg" alt="Goveo app icon" style="border-radius: 18%; box-shadow: 0 8px 24px rgba(0,0,0,0.35)">
+    <div class="label">App icon</div>
+  </div>
+</body>
+</html>

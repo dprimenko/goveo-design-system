@@ -1,0 +1,83 @@
+---
+/**
+ * Goveo · Astro · Example landing page using the design tokens.
+ *
+ * 1. Copy `export/tokens.css` to `src/styles/tokens.css`
+ * 2. Import it in your layout: `import '~/styles/tokens.css';`
+ *    (or add to <link rel="stylesheet"> in the head)
+ * 3. Use the CSS variables anywhere.
+ *
+ * This file is .astro — drop into `src/pages/landing-example.astro`.
+ */
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Goveo · Example</title>
+    <link rel="stylesheet" href="/tokens.css" />
+  </head>
+
+  <body class="gv-dark">
+    <main>
+      <section class="hero">
+        <p class="gv-eyebrow">Prueba la revolución</p>
+        <h1 class="gv-poster-xl">
+          Geolocaliza <span class="accent">tu mejor reel</span>
+        </h1>
+        <p class="lede">Basta de fotos y de caos/ruido de las Redes.</p>
+        <a href="#" class="cta">¡Empieza Gratis!</a>
+      </section>
+
+      <section class="card">
+        <p class="gv-eyebrow">¿Qué es un GeoClip?</p>
+        <h2 class="gv-poster-lg">
+          Un vídeo de <span class="accent">30 segundos</span> en tu sitio.
+        </h2>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: var(--space-96) var(--space-24);
+    display: grid;
+    gap: var(--space-64);
+  }
+  .hero { display: grid; gap: var(--space-24); justify-items: start; }
+  .accent {
+    color: var(--landing-accent);
+    text-shadow: var(--orange-glow);
+  }
+  .lede {
+    color: var(--landing-fg-muted);
+    font-size: var(--fs-display3);
+    max-width: 32ch;
+  }
+  .cta {
+    display: inline-block;
+    background: var(--landing-accent);
+    color: #fff;
+    padding: var(--space-16) var(--space-32);
+    border-radius: var(--radius-pill);
+    font-style: italic;
+    font-weight: var(--fw-black);
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: var(--shadow-orange-cta);
+    transition: background 0.3s ease;
+  }
+  .cta:hover { background: var(--landing-accent-hover); }
+  .card {
+    background: var(--landing-bg-soft);
+    backdrop-filter: blur(15px);
+    border: 2px solid var(--landing-border);
+    border-radius: var(--radius-card-xl);
+    padding: var(--space-48);
+    box-shadow: var(--shadow-orange);
+  }
+</style>

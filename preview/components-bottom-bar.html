@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" -->
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+<style>
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: #15151a;
+    font-family: var(--font-sans);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+    padding: 24px;
+    color: #fff;
+  }
+  .label {
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #71717a;
+  }
+  .phone {
+    position: relative;
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    height: 240px;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .phone-content {
+    position: absolute;
+    inset: 0 0 64px 0;
+    background: linear-gradient(180deg, #f5f7f9 0%, #fff 60%);
+    padding: 16px;
+    color: #292c32;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .phone-content h3 {
+    margin: 0; font-size: 16px; font-weight: 800;
+    letter-spacing: -0.2px;
+  }
+  .phone-content h3 span { color: #f96a3f; }
+  .skeleton {
+    height: 8px;
+    background: #e9e9eb;
+    border-radius: 4px;
+  }
+  .skeleton.w-60 { width: 60%; }
+  .skeleton.w-80 { width: 80%; }
+
+  /* FAB top-right */
+  .fab {
+    position: absolute;
+    top: 12px; right: 12px;
+    z-index: 5;
+    width: 36px; height: 36px;
+    border-radius: 999px;
+    background: #f96a3f;
+    border: 0;
+    display: grid; place-items: center;
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(249,106,63,0.45), 0 1px 3px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+  .fab i { font-size: 18px; }
+
+  /* Bottom bar */
+  .bar {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: #000;
+    height: 64px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    padding: 0 4px;
+  }
+  .tab {
+    background: transparent; border: 0; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 0;
+    color: rgba(255,255,255,0.92);
+    font-family: var(--font-sans);
+  }
+  .tab i { font-size: 22px; line-height: 1; }
+  .tab__label { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .tab--active i,
+  .tab--active .tab__label { color: #fff; }
+  .tab--active .tab__label {
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1.2px;
+  }
+
+  /* spec list */
+  .spec {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    font-size: 10px;
+    color: #a1a1aa;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .spec b { display: block; color: #fff; font-style: italic; font-weight: 900; letter-spacing: 0.04em; }
+  .spec code { color: #e98027; font-size: 9px; font-family: ui-monospace, Menlo, monospace; }
+</style>
+</head>
+<body>
+
+  <div class="label">Bottom navigation · 5 tabs + floating "+" FAB</div>
+
+  <div class="phone">
+    <div class="phone-content">
+      <h3>Cerca de ti <span>Negocios físicos</span></h3>
+      <div class="skeleton w-80"></div>
+      <div class="skeleton w-60"></div>
+      <div class="skeleton w-80"></div>
+    </div>
+
+    <button class="fab" aria-label="Subir GeoClip">
+      <i class="ph-bold ph-plus"></i>
+    </button>
+
+    <nav class="bar">
+      <button class="tab"><i class="ph ph-globe-hemisphere-west"></i><span class="tab__label">Lugares</span></button>
+      <button class="tab"><i class="ph ph-storefront"></i><span class="tab__label">Negocios</span></button>
+      <button class="tab tab--active"><i class="ph-fill ph-compass"></i><span class="tab__label">Home</span></button>
+      <button class="tab"><i class="ph ph-mask-happy"></i><span class="tab__label">Eventos</span></button>
+      <button class="tab"><i class="ph ph-clock-countdown"></i><span class="tab__label">GeoStories</span></button>
+    </nav>
+  </div>
+
+  <div class="spec">
+    <div><b>Lugares</b><code>globe-hemisphere-west</code></div>
+    <div><b>Negocios</b><code>storefront</code></div>
+    <div><b>Home</b><code>compass</code></div>
+    <div><b>Eventos</b><code>mask-happy</code></div>
+    <div><b>GeoStories</b><code>clock-countdown</code></div>
+  </div>
+
+  <div class="label" style="margin-top: 8px;">
+    · Activo: <code style="color:#e98027">weight="fill"</code> + label subrayado &nbsp;·&nbsp;
+    "+" flotante naranja (creadores, opcional)
+  </div>
+
+</body>
+</html>

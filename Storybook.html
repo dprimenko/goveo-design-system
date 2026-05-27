@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Goveo · Storybook</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<style>
+  :root {
+    --sb-bg:        #09090b;
+    --sb-bg-soft:   rgba(255,255,255,0.04);
+    --sb-bg-hover:  rgba(255,255,255,0.07);
+    --sb-bg-active: rgba(233,128,39,0.12);
+    --sb-border:    rgba(255,255,255,0.08);
+    --sb-border-strong: rgba(255,255,255,0.16);
+    --sb-fg:        #fafafa;
+    --sb-fg-muted:  #a1a1aa;
+    --sb-fg-subtle: #71717a;
+    --sb-accent:    #e98027;
+    --sb-rail:      280px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--sb-bg);
+    color: var(--sb-fg);
+    font-family: 'Inter', system-ui, sans-serif;
+    display: grid;
+    grid-template-columns: var(--sb-rail) 1fr;
+    overflow: hidden;
+  }
+
+  /* ============ SIDEBAR ============ */
+  .rail {
+    background: #050507;
+    border-right: 1px solid var(--sb-border);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .rail-head {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.03em; font-size: 14px;
+  }
+  .brand-pin {
+    width: 22px; height: 22px;
+    border-radius: 9999px;
+    background: var(--sb-accent);
+    display: grid; place-items: center;
+    box-shadow: 0 0 12px rgba(233,128,39,0.45);
+    color: #fff; font-size: 9px;
+  }
+  .brand-pin::after { content: '▶'; }
+  .brand-sub {
+    display: block;
+    font-style: normal; font-weight: 600;
+    color: var(--sb-fg-subtle);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    margin-top: 6px;
+  }
+
+  .search-wrap {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .search {
+    width: 100%;
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 9999px;
+    color: var(--sb-fg);
+    font-family: inherit;
+    padding: 8px 14px 8px 32px;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>");
+    background-repeat: no-repeat;
+    background-position: 11px center;
+  }
+  .search:focus { border-color: var(--sb-accent); }
+  .search::placeholder { color: var(--sb-fg-subtle); }
+
+  .nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 10px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+  }
+  .nav::-webkit-scrollbar { width: 6px; }
+  .nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  .group {
+    margin-top: 12px;
+  }
+  .group-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px 4px;
+    font-size: 9px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sb-fg-subtle);
+    cursor: pointer;
+    user-select: none;
+  }
+  .group-head .caret {
+    transition: transform 0.2s ease;
+    opacity: 0.6;
+    font-size: 8px;
+  }
+  .group.collapsed .caret { transform: rotate(-90deg); }
+  .group.collapsed .group-body { display: none; }
+  .group-count {
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    color: var(--sb-fg-muted);
+    padding: 1px 7px;
+    border-radius: 9999px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-style: normal;
+  }
+  .group-body { display: grid; gap: 1px; }
+
+  .item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--sb-fg-muted);
+    font-size: 12.5px;
+    line-height: 1.3;
+    transition: background 0.15s ease, color 0.15s ease;
+    border: 1px solid transparent;
+  }
+  .item:hover { background: var(--sb-bg-hover); color: var(--sb-fg); }
+  .item.active {
+    background: var(--sb-bg-active);
+    color: var(--sb-fg);
+    border-color: rgba(233,128,39,0.3);
+  }
+  .item-glyph {
+    width: 14px; height: 14px;
+    display: inline-grid; place-items: center;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: var(--sb-fg-subtle);
+    flex-shrink: 0;
+  }
+  .item.active .item-glyph { color: var(--sb-accent); }
+  .item-label { flex: 1; }
+  .item-tag {
+    font-size: 9px;
+    color: var(--sb-fg-subtle);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .rail-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--sb-border);
+    font-size: 10px;
+    color: var(--sb-fg-subtle);
+    letter-spacing: 0.06em;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ============ STAGE ============ */
+  .stage {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #18181b;
+  }
+  .toolbar {
+    height: 52px;
+    background: #0c0c0e;
+    border-bottom: 1px solid var(--sb-border);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 20px;
+  }
+  .crumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+    color: var(--sb-fg-muted);
+  }
+  .crumb strong { color: var(--sb-fg); font-weight: 600; }
+  .crumb .sep { color: var(--sb-fg-subtle); }
+  .crumb-tag {
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--sb-fg-muted);
+    text-transform: uppercase;
+  }
+
+  .spacer { flex: 1; }
+  .vp-group {
+    display: flex; align-items: center;
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 9999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .vp-btn {
+    background: transparent; border: 0; cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    color: var(--sb-fg-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: all 0.15s ease;
+  }
+  .vp-btn:hover { color: var(--sb-fg); }
+  .vp-btn.active {
+    background: var(--sb-accent);
+    color: #fff;
+  }
+
+  .tool-btn {
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    color: var(--sb-fg-muted);
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+  }
+  .tool-btn:hover {
+    background: var(--sb-bg-hover);
+    color: var(--sb-fg);
+    border-color: var(--sb-border-strong);
+  }
+  .tool-btn.copied { background: #16a34a; color: #fff; border-color: transparent; }
+
+  .canvas {
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+    display: grid;
+    place-items: start center;
+    background:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px) 0 0 / 24px 24px,
+      #0c0c0e;
+  }
+  .frame-wrap {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+    overflow: hidden;
+    transition: width 0.25s ease, height 0.25s ease;
+    width: 100%;
+    max-width: 100%;
+  }
+  .frame-wrap.dark { background: var(--sb-bg); }
+  iframe.frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
+    border: 0;
+  }
+
+  /* ============ EMPTY STATE ============ */
+  .empty {
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
+    padding: 80px 32px;
+    margin: auto;
+  }
+  .empty h1 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-style: italic; font-weight: 900; text-transform: uppercase;
+    letter-spacing: -0.03em; line-height: 0.9;
+    margin: 0 0 16px;
+  }
+  .empty h1 .accent { color: var(--sb-accent); text-shadow: 0 0 24px rgba(233,128,39,0.4); }
+  .empty p {
+    color: var(--sb-fg-muted);
+    line-height: 1.6;
+    margin: 0 auto 32px;
+    max-width: 50ch;
+  }
+  .empty-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .stat {
+    background: var(--sb-bg-soft);
+    border: 1px solid var(--sb-border);
+    border-radius: 14px;
+    padding: 20px 16px;
+  }
+  .stat .num {
+    font-size: 28px;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--sb-accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat .lab {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    color: var(--sb-fg-muted);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    .rail {
+      position: fixed; inset: 0 auto 0 0;
+      width: var(--sb-rail);
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      z-index: 50;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+    }
+    body.rail-open .rail { transform: translateX(0); }
+    .rail-toggle { display: inline-flex; }
+  }
+  .rail-toggle {
+    display: none;
+    background: transparent;
+    border: 0;
+    color: var(--sb-fg);
+    padding: 6px;
+    margin-right: -4px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="rail">
+    <div class="rail-head">
+      <div class="brand">
+        <span class="brand-pin"></span>
+        <span>Goveo · Storybook</span>
+      </div>
+      <span class="brand-sub">Design System · v1.0</span>
+    </div>
+
+    <div class="search-wrap">
+      <input class="search" id="search" placeholder="Buscar componente, token…" type="text" />
+    </div>
+
+    <nav class="nav" id="nav"></nav>
+
+    <div class="rail-foot">
+      <span>21 cards · 3 kits</span>
+      <a href="Export Guide.html" class="tool-btn" style="padding: 2px 8px; font-size: 9px;">Export ▸</a>
+    </div>
+  </aside>
+
+  <!-- ============ STAGE ============ -->
+  <main class="stage">
+    <div class="toolbar">
+      <button class="rail-toggle" id="rail-toggle" aria-label="Toggle sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="crumb" id="crumb">
+        <span>Goveo</span>
+        <span class="sep">/</span>
+        <strong>Welcome</strong>
+        <span class="crumb-tag" id="crumb-tag" style="display:none;">—</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="vp-group" id="vp-group">
+        <button class="vp-btn active" data-w="auto">Fit</button>
+        <button class="vp-btn" data-w="375">375</button>
+        <button class="vp-btn" data-w="768">768</button>
+        <button class="vp-btn" data-w="1024">1024</button>
+        <button class="vp-btn" data-w="1440">1440</button>
+      </div>
+      <a class="tool-btn" id="open-new" href="#" target="_blank" rel="noopener" title="Open in new tab">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+        New tab
+      </a>
+      <button class="tool-btn" id="copy-link" title="Copy link to this card">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Copy link
+      </button>
+    </div>
+
+    <div class="canvas" id="canvas">
+      <!-- Default empty state rendered by JS when no item is selected -->
+    </div>
+  </main>
+
+<script>
+  // ============================================
+  // CATALOG
+  // ============================================
+  const CATALOG = [
+    {
+      id: 'tokens',
+      label: 'Tokens',
+      items: [
+        { id: 'colors-primary',      label: 'Primary · orange ramp',  path: 'preview/colors-primary.html',      tag: 'Colors', h: 180 },
+        { id: 'colors-neutrals',     label: 'Neutrals',               path: 'preview/colors-neutrals.html',     tag: 'Colors', h: 220 },
+        { id: 'colors-semantic-app', label: 'Semantic · app',         path: 'preview/colors-semantic-app.html', tag: 'Colors', h: 320 },
+        { id: 'colors-landing',      label: 'Semantic · landing',     path: 'preview/colors-landing.html',      tag: 'Colors', h: 320, dark: true },
+        { id: 'type-family',         label: 'Family · Inter',         path: 'preview/type-family.html',         tag: 'Type',   h: 280 },
+        { id: 'type-app-scale',      label: 'App scale',              path: 'preview/type-app-scale.html',      tag: 'Type',   h: 480 },
+        { id: 'type-landing-poster', label: 'Landing · poster',       path: 'preview/type-landing-poster.html', tag: 'Type',   h: 380, dark: true },
+        { id: 'spacing-scale',       label: 'Spacing scale',          path: 'preview/spacing-scale.html',       tag: 'Spacing',h: 420 },
+        { id: 'spacing-radii',       label: 'Radii',                  path: 'preview/spacing-radii.html',       tag: 'Spacing',h: 220 },
+        { id: 'spacing-shadows',     label: 'Shadows & glow',         path: 'preview/spacing-shadows.html',     tag: 'Spacing',h: 220, dark: true },
+      ],
+    },
+    {
+      id: 'brand',
+      label: 'Brand',
+      items: [
+        { id: 'brand-logo',           label: 'Logo & wordmark',  path: 'preview/brand-logo.html',           tag: 'Brand', h: 240 },
+        { id: 'brand-icons-svg',      label: 'Brand SVG icons',  path: 'preview/brand-icons-svg.html',      tag: 'Brand', h: 200 },
+        { id: 'brand-icons-phosphor', label: 'Phosphor icons',   path: 'preview/brand-icons-phosphor.html', tag: 'Brand', h: 220 },
+      ],
+    },
+    {
+      id: 'components',
+      label: 'Components',
+      items: [
+        { id: 'buttons-app',     label: 'Buttons · app',         path: 'preview/components-buttons-app.html',     tag: 'Components', h: 200 },
+        { id: 'buttons-landing', label: 'Buttons · landing',     path: 'preview/components-buttons-landing.html', tag: 'Components', h: 240, dark: true },
+        { id: 'glass-card',      label: 'Glass card',            path: 'preview/components-glass-card.html',      tag: 'Components', h: 280, dark: true },
+        { id: 'pricing-card',    label: 'Pricing card',          path: 'preview/components-pricing-card.html',    tag: 'Components', h: 460, dark: true },
+        { id: 'input-tabs',      label: 'Inputs & tabs',         path: 'preview/components-input-tabs.html',      tag: 'Components', h: 280, dark: true },
+        { id: 'bullets',         label: 'Bullet glyphs',         path: 'preview/components-bullets.html',         tag: 'Components', h: 200 },
+        { id: 'feed-card',       label: 'Feed card',             path: 'preview/components-feed-card.html',       tag: 'Components', h: 720 },
+        { id: 'bottom-bar',      label: 'Bottom bar',            path: 'preview/components-bottom-bar.html',      tag: 'Components', h: 140 },
+      ],
+    },
+    {
+      id: 'kits',
+      label: 'UI Kits',
+      items: [
+        { id: 'kit-app',     label: 'App · vertical feed',  path: 'ui_kits/goveo-app/index.html',     tag: 'Kit', h: 900, dark: true,  preferredW: 480 },
+        { id: 'kit-landing', label: 'Landing · marketing',  path: 'ui_kits/goveo-landing/index.html', tag: 'Kit', h: 900, dark: true },
+        { id: 'kit-product', label: 'Product · screens',    path: 'ui_kits/goveo-product/index.html', tag: 'Kit', h: 900 },
+      ],
+    },
+    {
+      id: 'docs',
+      label: 'Docs',
+      items: [
+        { id: 'doc-export',  label: 'Export Guide',  path: 'Export Guide.html',  tag: 'Docs', h: 900, dark: true },
+        { id: 'doc-landing-test', label: 'landing-test.html (source)', path: 'landing-test.html', tag: 'Source', h: 900, dark: true },
+      ],
+    },
+  ];
+
+  // Flat lookup
+  const FLAT = CATALOG.flatMap(g => g.items.map(i => ({ ...i, groupId: g.id, groupLabel: g.label })));
+
+  // ============================================
+  // STATE
+  // ============================================
+  const state = {
+    current: null,
+    viewport: 'auto',
+    collapsed: new Set(),
+    search: '',
+  };
+
+  // ============================================
+  // RENDER NAV
+  // ============================================
+  const nav = document.getElementById('nav');
+  function renderNav() {
+    const q = state.search.trim().toLowerCase();
+    nav.innerHTML = '';
+    let totalMatched = 0;
+
+    CATALOG.forEach(group => {
+      const matched = group.items.filter(it => !q || it.label.toLowerCase().includes(q) || it.tag.toLowerCase().includes(q));
+      if (q && matched.length === 0) return;
+      totalMatched += matched.length;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'group' + (state.collapsed.has(group.id) ? ' collapsed' : '');
+
+      const head = document.createElement('div');
+      head.className = 'group-head';
+      head.innerHTML = `
+        <span style="display:flex; align-items:center; gap:8px;">
+          <span class="caret">▼</span>
+          <span>${group.label}</span>
+        </span>
+        <span class="group-count">${matched.length}</span>`;
+      head.addEventListener('click', () => {
+        if (state.collapsed.has(group.id)) state.collapsed.delete(group.id);
+        else state.collapsed.add(group.id);
+        renderNav();
+      });
+      wrap.appendChild(head);
+
+      const body = document.createElement('div');
+      body.className = 'group-body';
+      matched.forEach(it => {
+        const el = document.createElement('div');
+        el.className = 'item' + (state.current === it.id ? ' active' : '');
+        el.innerHTML = `
+          <span class="item-glyph">${state.current === it.id ? '▸' : '·'}</span>
+          <span class="item-label">${highlight(it.label, q)}</span>`;
+        el.addEventListener('click', () => selectItem(it.id));
+        body.appendChild(el);
+      });
+      wrap.appendChild(body);
+      nav.appendChild(wrap);
+    });
+
+    if (q && totalMatched === 0) {
+      nav.innerHTML = `<div style="padding: 24px 16px; color: var(--sb-fg-subtle); font-size: 12px; text-align: center;">Sin resultados para “${escapeHtml(q)}”.</div>`;
+    }
+  }
+
+  function highlight(text, q) {
+    if (!q) return escapeHtml(text);
+    const lower = text.toLowerCase();
+    const idx = lower.indexOf(q);
+    if (idx === -1) return escapeHtml(text);
+    return escapeHtml(text.slice(0, idx))
+      + `<mark style="background: rgba(233,128,39,0.25); color: var(--sb-accent); padding: 0 2px; border-radius: 3px;">${escapeHtml(text.slice(idx, idx + q.length))}</mark>`
+      + escapeHtml(text.slice(idx + q.length));
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  // ============================================
+  // SELECT ITEM
+  // ============================================
+  const canvas = document.getElementById('canvas');
+  const crumb = document.getElementById('crumb');
+  const crumbTag = document.getElementById('crumb-tag');
+  const openNew = document.getElementById('open-new');
+
+  function selectItem(id) {
+    const item = FLAT.find(i => i.id === id);
+    if (!item) { state.current = null; renderEmpty(); renderNav(); return; }
+    state.current = id;
+
+    if (item.preferredW && state.viewport === 'auto') {
+      state.viewport = String(item.preferredW);
+      updateViewportButtons();
+    }
+
+    // Crumb
+    crumb.innerHTML = `<span>Goveo</span><span class="sep">/</span><span>${escapeHtml(item.groupLabel)}</span><span class="sep">/</span><strong>${escapeHtml(item.label)}</strong>`;
+    crumb.appendChild(crumbTag);
+    crumbTag.textContent = item.tag;
+    crumbTag.style.display = '';
+
+    openNew.href = item.path;
+
+    // Build frame
+    canvas.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'frame-wrap' + (item.dark ? ' dark' : '');
+    wrap.style.height = item.h + 'px';
+
+    if (state.viewport !== 'auto') {
+      wrap.style.width = state.viewport + 'px';
+      wrap.style.maxWidth = '100%';
+    } else {
+      wrap.style.width = '100%';
+      wrap.style.maxWidth = '1240px';
+    }
+
+    const frame = document.createElement('iframe');
+    frame.className = 'frame';
+    frame.src = item.path;
+    frame.loading = 'eager';
+    frame.title = item.label;
+    wrap.appendChild(frame);
+    canvas.appendChild(wrap);
+
+    // URL hash
+    history.replaceState(null, '', '#' + id);
+
+    renderNav();
+  }
+
+  function renderEmpty() {
+    crumb.innerHTML = `<span>Goveo</span><span class="sep">/</span><strong>Welcome</strong>`;
+    crumb.appendChild(crumbTag);
+    crumbTag.style.display = 'none';
+    openNew.href = '#';
+    canvas.innerHTML = `
+      <div class="empty">
+        <p style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sb-fg-subtle); margin: 0 0 24px; font-weight: 800; font-style: italic;">Goveo · Design System</p>
+        <h1>Todo el sistema, <span class="accent">en una pantalla.</span></h1>
+        <p>Navega por los tokens, componentes y kits desde la barra lateral. Cada tarjeta es un preview en vivo; los kits son páginas completas. Usa el selector de viewport arriba para probar en mobile, tablet o desktop.</p>
+        <div class="empty-stats">
+          <div class="stat"><div class="num">${CATALOG[0].items.length}</div><div class="lab">Tokens</div></div>
+          <div class="stat"><div class="num">${CATALOG[1].items.length}</div><div class="lab">Brand</div></div>
+          <div class="stat"><div class="num">${CATALOG[2].items.length}</div><div class="lab">Components</div></div>
+          <div class="stat"><div class="num">${CATALOG[3].items.length}</div><div class="lab">UI Kits</div></div>
+        </div>
+      </div>`;
+  }
+
+  // ============================================
+  // VIEWPORT
+  // ============================================
+  const vpGroup = document.getElementById('vp-group');
+  vpGroup.addEventListener('click', e => {
+    const btn = e.target.closest('.vp-btn');
+    if (!btn) return;
+    state.viewport = btn.dataset.w;
+    updateViewportButtons();
+    if (state.current) selectItem(state.current);
+  });
+  function updateViewportButtons() {
+    vpGroup.querySelectorAll('.vp-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.w === state.viewport);
+    });
+  }
+
+  // ============================================
+  // SEARCH
+  // ============================================
+  document.getElementById('search').addEventListener('input', e => {
+    state.search = e.target.value;
+    renderNav();
+  });
+
+  // ============================================
+  // COPY LINK
+  // ============================================
+  document.getElementById('copy-link').addEventListener('click', e => {
+    const btn = e.currentTarget;
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 1600);
+    });
+  });
+
+  // ============================================
+  // RAIL TOGGLE (mobile)
+  // ============================================
+  document.getElementById('rail-toggle').addEventListener('click', () => {
+    document.body.classList.toggle('rail-open');
+  });
+
+  // ============================================
+  // BOOT
+  // ============================================
+  const initial = window.location.hash.slice(1);
+  if (initial && FLAT.find(i => i.id === initial)) {
+    renderNav();
+    selectItem(initial);
+  } else {
+    renderNav();
+    renderEmpty();
+  }
+</script>
+</body>
+</html>
