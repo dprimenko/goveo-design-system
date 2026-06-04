@@ -1,0 +1,59 @@
+/* =============================================================
+   THEME · GOVEO (default)
+   =============================================================
+   Brand tokens for the Goveo (global) theme.
+
+   Applied via class on <html> or <body>:
+     .theme-goveo   → activates this theme explicitly
+     :root          → applied by default (no theme class needed)
+
+   Components consume the semantic tokens at the bottom of the file
+   (--accent, --accent-hover, --logo-url, etc) — not the brand
+   ramp directly, when possible. The legacy ramp tokens
+   (--primary-500, --naranja-goveo, …) are kept to preserve
+   existing styles in ui_kits/* untouched.
+   ============================================================ */
+
+:root,
+.theme-goveo {
+  /* ---------- BRAND · PRIMARY (orange ramp) ------------------ */
+  --primary-50:  #fff3f0;
+  --primary-100: #ffe4dd;
+  --primary-200: #ffc8bb;
+  --primary-300: #ffa38e;
+  --primary-400: #ff7d5e;
+  --primary-500: #f96a3f;  /* hero orange · "Goveo orange" */
+  --primary-600: #f26134;
+  --primary-700: #eb5a2c;  /* landing primary / hover */
+  --primary-800: #d44d23;
+  --primary-900: #b33d1a;
+  --primary-950: #7c2610;
+
+  /* ---------- BRAND · ACCENT (landing warm-orange) ----------- */
+  /* In Goveo, this happens to be the same colour family as the
+     primary ramp — slightly warmer for the dark landing surface. */
+  --naranja-goveo: #e98027;
+  --naranja-dark:  #d36d1d;
+
+  /* ---------- SEMANTIC BRAND TOKENS -------------------------- */
+  --accent:         var(--primary-500);
+  --accent-hover:   var(--primary-700);
+  --fg-on-accent:   #ffffff;
+  --fg-on-primary:  #ffffff;
+
+  --landing-accent:       var(--naranja-goveo);
+  --landing-accent-hover: var(--naranja-dark);
+  --landing-accent-soft:  rgba(233, 128, 39, 0.10);
+  --landing-accent-ring:  rgba(233, 128, 39, 0.20);
+
+  /* Glow used behind hero numbers / hero orange words */
+  --orange-glow: 0 0 20px rgba(233, 128, 39, 0.50);
+  --accent-glow: var(--orange-glow);
+
+  /* ---------- BRAND · LOGO ----------------------------------- */
+  --logo-url:           url('../assets/goveo-logo.png');
+  --logo-wordmark-url:  url('../assets/goveo-wordmark-outline.png');
+  --logo-aspect:        1 / 1;
+  --brand-name:         'Goveo';
+  --brand-tagline:      'Video · Smart Geomarketing';
+}

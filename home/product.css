@@ -1,0 +1,210 @@
+/* =============================================================
+   GOVEO · PRODUCT SYSTEM
+   Tokens unificados para app + panel web.
+   Coexiste con colors_and_type.css (los tokens base ya definidos
+   siguen disponibles). Esto añade el lenguaje de PRODUCT:
+   - Light surface (panel web, ajustes, dashboards, publisher)
+   - Dark surface (feed móvil, reproductor)
+   - Buttons, inputs, cards, navs… todos comparten estos tokens
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---------- COLORS · BRAND -------------------------------- */
+  --gp-orange-50:  #fff3f0;
+  --gp-orange-100: #ffe4dd;
+  --gp-orange-200: #ffc8bb;
+  --gp-orange-300: #ffa38e;
+  --gp-orange-400: #ff7d5e;
+  --gp-orange-500: #f96a3f;  /* primary action */
+  --gp-orange-600: #f26134;
+  --gp-orange-700: #eb5a2c;  /* primary hover */
+  --gp-orange-800: #d44d23;  /* primary active */
+  --gp-orange-900: #b33d1a;
+
+  /* ---------- COLORS · NEUTRAL ramp (refined, slightly warm)  */
+  --gp-ink-0:   #ffffff;
+  --gp-ink-25:  #fafafa;
+  --gp-ink-50:  #f5f6f7;
+  --gp-ink-100: #eceef1;
+  --gp-ink-200: #d9dde2;
+  --gp-ink-300: #b9bfc7;
+  --gp-ink-400: #8b939d;
+  --gp-ink-500: #5e6670;
+  --gp-ink-600: #3e454e;
+  --gp-ink-700: #292d34;
+  --gp-ink-800: #1a1d22;
+  --gp-ink-900: #0e1014;
+
+  /* ---------- COLORS · STATE ------------------------------- */
+  --gp-success:  #10a37f;
+  --gp-success-bg: #e8f7f2;
+  --gp-danger:   #e5484d;
+  --gp-danger-bg:  #fdecee;
+  --gp-warning:  #f59e0b;
+  --gp-warning-bg: #fff5e3;
+  --gp-info:     #0066ff;
+  --gp-info-bg:  #e6f0ff;
+
+  /* ---------- SEMANTIC · LIGHT surface (default product) ---- */
+  --bg-page:        var(--gp-ink-25);     /* app background */
+  --bg-surface:     var(--gp-ink-0);      /* cards, panels */
+  --bg-elevated:    var(--gp-ink-0);      /* modals, popovers (with shadow) */
+  --bg-muted:       var(--gp-ink-50);     /* hover row, subtle fill */
+  --bg-pressed:     var(--gp-ink-100);    /* active row */
+  --bg-overlay:     rgba(14, 16, 20, 0.55); /* modal scrim */
+
+  --fg-default:     var(--gp-ink-800);
+  --fg-muted:       var(--gp-ink-500);
+  --fg-subtle:      var(--gp-ink-400);
+  --fg-disabled:    var(--gp-ink-300);
+  --fg-on-accent:   #ffffff;
+  --fg-accent:      var(--gp-orange-700);
+
+  --border-default: var(--gp-ink-200);
+  --border-subtle:  var(--gp-ink-100);
+  --border-strong:  var(--gp-ink-300);
+  --border-accent:  var(--gp-orange-500);
+  --border-focus:   var(--gp-orange-500);
+
+  --shadow-xs: 0 1px 2px rgba(14,16,20,0.04);
+  --shadow-sm: 0 2px 4px rgba(14,16,20,0.06), 0 1px 2px rgba(14,16,20,0.04);
+  --shadow-md: 0 6px 16px rgba(14,16,20,0.08), 0 2px 4px rgba(14,16,20,0.04);
+  --shadow-lg: 0 16px 32px rgba(14,16,20,0.12), 0 4px 8px rgba(14,16,20,0.06);
+  --shadow-focus: 0 0 0 3px rgba(249,106,63,0.25);
+
+  /* ---------- SPACING / RADII / SIZE ----------------------- */
+  --gp-space-1:  4px;
+  --gp-space-2:  8px;
+  --gp-space-3:  12px;
+  --gp-space-4:  16px;
+  --gp-space-5:  20px;
+  --gp-space-6:  24px;
+  --gp-space-8:  32px;
+  --gp-space-10: 40px;
+  --gp-space-12: 48px;
+  --gp-space-16: 64px;
+  --gp-space-20: 80px;
+
+  --gp-radius-xs:   4px;
+  --gp-radius-sm:   6px;
+  --gp-radius-md:   10px;   /* default cards, buttons */
+  --gp-radius-lg:   14px;   /* large cards, modals */
+  --gp-radius-xl:   20px;
+  --gp-radius-pill: 9999px;
+
+  --gp-control-sm-h: 32px;
+  --gp-control-md-h: 40px;
+  --gp-control-lg-h: 48px;
+
+  /* ---------- TYPOGRAPHY ----------------------------------- */
+  --gp-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --gp-font-mono: ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  --gp-fs-xs:   11px;  --gp-lh-xs:   14px;
+  --gp-fs-sm:   13px;  --gp-lh-sm:   18px;
+  --gp-fs-base: 14px;  --gp-lh-base: 20px;
+  --gp-fs-md:   16px;  --gp-lh-md:   24px;
+  --gp-fs-lg:   18px;  --gp-lh-lg:   26px;
+  --gp-fs-xl:   22px;  --gp-lh-xl:   28px;
+  --gp-fs-2xl:  28px;  --gp-lh-2xl:  34px;
+  --gp-fs-3xl:  36px;  --gp-lh-3xl:  42px;
+  --gp-fs-4xl:  44px;  --gp-lh-4xl:  50px;
+
+  /* ---------- MOTION --------------------------------------- */
+  --gp-ease:      cubic-bezier(0.2, 0, 0, 1);
+  --gp-ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --gp-dur-fast:  120ms;
+  --gp-dur:       180ms;
+  --gp-dur-slow:  280ms;
+
+  /* ---------- Z-INDEX -------------------------------------- */
+  --gp-z-nav:     10;
+  --gp-z-sticky:  20;
+  --gp-z-drawer:  30;
+  --gp-z-modal:   40;
+  --gp-z-toast:   50;
+  --gp-z-tooltip: 60;
+}
+
+/* ---------- DARK surface (feed móvil, reproductor) ---------- */
+.gp-surface-dark {
+  --bg-page:        var(--gp-ink-900);
+  --bg-surface:     var(--gp-ink-800);
+  --bg-elevated:    var(--gp-ink-700);
+  --bg-muted:       rgba(255,255,255,0.06);
+  --bg-pressed:     rgba(255,255,255,0.12);
+  --bg-overlay:     rgba(0,0,0,0.7);
+
+  --fg-default:     #ffffff;
+  --fg-muted:       rgba(255,255,255,0.72);
+  --fg-subtle:      rgba(255,255,255,0.52);
+  --fg-disabled:    rgba(255,255,255,0.30);
+  --fg-on-accent:   #ffffff;
+  --fg-accent:      var(--gp-orange-400);
+
+  --border-default: rgba(255,255,255,0.12);
+  --border-subtle:  rgba(255,255,255,0.06);
+  --border-strong:  rgba(255,255,255,0.20);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.5);
+  --shadow-md: 0 8px 20px rgba(0,0,0,0.5);
+  --shadow-lg: 0 24px 48px rgba(0,0,0,0.6);
+  --shadow-focus: 0 0 0 3px rgba(249,106,63,0.35);
+
+  background: var(--bg-page);
+  color: var(--fg-default);
+}
+
+/* =============================================================
+   BASE
+   ============================================================ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body.gp-product {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--fg-default);
+  font-family: var(--gp-font);
+  font-size: var(--gp-fs-base);
+  line-height: var(--gp-lh-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* =============================================================
+   TYPOGRAPHY (semantic classes — opt-in)
+   No italic. No uppercase headlines. No font-weight 900.
+   That voice is reserved for the landing.
+   ============================================================ */
+.gp-h1 { font-size: var(--gp-fs-3xl); line-height: var(--gp-lh-3xl); font-weight: 600; letter-spacing: -0.02em; }
+.gp-h2 { font-size: var(--gp-fs-2xl); line-height: var(--gp-lh-2xl); font-weight: 600; letter-spacing: -0.015em; }
+.gp-h3 { font-size: var(--gp-fs-xl);  line-height: var(--gp-lh-xl);  font-weight: 600; letter-spacing: -0.01em; }
+.gp-h4 { font-size: var(--gp-fs-lg);  line-height: var(--gp-lh-lg);  font-weight: 600; }
+.gp-body-lg { font-size: var(--gp-fs-md);  line-height: var(--gp-lh-md);  font-weight: 400; }
+.gp-body    { font-size: var(--gp-fs-base);line-height: var(--gp-lh-base);font-weight: 400; }
+.gp-body-sm { font-size: var(--gp-fs-sm);  line-height: var(--gp-lh-sm);  font-weight: 400; }
+.gp-caption { font-size: var(--gp-fs-xs);  line-height: var(--gp-lh-xs);  font-weight: 500; letter-spacing: 0.02em; }
+.gp-mono    { font-family: var(--gp-font-mono); font-size: var(--gp-fs-sm); }
+.gp-muted   { color: var(--fg-muted); }
+.gp-subtle  { color: var(--fg-subtle); }
+.gp-strong  { font-weight: 600; }
+
+/* Eyebrow label (used in section headers, etc) */
+.gp-eyebrow {
+  font-size: var(--gp-fs-xs);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+/* Selection */
+::selection { background: var(--gp-orange-200); color: var(--gp-ink-800); }
+.gp-surface-dark ::selection { background: var(--gp-orange-500); color: #fff; }

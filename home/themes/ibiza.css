@@ -1,0 +1,69 @@
+/* =============================================================
+   THEME · IBIZA GOVEO
+   =============================================================
+   Brand tokens for the Ibiza (regional) theme — the same app
+   restricted to Ibiza / Formentera. Same components, different
+   marca.
+
+   Applied via class on <html> or <body>:
+     .theme-ibiza   → activates this theme
+
+   Source colours confirmed by the team (2026-05):
+     #88E4D7  primary    (light turquoise · "Mediterranean")
+     #379EA3  primary-dark / hover
+     #E98127  accent     (kept warm — matches Goveo landing accent)
+
+   The neutral palette, type ramp, spacing and radii come from
+   colors_and_type.css unchanged — only brand-coloured tokens and
+   the logo are overridden here.
+   ============================================================ */
+
+.theme-ibiza {
+  /* ---------- BRAND · PRIMARY (turquoise ramp) --------------- */
+  /* Built around the two brand stops: #88E4D7 at 500, #379EA3 at 700. */
+  --primary-50:  #f0fbf8;
+  --primary-100: #dcf7ef;
+  --primary-200: #b9eddf;
+  --primary-300: #98e6d8;
+  --primary-400: #8fe5d7;
+  --primary-500: #88e4d7;  /* hero turquoise · "Ibiza primary" */
+  --primary-600: #5cbbb4;
+  --primary-700: #379ea3;  /* hover / dark primary */
+  --primary-800: #297a82;
+  --primary-900: #1c5660;
+  --primary-950: #0d3338;
+
+  /* ---------- BRAND · ACCENT (warm orange — kept) ------------ */
+  /* Ibiza uses the same warm orange as the Goveo landing for
+     contrast against the cool turquoise. */
+  --naranja-goveo: #e98127;
+  --naranja-dark:  #c66a1a;
+
+  /* ---------- SEMANTIC BRAND TOKENS -------------------------- */
+  --accent:         var(--primary-500);
+  --accent-hover:   var(--primary-700);
+
+  /* Primary on Ibiza is LIGHT turquoise — flip foreground to dark.
+     This is the key per-theme difference downstream components
+     should respect (use var(--fg-on-primary), not hard #fff). */
+  --fg-on-accent:   #0d3338;
+  --fg-on-primary:  #0d3338;
+
+  --landing-accent:       var(--naranja-goveo);
+  --landing-accent-hover: var(--naranja-dark);
+  --landing-accent-soft:  rgba(233, 129, 39, 0.10);
+  --landing-accent-ring:  rgba(233, 129, 39, 0.20);
+
+  /* Glow behind hero numbers / accent words — teal on Ibiza */
+  --orange-glow: 0 0 20px rgba(136, 228, 215, 0.55);
+  --accent-glow: var(--orange-glow);
+
+  /* ---------- BRAND · LOGO ----------------------------------- */
+  /* TODO: download to assets/goveo-ibiza-logo.png and switch.
+     Using the canonical CDN URL meanwhile so the showcase works. */
+  --logo-url:           url('https://es.goveo.app/assets/img/ibiza/logo-ibiza.png');
+  --logo-wordmark-url:  url('https://es.goveo.app/assets/img/ibiza/logo-ibiza.png');
+  --logo-aspect:        1 / 1;
+  --brand-name:         'Ibiza Goveo';
+  --brand-tagline:      'Ibiza · Formentera';
+}
